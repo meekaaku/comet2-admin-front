@@ -19,6 +19,20 @@ onMount(() => {
                     Pages
                 </li>
 
+
+                <li class="sidebar-item active">
+						<a data-bs-target="#dashboards" data-bs-toggle="collapse" class="sidebar-link collapsed">
+							<span class="align-middle"><i data-feather="dollar-sign"></i>Sales</span>
+						</a>
+						<ul id="dashboards" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
+							<li class="sidebar-item active"><a class="sidebar-link" href="app/sales/orders"> &nbsp; &nbsp;<i data-feather="list"></i>Orders</a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="app/sales/customers">&nbsp; &nbsp;<i data-feather="users"></i>Customers</a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/dashboard-ecommerce">E-Commerce <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/dashboard-crypto">Crypto <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
+						</ul>
+					</li>
+
+
                 <li class="sidebar-item active">
                     <a class="sidebar-link" href="index.html">
           <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
@@ -579,3 +593,6 @@ onMount(() => {
     </div>
 </div>
 
+<style>
+    
+</style>
