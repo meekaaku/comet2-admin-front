@@ -4,9 +4,10 @@ import { comet } from '$lib'
 let tenant_username = '';
 let user_username = '';
 let user_password = '';
-function login()
+async function login()
 {
-	comet.auth.login({tenant_username, user_username, user_password})
+	const token = await comet.auth.login({tenant_username, user_username, user_password})
+	console.log({token});
 }
 </script>
 <main class="d-flex w-100">
