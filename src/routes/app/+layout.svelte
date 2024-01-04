@@ -22,7 +22,7 @@ import { onMount } from "svelte";
 
 					<li class="sidebar-item active">
 						<a class="sidebar-link" href="index.html">
-              <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
+              <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">XDashboard</span>
             </a>
 					</li>
 
@@ -32,7 +32,7 @@ import { onMount } from "svelte";
             			</a>
 					</li>
 	
-	<li class="sidebar-item">
+		<li class="sidebar-item">
 						<a class="sidebar-link" href="pages-profile.html">
               				<i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
             			</a>
@@ -44,20 +44,20 @@ import { onMount } from "svelte";
 					</li>
 
 
-	<li class="sidebar-item">
+		<li class="sidebar-item">
 						<a class="sidebar-link" href="pages-profile.html">
               				<i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
             			</a>
 					</li>
 
 
-	<li class="sidebar-item">
+		<li class="sidebar-item">
 						<a class="sidebar-link" href="pages-profile.html">
               				<i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
             			</a>
 					</li>
 	
-	<li class="sidebar-item">
+		<li class="sidebar-item">
 						<a class="sidebar-link" href="pages-profile.html">
               				<i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
             			</a>
@@ -65,27 +65,27 @@ import { onMount } from "svelte";
 
 
 	
-	<li class="sidebar-item">
+		<li class="sidebar-item">
 						<a class="sidebar-link" href="pages-profile.html">
               				<i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
             			</a>
 					</li>
-	<li class="sidebar-item">
+		<li class="sidebar-item">
 						<a class="sidebar-link" href="pages-profile.html">
               				<i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
             			</a>
 					</li>
-	<li class="sidebar-item">
+		<li class="sidebar-item">
 						<a class="sidebar-link" href="pages-profile.html">
               				<i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
             			</a>
 					</li>
-	<li class="sidebar-item">
+		<li class="sidebar-item">
 						<a class="sidebar-link" href="pages-profile.html">
               				<i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
             			</a>
 					</li>
-	<li class="sidebar-item">
+		<li class="sidebar-item">
 						<a class="sidebar-link" href="pages-profile.html">
               				<i class="align-middle" data-feather="user"></i> <span class="align-middle">Profile</span>
             			</a>
