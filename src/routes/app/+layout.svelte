@@ -1,15 +1,42 @@
 <script lang="ts">
 import { onMount } from "svelte";
 
+let sidebarElement: HTMLElement;
+let navbarElement: HTMLElement;
+let sidebarCollapsed: boolean ;
+function toggle()
+{
+
+	const collapsed = sidebarElement.classList.contains("collapsed");
+	sidebarCollapsed = collapsed;
+	console.log({collapsed});
+	if(collapsed)
+	{
+		navbarElement.classList.remove("navbar-wide");
+	}
+	else
+	{
+		navbarElement.classList.add("navbar-narrow");
+	}
+}
+
+onMount(toggle);
 
 </script>
 
 <style>
-
 .navbar {
-	position: fixed; 
-	width: inherit;
+	position: fixed;
+	right: 0;
+	transition: 0.8s;
 	z-index: 100;
+}
+.navbar-wide{
+	width: 100%;
+}
+
+.navbar-narrow {
+	width: calc(100% - 260px);
 }
 
 main {
@@ -19,11 +46,11 @@ main {
 </style>
 
     <div class="wrapper">
-		<nav id="sidebar" class="sidebar js-sidebar">
+		<nav bind:this={sidebarElement} id="sidebar" class="sidebar js-sidebar">
 			<div class="sidebar-content js-simplebar">
 				<a class="sidebar-brand" href="index.html">
-          <span class="align-middle">AdminKit</span>
-        </a>
+          			<span class="align-middle">AdminKit</span>
+        		</a>
 
 				<ul class="sidebar-nav">
 					<li class="sidebar-header">
@@ -36,10 +63,22 @@ main {
             </a>
 					</li>
 
+<li class="sidebar-item">
+						<a data-bs-target="#dashboards" data-bs-toggle="collapse" class="sidebar-link collapsed">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sliders align-middle"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg> <span class="align-middle">Dashboards</span>
+						</a>
+						<ul id="dashboards" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar" style="padding-left: 1rem;">
+							<li class="sidebar-item"><i data-feather="feather"></i>
+<a class="sidebar-link" href="/"> <i data-feather="feather"></i> Analytics</a></li>
+							<li class="sidebar-item active"><a class="sidebar-link" href="/dashboard-ecommerce">E-Commerce <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/dashboard-crypto">Crypto <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
+						</ul>
+					</li>
+
+
 					<li class="sidebar-item">
 						<a data-bs-target="#ui" data-bs-toggle="collapse" class="sidebar-link collapsed" aria-expanded="false">
-							<!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-briefcase align-middle"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg> <span class="align-middle">UI Elements</span> -->
-						 ... <span class="align-middle">UI Elements</span>
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-briefcase align-middle"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg> <span class="align-middle">UI Elements</span>
 						</a>
 						<ul id="ui" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
 							<li class="sidebar-item"><a class="sidebar-link" href="/ui-alerts">Alerts <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
@@ -206,8 +245,8 @@ main {
 		</nav>
 
 		<div class="main">
-			<nav class="navbar navbar-expand navbar-light navbar-bg" >
-				<a class="sidebar-toggle js-sidebar-toggle">
+			<nav bind:this={navbarElement} class="navbar navbar-expand navbar-light navbar-bg " class:navbar-narrow={!sidebarCollapsed} class:navbar-wide={sidebarCollapsed}>
+				<a class="sidebar-toggle js-sidebar-toggle" on:click={toggle}>
           <i class="hamburger align-self-center"></i>
         </a>
 
