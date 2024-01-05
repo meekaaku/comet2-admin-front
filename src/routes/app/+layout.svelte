@@ -6,6 +6,16 @@ import { onMount } from "svelte";
 
 <style>
 
+.navbar {
+	position: fixed; 
+	width: inherit;
+	z-index: 100;
+}
+
+main {
+	margin-top: 3rem;
+}
+
 </style>
 
     <div class="wrapper">
@@ -24,6 +34,25 @@ import { onMount } from "svelte";
 						<a class="sidebar-link" href="index.html">
               <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">XDashboard</span>
             </a>
+					</li>
+
+					<li class="sidebar-item">
+						<a data-bs-target="#ui" data-bs-toggle="collapse" class="sidebar-link collapsed" aria-expanded="false">
+							<!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-briefcase align-middle"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg> <span class="align-middle">UI Elements</span> -->
+						 ... <span class="align-middle">UI Elements</span>
+						</a>
+						<ul id="ui" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
+							<li class="sidebar-item"><a class="sidebar-link" href="/ui-alerts">Alerts <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/ui-buttons">Buttons</a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/ui-cards">Cards</a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/ui-general">General</a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/ui-grid">Grid</a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/ui-modals">Modals <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/ui-offcanvas">Offcanvas <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/ui-placeholders">Placeholders <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/ui-tabs">Tabs <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/ui-typography">Typography</a></li>
+						</ul>
 					</li>
 
 					<li class="sidebar-item">
@@ -177,7 +206,7 @@ import { onMount } from "svelte";
 		</nav>
 
 		<div class="main">
-			<nav class="navbar navbar-expand navbar-light navbar-bg sticky-top">
+			<nav class="navbar navbar-expand navbar-light navbar-bg" >
 				<a class="sidebar-toggle js-sidebar-toggle">
           <i class="hamburger align-self-center"></i>
         </a>
