@@ -1,5 +1,6 @@
 <script lang="ts">
 import { onMount } from "svelte";
+import * as UI from '$lib/ui';
 
 let sidebarElement: HTMLElement;
 let navbarElement: HTMLElement;
@@ -25,6 +26,8 @@ onMount(toggle);
 </script>
 
 <style>
+
+
 .navbar {
 	position: fixed;
 	right: 0;
@@ -43,6 +46,26 @@ main {
 	margin-top: 3rem;
 }
 
+:global(.sidebar [data-bs-toggle=collapse]:after)
+{
+    border: solid;
+    border-width: 0 .075rem .075rem 0;
+    content: " ";
+    display: inline-block;
+    padding: 2px;
+    position: absolute;
+    right: 1.5rem;
+    top: 1.2rem;
+    transform: rotate(45deg);
+    transition: all .2s ease-out;
+}
+
+.sidebar [aria-expanded=true]:after, .sidebar [data-bs-toggle=collapse]:not(.collapsed):after
+{
+    top: 1.4rem;
+    transform: rotate(-135deg);
+}
+
 </style>
 
     <div class="wrapper">
@@ -54,24 +77,40 @@ main {
 
 				<ul class="sidebar-nav">
 					<li class="sidebar-header">
-						Pages
+						Modules
 					</li>
 
-					<li class="sidebar-item active">
-						<a class="sidebar-link" href="index.html">
-              <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">XDashboard</span>
-            </a>
-					</li>
+					<UI.SidebarItem icon="feather" name="Catalog">
+						<UI.SidebarLink name="Collections" url="/" />
+						<UI.SidebarLink name="Products" url="/" />
+					</UI.SidebarItem>
 
-<li class="sidebar-item">
-						<a data-bs-target="#dashboards" data-bs-toggle="collapse" class="sidebar-link collapsed">
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sliders align-middle"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg> <span class="align-middle">Dashboards</span>
+
+					<li class="sidebar-item">
+						<a data-bs-target="#catalog" data-bs-toggle="collapse" class="sidebar-link collapsed">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sliders align-middle"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg> <span class="align-middle">Catalog</span>
 						</a>
-						<ul id="dashboards" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar" style="padding-left: 1rem;">
+						<ul id="catalog" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar" style="padding-left: 1rem;">
 							<li class="sidebar-item"><i data-feather="feather"></i>
-<a class="sidebar-link" href="/"> <i data-feather="feather"></i> Analytics</a></li>
+								<a class="sidebar-link" href="/"> <i data-feather="feather"></i> Analytics</a>
+							</li>
 							<li class="sidebar-item active"><a class="sidebar-link" href="/dashboard-ecommerce">E-Commerce <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
 							<li class="sidebar-item"><a class="sidebar-link" href="/dashboard-crypto">Crypto <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
+						</ul>
+					</li>
+
+					<li class="sidebar-item">
+						<a data-bs-target="#pages" data-bs-toggle="collapse" class="sidebar-link collapsed" aria-expanded="false">
+							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layout align-middle"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg> <span class="align-middle">Pages</span>
+						</a>
+						<ul id="pages" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
+							<li class="sidebar-item"><a class="sidebar-link" href="/pages-settings">Settings</a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/pages-projects">Projects <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/pages-clients">Clients <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/pages-orders">Orders <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/pages-pricing">Pricing <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/pages-chat">Chat <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/pages-blank">Blank Page</a></li>
 						</ul>
 					</li>
 

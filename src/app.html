@@ -21,7 +21,7 @@
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<body data-theme="default" data-layout="fluid" data-sidebar-position="left" data-sidebar-layout="default">
 
 
 	%sveltekit.body%
@@ -33,3 +33,14 @@
 </body>
 
 </html>
+.sidebar [data-bs-toggle=collapse]:after
+    border: solid;
+    border-width: 0 .075rem .075rem 0;
+    content: " ";
+    display: inline-block;
+    padding: 2px;
+    position: absolute;
+    right: 1.5rem;
+    top: 1.2rem;
+    transform: rotate(45deg);
+    transition: all .2s ease-out;
