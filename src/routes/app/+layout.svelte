@@ -81,30 +81,18 @@ main {
 						Modules
 					</li>
 
-					<UI.SidebarItem icon="feather" name="Catalog">
-						<UI.SidebarLink name="Collections" url="/" />
-						<UI.SidebarLink name="Products" url="/" />
+					<UI.SidebarItem icon="fi-aperture" name="Catalog">
+						<UI.SidebarLink icon="bi-airplane" name="Collections" url="/app/catalog/collections" />
+						<UI.SidebarLink icon="fi-activity" name="Products"  url="/app/catalog/products" />
+						<UI.SidebarLink icon="bi-palette2" name="Variants"  url="/app/catalog/products" />
 					</UI.SidebarItem>
 
-					<UI.SidebarItem icon="feather" name="Sales">
-						<UI.SidebarLink name="Orders" url="/" />
-						<UI.SidebarLink name="Customers" url="/" />
+					<UI.SidebarItem icon="fi-layers" name="Sales">
+						<UI.SidebarLink icon="fi-menu" name="Orders" url="/app/sales/orders" />
+						<UI.SidebarLink icon="fi-user" name="Customers" url="/app/sales/customers" />
 					</UI.SidebarItem>
 
-					<li class="sidebar-item">
-						<a data-bs-target="#catalog" data-bs-toggle="collapse" class="sidebar-link collapsed">
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sliders align-middle"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg> <span class="align-middle">Catalog</span>
-						</a>
-						<ul id="catalog" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar" style="padding-left: 1rem;">
-							<li class="sidebar-item"><i data-feather="feather"></i>
-								<a class="sidebar-link" href="/"> <i data-feather="feather"></i> Analytics</a>
-							</li>
-							<li class="sidebar-item active"><a class="sidebar-link" href="/dashboard-ecommerce">E-Commerce <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="/dashboard-crypto">Crypto <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
-						</ul>
-					</li>
-
-					<li class="sidebar-item">
+					<li class="sidebar-item d-none">
 						<a data-bs-target="#pages" data-bs-toggle="collapse" class="sidebar-link collapsed" aria-expanded="false">
 							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-layout align-middle"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg> <span class="align-middle">Pages</span>
 						</a>
@@ -119,24 +107,6 @@ main {
 						</ul>
 					</li>
 
-
-					<li class="sidebar-item">
-						<a data-bs-target="#ui" data-bs-toggle="collapse" class="sidebar-link collapsed" aria-expanded="false">
-							<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-briefcase align-middle"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg> <span class="align-middle">UI Elements</span>
-						</a>
-						<ul id="ui" class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar">
-							<li class="sidebar-item"><a class="sidebar-link" href="/ui-alerts">Alerts <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="/ui-buttons">Buttons</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="/ui-cards">Cards</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="/ui-general">General</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="/ui-grid">Grid</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="/ui-modals">Modals <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="/ui-offcanvas">Offcanvas <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="/ui-placeholders">Placeholders <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="/ui-tabs">Tabs <span class="sidebar-badge badge bg-primary">Pro</span></a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="/ui-typography">Typography</a></li>
-						</ul>
-					</li>
 
 					<li class="sidebar-item">
 						<a class="sidebar-link" href="pages-profile.html">
