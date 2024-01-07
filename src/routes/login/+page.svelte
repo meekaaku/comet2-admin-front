@@ -1,25 +1,30 @@
 <script lang="ts">
 import { goto } from '$app/navigation';
-import { comet } from '$lib'
+import { comet, logger } from '$lib'
 
 let tenant_username = '';
 let user_username = '';
 let user_password = '';
 let error_data: any|null = null;
+let busy = false;
 
 async function login()
 {
 	try 
 	{
 		error_data = null;
+		busy  = true;
 		const { token } = await comet.auth.login({tenant_username, user_username, user_password})
 		comet.setHeader('Authorization', `Bearer ${token}`);
+		busy = false;
+		logger.info('Logged in ', token)
 		goto('/app');
 
 	}
 	catch (e: any)
 	{
 		console.log(e);
+		busy = false;
 		error_data = e.response.data;
 	}
 }
@@ -62,17 +67,21 @@ async function login()
 											</div>
 										</div>
 										<div class="d-grid gap-2 mt-3">
-											<a href="#" class="btn btn-lg btn-primary d-none" on:click={login}>Login</a>
-											<button type="submit" class="btn btn-lg btn-primary">Login</button>
+											<button type="submit" class="btn btn-lg btn-primary">
+											{#if busy}
+												<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+												Loggin in 
+											{:else}
+												Login
+											{/if}
+											</button>
 										</div>
 									</form>
 								
 
-									{#if error_data}
 									<div class="text-center mb-3">
-										<span class="text-danger">{error_data.message}</span>
+										<span class="text-danger">{error_data?.message ? error_data.message : ''} &nbsp</span>
 									</div>
-									{/if}
 
 								</div>
 							</div>

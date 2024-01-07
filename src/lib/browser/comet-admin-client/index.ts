@@ -1,11 +1,13 @@
 import axios, { type AxiosInstance } from 'axios';
 import { Auth } from './auth';
+import { Orders } from './orders';
 
 
 export class CometAdminClient 
 {
 	readonly axios: AxiosInstance ;
 	readonly auth: Auth;
+	readonly orders: Orders;
 
 
 	constructor(
@@ -24,7 +26,9 @@ export class CometAdminClient
 			}
 			*/
 		});
+		//_axios.defaults.withCredentials = true;
 		this.auth = new Auth(_axios);
+		this.orders = new Orders(_axios);
 		/*
 		this.collections = new Collections(client);
 		this.channels = new Channels(client);
@@ -32,7 +36,6 @@ export class CometAdminClient
 		this.products = new Products(client);
 		this.shipping = new Shipping(client);
 		this.payments = new Payments(client)
-		this.orders = new Orders(client);
 		*/
 		this.axios = _axios;
 	}
