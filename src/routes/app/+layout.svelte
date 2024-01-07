@@ -89,7 +89,7 @@ main {
 
 					<UI.SidebarItem icon="fi-layers" name="Sales">
 						<UI.SidebarLink icon="fi-menu" name="Orders" url="/app/sales/orders" />
-						<UI.SidebarLink icon="fi-user" name="Customers" url="/app/sales/customers" />
+						<UI.SidebarLink icon="sh-user" name="Customers" url="/app/sales/customers" />
 					</UI.SidebarItem>
 
 					<li class="sidebar-item d-none">

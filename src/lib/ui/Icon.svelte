@@ -2,7 +2,7 @@
 
 export let icon = 'bi-arrow-right';
 
-const prefix = icon.slice(0,2)
+const prefix = icon.slice(0,2)  // bi - bootstrap icons, fi - feather icons, sh - streamlinehq 
 const rest = icon.slice(3);
 
 </script>
@@ -13,11 +13,8 @@ const rest = icon.slice(3);
 {:else if prefix === 'fi'}
     <i data-feather="{rest}"></i>
 
-{:else if prefix === 'fa'}
-    fa-icon
-
 {:else}
-    <i class="bi bi-arrow-right"></i>
+    <i data-feather="arrow-right"></i>
 
 {/if}
 
