@@ -17,7 +17,7 @@ function toggle()
     }
 }
 
-.c-container 
+.master
 {
     display: flex;
     flex-direction: row;
@@ -36,6 +36,7 @@ function toggle()
     color: white;
     opacity: 0.8;
     transition: 0.2s;
+    overflow-y: scroll;
 }
 
 .c-main 
@@ -56,7 +57,7 @@ function toggle()
 
 .c-content{
     background-color: aqua;
-    overflow: scroll;
+    overflow-y: scroll;
 }
 
 
@@ -68,7 +69,7 @@ function toggle()
 
 
 
-<div class="c-container">
+<div class="master">
     <div bind:this={sidebarElement} class="c-sidebar">
     
         <div class="accordion accordion-flush" id="accordionFlushExample">
@@ -85,16 +86,83 @@ function toggle()
             <SidebarDrop name="Sales" icon="bi-activity">
                 <SidebarLink name="Orders" icon="bi-person" url="{base}/app/sales/orders" />
                 <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
             </SidebarDrop>
 
         </div>
     </div>
+
     <div class="c-main">
-        <div class="c-navbar sticky-top">
+
+        <div class="c-navbar lg-light sticky-top">
              <button on:click={toggle}><i class="bi bi-layout-text-sidebar-reverse"></i></button>
              nav links here
         </div>
-        <div class="c-content">
+        <div class="c-content container-fluid">
 
 
             <slot />
