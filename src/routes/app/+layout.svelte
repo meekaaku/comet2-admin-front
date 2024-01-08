@@ -59,15 +59,7 @@ function toggle()
 }
 
 
-.accordion-item {
-    color: #ccc;
-    border: none;
-    background-color: #222;
-}
-.accordion-button {
-    color: #ccc;
-    background-color: #111;
-}
+
 
 </style>
 

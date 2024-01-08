@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Icon } from '$lib/ui';
 
-export let id = Math.random().toString(36).substring(7);
+export let id = 'id' + Math.random().toString(16).substring(7);
 export let icon = '';
 export let name = '';
 
@@ -9,6 +9,9 @@ export let name = '';
 
 </script>
 <style>
+.accordion-button:focus {
+    box-shadow: none;
+}
 .accordion-item {
     color: #aaa;
     border: none;
