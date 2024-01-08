@@ -1,4 +1,5 @@
 <script lang="ts">
+import { base } from '$app/paths'
 import { SidebarDrop, SidebarLink } from '$lib/ui';
 let sidebarElement: HTMLElement;
 
@@ -76,14 +77,14 @@ function toggle()
             </div>
 
             <SidebarDrop name="Catalog" icon="bi-book">
-                <SidebarLink name="Products" icon="bi-person" url="/" />
-                <SidebarLink name="Collections" icon="bi-activity" url="/" />
+                <SidebarLink name="Products" icon="bi-person" url="{base}/app/catalog/products" />
+                <SidebarLink name="Collections" icon="bi-activity" url="{base}/app/catalog/collections" />
             </SidebarDrop>
 
 
             <SidebarDrop name="Sales" icon="bi-activity">
-                <SidebarLink name="Orders" icon="bi-person" url="/" />
-                <SidebarLink name="Customers" icon="bi-person" url="/" />
+                <SidebarLink name="Orders" icon="bi-person" url="{base}/app/sales/orders" />
+                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
             </SidebarDrop>
 
         </div>
