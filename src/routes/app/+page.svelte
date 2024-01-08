@@ -1,6 +1,42 @@
-<script lang="ts">
-import * as UI from '$lib/ui';
-import { comet } from '$lib';
-</script>
+app2
 
-<UI.Title>App Index Page</UI.Title>
+<div style="width: 30vw; height: 30vh; background-color: blue">
+    sdfk
+</div>
+---
+<div style="width: 30vw; height: 30vh; background-color: blue">
+    sdfk
+</div>
+---
+<div style="width: 30vw; height: 30vh; background-color: blue">
+    sdfk
+</div>
+---
+<div style="width: 30vw; height: 30vh; background-color: blue">
+    sdfk
+</div>
+---
+<div style="width: 30vw; height: 30vh; background-color: blue">
+    sdfk
+</div>
+---
+<div style="width: 30vw; height: 30vh; background-color: blue">
+    sdfk
+</div>
+---
+<div style="width: 30vw; height: 30vh; background-color: blue">
+    sdfk
+</div>
+---
+<div style="width: 30vw; height: 30vh; background-color: blue">
+    sdfk
+</div>
+---
+<div style="width: 30vw; height: 30vh; background-color: blue">
+    sdfk
+</div>
+---
+<div style="width: 30vw; height: 30vh; background-color: blue">
+    sdfk
+</div>
+---
