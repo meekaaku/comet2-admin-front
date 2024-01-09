@@ -1,6 +1,6 @@
 <script lang="ts">
 import { base } from '$app/paths'
-import { SidebarDrop, SidebarLink } from '$lib/ui';
+import { SidebarDrop, SidebarLink, Icon } from '$lib/ui';
 let sidebarElement: HTMLElement;
 
 function toggle()
@@ -23,7 +23,6 @@ function toggle()
     flex-direction: row;
     width: 100vw;
     height: 100vh;
-    background-color: lightblue;
 }
 
 .c-sidebar
@@ -43,21 +42,26 @@ function toggle()
 {
     display: flex;
     flex-direction: column;
-    background-color: chartreuse;
     width: 100%;
 }
 .c-navbar 
 {
-    
+    display: flex;
+    flex-direction: row;
+    background-color: white;
     min-height: 3em;
-    
-    background-color: bisque;
     width: 100%;
+
+    box-shadow: 0px 15px 5px -15px rgba(0,0,0,0.65);    
+    border-bottom: solid 1px #eee;
+
+   /* box-shadow: 0px -4px 24px 0px rgba(0,0,0,0.65); */
 }
 
 .c-content{
-    background-color: aqua;
+    padding-top: 1rem;
     overflow-y: scroll;
+    background-color: #eee;
 }
 
 
@@ -158,14 +162,16 @@ function toggle()
 
     <div class="c-main">
 
-        <div class="c-navbar lg-light sticky-top">
-             <button on:click={toggle}><i class="bi bi-layout-text-sidebar-reverse"></i></button>
+        <div class="c-navbar sticky-top">
+             <button type="button" class="btn btn-link" on:click={toggle}><Icon icon="bi-layout-text-sidebar-reverse" /></button>
+
              nav links here
         </div>
-        <div class="c-content container-fluid">
-
+        <div class="c-content">
+            <div class="container-containr">
 
             <slot />
+            </div>
         </div>
 
 
