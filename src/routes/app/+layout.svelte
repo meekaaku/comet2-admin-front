@@ -1,12 +1,20 @@
 <script lang="ts">
 import { base } from '$app/paths'
+import { goto } from '$app/navigation';
 import { SidebarDrop, SidebarLink, Icon } from '$lib/ui';
+import { comet } from '$lib';
 let sidebarElement: HTMLElement;
 
 function toggle()
 {
     console.log("toggle");
     sidebarElement.style.marginLeft = (sidebarElement.style.marginLeft == "0px") ? "-240px" : "0px";
+}
+function logout()
+{
+	comet.deleteHeader('Authorization');
+	goto(`${base}/login`);
+	//goto('/login');
 }
 </script>
 <style>
@@ -43,11 +51,13 @@ function toggle()
     display: flex;
     flex-direction: column;
     width: 100%;
+    background-color: #eee;
 }
 .c-navbar 
 {
     display: flex;
     flex-direction: row;
+    align-items: center;
     background-color: white;
     min-height: 3em;
     width: 100%;
@@ -59,9 +69,8 @@ function toggle()
 }
 
 .c-content{
-    padding-top: 1rem;
-    overflow-y: scroll;
-    background-color: #eee;
+    padding: 1rem;
+    overflow-y: auto;
 }
 
 
@@ -163,9 +172,20 @@ function toggle()
     <div class="c-main">
 
         <div class="c-navbar sticky-top">
-             <button type="button" class="btn btn-link" on:click={toggle}><Icon icon="bi-layout-text-sidebar-reverse" /></button>
+            <div>
+                <button type="button" class="btn btn-link" on:click={toggle}><Icon icon="bi-layout-text-sidebar-reverse" /></button>
+            </div> 
 
-             nav links here
+            <div class="dropdown" style="margin-left: auto">
+                <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <Icon icon="bi-person" />
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#"><Icon icon="bi-person-lines-fill"></Icon>Profile</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#" on:click={logout}>Logout</a></li>
+                </ul>
+            </div>
         </div>
         <div class="c-content">
             <div class="container-containr">
