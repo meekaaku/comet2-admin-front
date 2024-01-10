@@ -20,11 +20,6 @@ export class CometAdminClient
 
 		const _axios = axios.create({
 			baseURL: `${base}/`,
-			/*
-			headers: {
-				Authorization: `Bearer ${api_key}`,
-			}
-			*/
 		});
 		//_axios.defaults.withCredentials = true;
 		this.auth = new Auth(_axios);
@@ -39,17 +34,4 @@ export class CometAdminClient
 		*/
 		this.axios = _axios;
 	}
-
-	setHeader(header: string, value: string)
-	{
-		this.axios.defaults.headers.common[header] = value; // This 
-	}
-
-	deleteHeader(header: string)
-	{
-		if(this.axios.defaults.headers.common[header]){
-			delete this.axios.defaults.headers.common[header];
-		}
-	}
-
 }

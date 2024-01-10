@@ -1,5 +1,6 @@
 <script lang="ts">
 import { goto } from '$app/navigation';
+import { base } from '$app/paths';
 import { comet, logger } from '$lib'
 
 let tenant_username = '';
@@ -15,10 +16,8 @@ async function login()
 		error_data = null;
 		busy  = true;
 		const { token } = await comet.auth.login({tenant_username, user_username, user_password})
-		comet.setHeader('Authorization', `Bearer ${token}`);
 		busy = false;
-		logger.info('Logged in ', token)
-		goto('/app');
+		goto(`${base}/app`);
 
 	}
 	catch (e: any)
