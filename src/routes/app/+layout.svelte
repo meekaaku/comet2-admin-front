@@ -10,9 +10,10 @@ function toggle()
     console.log("toggle");
     sidebarElement.style.marginLeft = (sidebarElement.style.marginLeft == "0px") ? "-240px" : "0px";
 }
-function logout()
+async function logout()
 {
-	comet.deleteHeader('Authorization');
+    await comet.auth.logout();
+	//comet.auth.deleteHeader('Authorization');
 	goto(`${base}/login`);
 	//goto('/login');
 }
