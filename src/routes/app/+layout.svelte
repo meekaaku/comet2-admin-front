@@ -3,20 +3,45 @@ import { base } from '$app/paths'
 import { goto } from '$app/navigation';
 import { SidebarDrop, SidebarLink, Icon } from '$lib/ui';
 import { comet } from '$lib';
+import { onMount } from 'svelte';
+
+
+
 let sidebarElement: HTMLElement;
+let loggedin = false;
 
 function toggle()
 {
-    console.log("toggle");
     sidebarElement.style.marginLeft = (sidebarElement.style.marginLeft == "0px") ? "-240px" : "0px";
 }
 async function logout()
 {
     await comet.auth.logout();
-	//comet.auth.deleteHeader('Authorization');
 	goto(`${base}/login`);
-	//goto('/login');
 }
+
+async function init()
+{
+    const token = localStorage.getItem('token');
+    
+    if(!token){
+        goto(`${base}/login`);
+        return;
+    }
+
+    try
+    {
+        const data = await comet.auth.validateToken(token);
+        loggedin = true;
+    }
+    catch(e)
+    {
+        goto(`${base}/login`);
+
+    }
+}
+
+onMount(init);
 </script>
 <style>
 
@@ -52,7 +77,7 @@ async function logout()
     display: flex;
     flex-direction: column;
     width: 100%;
-    background-color: #eee;
+    background-color: white;
 }
 .c-navbar 
 {
@@ -83,6 +108,7 @@ async function logout()
 
 
 
+{#if loggedin}
 <div class="master">
     <div bind:this={sidebarElement} class="c-sidebar">
     
@@ -199,3 +225,9 @@ async function logout()
 
     </div>
 </div>
+
+{:else}
+
+Not logged in
+
+{/if}

@@ -8,13 +8,14 @@ export class Auth {
 	{
 		const response = await this.client.post('auth/login', credentials);
 		const token = response.data.token;
-		await this.setToken(token);
+		await this.saveToken(token);
+		this.setHeader('Authorization', `Bearer ${token}`);
 		return { token };
 	}
 
 	async logout()
 	{
-		this.client.deleteHeader('Authorization');
+		this.deleteHeader('Authorization');
 		localStorage.removeItem('token');
 	}
 
@@ -22,14 +23,14 @@ export class Auth {
 	{
 		const response = await this.client.post('auth/token', { token });
 		const newtoken = response.data.token;
-		await this.setToken(newtoken);
+		await this.saveToken(newtoken);
+		this.setHeader('Authorization', `Bearer ${newtoken}`);
 		return { token: newtoken }
 	}
 
-	async setToken(token: string)
+	async saveToken(token: string)
 	{
 		localStorage.setItem('token', token);
-		this.setHeader('Authorization', `Bearer ${token}`);
 	}
 
 

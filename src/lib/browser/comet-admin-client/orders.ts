@@ -6,9 +6,8 @@ export class Orders
 
 	async list(filters:any = null): Promise<RPaginated<ROrderListRow>>
 	{
-		console.log('geting the orders');
 		const response = await this.client.get('sales/orders');
-		console.log(response);
-		return response.data.orders as RPaginated<ROrderListRow>;
+		console.log(response.data);
+		return response.data as RPaginated<ROrderListRow>;
 	}
 }

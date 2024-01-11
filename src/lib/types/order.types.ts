@@ -13,13 +13,19 @@ export interface ROrder
 }
 export interface ROrderListRow 
 {
-  order_no: string;
   order_id: string;
-  order_date: string;
-  order_total: string;
-  customer_name: string;
+  order_no: string;
   currency_code: string;
-  payment_status: string;
-  shipping_status: string;
+  date_created: string;
+  billto_address: string;
+  shipto_address: string;
+  shipping_method_code: string;
+  payment_method_code: string;
+  shipping_status_name: string;
+  payment_status_name: string;
+  customer_id: string;
+  channel_id: string;
+  channel_name: string;
+  username: string;
   total_wtax: string;
 }

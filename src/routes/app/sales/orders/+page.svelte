@@ -2,6 +2,7 @@
 import { onMount } from 'svelte';
 import * as UI from '$lib/ui';
 import { comet, logger } from '$lib';
+import { formatNumber, formatAddress, formatDate } from '$lib/utils';
 import type { ROrderListRow, RPaginated } from '$lib/types';
 
 let filters: any = null;
@@ -50,6 +51,10 @@ onMount(async () => {
     width: 100%;
   }
 
+  .responsive-table tr {
+    margin-bottom: 15px;
+    border: solid 1px grey
+  }
   .responsive-table td {
     text-align: right; /* Adjust alignment for stacked layout */
     /* Add more styles as needed */
@@ -77,20 +82,26 @@ onMount(async () => {
   <table class="responsive-table">
     <thead>
       <tr>
-        <th>Order #</th>
-        <th>Customer</th>
-        <th>Ship To</th>
-        <th>Order Total</th>
+        <th style="width: 5%" class="text-center">Order #</th>
+        <th style="width: 10%" class="text-center">Date</th>
+        <th style="width: 10%" class="text-center">Channel</th>
+        <th  class="text-center">Ship To</th>
+        <th style="width: 10%" class="text-center">Payment</th>
+        <th style="width: 10%" class="text-center">Shipping</th>
+        <th style="width: 10%" class="text-center">Total</th>
       </tr>
     </thead>
     <tbody>
         {#if orders}
         {#each orders.items as order}
         <tr>
-            <td data-label="Order #">{order.order_no}</td>
-            <td data-label="Customer">{order.order_no}</td>
-            <td data-label="Order #">{order.order_no}</td>
-            <td data-label="Order Total">{order.total_wtax}</td>
+            <td data-label="Order #" class="text-center">{order.order_no}</td>
+            <td data-label="Date" class="text-center">{formatDate(order.date_created)}</td>
+            <td data-label="Channel" class="text-center">{order.channel_name}</td>
+            <td data-label="Ship To" class="text-center">{order.shipto_address}</td>
+            <td data-label="Payment" class="text-center">{order.payment_method_code} - {order.payment_status_name}</td>
+            <td data-label="Shipping" class="text-center">{order.shipping_method_code} - {order.shipping_status_name}</td>
+            <td data-label="Total" class="text-end">{order.currency_code} {formatNumber(order.total_wtax)}</td>
         </tr>
         {/each}
         {/if}
