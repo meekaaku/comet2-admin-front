@@ -2,6 +2,7 @@
 import { onMount } from 'svelte';
 import * as UI from '$lib/ui';
 import { comet, logger } from '$lib';
+import { progress, loading } from '$lib/stores';
 import { formatNumber, formatAddress, formatDate } from '$lib/utils';
 import type { ROrderListRow, RPaginated } from '$lib/types';
 
@@ -11,8 +12,9 @@ let order_list: RPaginated<ROrderListRow>;
 
 async function loadOrders()
 {
-    console.log('loadOrders()');
+    $loading = true;
     order_list = await comet.orders.list(filters);
+    $loading = false
 }
 
 onMount(async () => {
