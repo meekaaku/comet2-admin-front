@@ -107,12 +107,15 @@ onMount(init);
 
 
 
+    <Progress />
 
 {#if loggedin}
 
-    <Progress />
+    <progress value="50" max="100" style="display: none" />
 <div class="master">
+
     <div bind:this={sidebarElement} class="c-sidebar">
+
     
         <div class="accordion accordion-flush" id="accordionFlushExample">
             <div class="logo" style="height: 3rem;">
