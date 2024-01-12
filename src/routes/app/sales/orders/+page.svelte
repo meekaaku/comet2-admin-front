@@ -6,15 +6,13 @@ import { formatNumber, formatAddress, formatDate } from '$lib/utils';
 import type { ROrderListRow, RPaginated } from '$lib/types';
 
 let filters: any = null;
-let orders: RPaginated<ROrderListRow>;
+let order_list: RPaginated<ROrderListRow>;
 
 
 async function loadOrders()
 {
     console.log('loadOrders()');
-    orders = await comet.orders.list(filters);
-    console.log('orders', orders);
-    logger.info('Orders received ', orders)
+    order_list = await comet.orders.list(filters);
 }
 
 onMount(async () => {
@@ -78,6 +76,7 @@ onMount(async () => {
 
 
 
+{#if order_list}
 <div class="table-wrapper">
   <table class="responsive-table">
     <thead>
@@ -92,8 +91,8 @@ onMount(async () => {
       </tr>
     </thead>
     <tbody>
-        {#if orders}
-        {#each orders.items as order}
+        {#if order_list}
+        {#each order_list.items as order}
         <tr>
             <td data-label="Order #" class="text-center">{order.order_no}</td>
             <td data-label="Date" class="text-center">{formatDate(order.date_created)}</td>
@@ -109,3 +108,28 @@ onMount(async () => {
     </tbody>
   </table>
 </div>
+<div class="d-flex justify-content-center mt-2">
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    {#each Array(order_list.page_count) as _,page}
+    <li class="page-item" class:active = {page + 1 === order_list.page}><a class="page-link" href="#">{page+1}</a></li>
+    {/each}
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+</div>
+
+{:else}
+
+NO orders
+
+{/if}
