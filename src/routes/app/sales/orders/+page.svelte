@@ -6,14 +6,17 @@ import { progress, loading } from '$lib/stores';
 import { formatNumber, formatAddress, formatDate } from '$lib/utils';
 import type { ROrderListRow, RPaginated } from '$lib/types';
 
-let filters: any = null;
 let order_list: RPaginated<ROrderListRow>;
+let page = 1;
+let page_size = 10;
+let order = 'date-desc';
+let filters: any = {};
 
 
 async function loadOrders()
 {
     $loading = true;
-    order_list = await comet.orders.list(filters);
+    order_list = await comet.orders.list({page, page_size, order, filters});    
     $loading = false
 }
 
