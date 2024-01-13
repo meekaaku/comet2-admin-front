@@ -1,7 +1,7 @@
 <script lang="ts">
 import { base } from '$app/paths'
 import { goto } from '$app/navigation';
-import { SidebarDrop, SidebarLink, Icon, Progress } from '$lib/ui';
+import { SidebarDrop, SidebarLink, Icon, Progress as UIProgress } from '$lib/ui';
 import { comet } from '$lib';
 import { onMount } from 'svelte';
 
@@ -107,11 +107,10 @@ onMount(init);
 
 
 
-    <Progress />
+    <UIProgress></UIProgress>
 
 {#if loggedin}
 
-    <progress value="50" max="100" style="display: none" />
 <div class="master">
 
     <div bind:this={sidebarElement} class="c-sidebar">
