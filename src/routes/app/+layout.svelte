@@ -1,7 +1,7 @@
 <script lang="ts">
 import { base } from '$app/paths'
 import { goto } from '$app/navigation';
-import { SidebarDrop, SidebarLink, Icon, Progress as UIProgress } from '$lib/ui';
+import { SidebarDrop, SidebarLink, Icon, Progress } from '$lib/ui';
 import { comet } from '$lib';
 import { onMount } from 'svelte';
 
@@ -107,7 +107,8 @@ onMount(init);
 
 
 
-    <UIProgress></UIProgress>
+    
+    <!-- For some reason the above Progress is not full width unless we hvae this one below -->
 
 {#if loggedin}
 
