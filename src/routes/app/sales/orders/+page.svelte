@@ -2,21 +2,28 @@
 import { onMount } from 'svelte';
 import * as UI from '$lib/ui';
 import { comet, logger } from '$lib';
-import { progress, loading } from '$lib/stores';
+import { loading } from '$lib/stores';
 import { formatNumber, formatAddress, formatDate } from '$lib/utils';
 import type { ROrderListRow, RPaginated } from '$lib/types';
 
 let order_list: RPaginated<ROrderListRow>;
 let page = 1;
-let page_size = 10;
-let order = 'date-desc';
-let filters: any = {};
+let page_size = 5;
+let sort: string|undefined = undefined;
+let filters: any = undefined;
 
+
+function onPageChange(_page: number)
+{
+    console.log('onPageChange', page);
+    page = _page;
+    loadOrders();
+}
 
 async function loadOrders()
 {
     $loading = true;
-    order_list = await comet.orders.list({page, page_size, order, filters});    
+    order_list = await comet.orders.list({page, page_size, sort, filters});    
     $loading = false
 }
 
@@ -122,7 +129,9 @@ onMount(async () => {
       </a>
     </li>
     {#each Array(order_list.page_count) as _,page}
-    <li class="page-item" class:active = {page + 1 === order_list.page}><a class="page-link" href="#">{page+1}</a></li>
+    <li class="page-item" class:active = {page + 1 === order_list.page}>
+        <a class="page-link" href="#" on:click={()=> onPageChange(page+1)}>{page+1}</a>
+    </li>
     {/each}
     <li class="page-item">
       <a class="page-link" href="#" aria-label="Next">
