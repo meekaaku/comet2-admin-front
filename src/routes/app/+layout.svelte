@@ -108,15 +108,14 @@ onMount(init);
 
 
     
+    <Progress></Progress>
     <!-- For some reason the above Progress is not full width unless we hvae this one below -->
+    <progress value="0" max="100" style="visibility: hidden"></progress>
 
 {#if loggedin}
 
 <div class="master">
-
     <div bind:this={sidebarElement} class="c-sidebar">
-
-    
         <div class="accordion accordion-flush" id="accordionFlushExample">
             <div class="logo" style="height: 3rem;">
                 Logo
