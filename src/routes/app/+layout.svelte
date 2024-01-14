@@ -108,11 +108,15 @@ onMount(init);
 
 
     
-    <Progress></Progress>
-    <!-- For some reason the above Progress is not full width unless we hvae this one below -->
-    <progress value="0" max="100" style="visibility: hidden"></progress>
 
 {#if loggedin}
+
+    <!-- <Progress></Progress> -->
+    <Progress></Progress>
+
+    <!-- For some reason the above Progress is not full width unless we hvae this one below -->
+    <progress value="50" max="100" style="visibility: visible; height: 0; top: 0; margin:0; padding: 0;"></progress>
+
 
 <div class="master">
     <div bind:this={sidebarElement} class="c-sidebar">

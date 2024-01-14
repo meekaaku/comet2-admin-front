@@ -8,7 +8,7 @@ import type { ROrderListRow, RPaginated } from '$lib/types';
 
 let order_list: RPaginated<ROrderListRow>;
 let page = 1;
-let page_size = 5;
+let page_size = 20;
 let sort: string|undefined = undefined;
 let filters: any = undefined;
 
@@ -25,6 +25,7 @@ async function loadOrders()
     $loading = true;
     order_list = await comet.orders.list({page, page_size, sort, filters});    
     $loading = false
+    return order_list;
 }
 
 onMount(async () => {
@@ -88,7 +89,10 @@ onMount(async () => {
 
 
 
-{#if order_list}
+{#await loadOrders()}
+    Loading orders
+{:then order_list}
+
 <div class="table-wrapper">
   <table class="responsive-table">
     <thead>
@@ -142,8 +146,6 @@ onMount(async () => {
 </nav>
 </div>
 
-{:else}
+{/await}
 
-NO orders
 
-{/if}
