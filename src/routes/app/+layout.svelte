@@ -127,7 +127,7 @@ onMount(init);
 
 
             <SidebarDrop name="Sales" icon="bi-activity">
-                <SidebarLink name="Orders" icon="bi-person" url="{base}/app/sales/orders" />
+                <SidebarLink name="Orders" icon="bi-person" url="{base}/app/sales/orders/list" />
                 <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
                 <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
                 <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
