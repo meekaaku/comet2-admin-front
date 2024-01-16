@@ -16,7 +16,6 @@ export class Orders
 		const { page = 1, page_size = 5, sort = 'date-desc',  filters = {} } = spec;
 		const jfilters = JSON.stringify(filters);
 		const response = await this.client.get(`sales/orders?page=${page}&page_size=${page_size}&sort=${sort}&filters=${jfilters}`);
-		console.log(response.data);
 		return response.data as RPaginated<ROrderListRow>;
 	}
 }

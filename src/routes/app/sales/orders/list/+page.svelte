@@ -15,8 +15,8 @@ let filters: any = undefined;
 
 function onPageChange(_page: number)
 {
-    console.log('onPageChange', page);
     page = _page;
+    logger.info(`Page changed to ${page}`)
     loadOrders();
 }
 
@@ -25,6 +25,7 @@ async function loadOrders()
     $loading = true;
     order_list = await comet.orders.list({page, page_size, sort, filters});    
     $loading = false
+    logger.info(`Orders loaded `, order_list)
     return order_list;
 }
 
