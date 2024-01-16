@@ -35,7 +35,7 @@ function check(n: any)
 }
 
 
-$: check($navigating)
+$: check($navigating || $loading)
 </script>
 
 

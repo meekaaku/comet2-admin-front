@@ -6,7 +6,7 @@ import { loading } from '$lib/stores';
 import { formatNumber, formatAddress, formatDate } from '$lib/utils';
 import type { ROrderListRow, RPaginated } from '$lib/types';
 
-let order_list: RPaginated<ROrderListRow>;
+let order_list: RPaginated<ROrderListRow>|undefined = undefined;
 let page = 1;
 let page_size = 20;
 let sort: string|undefined = undefined;
@@ -90,9 +90,9 @@ onMount(async () => {
 
 
 
-{#await loadOrders()}
+{#if $loading || !order_list}
     Loading orders
-{:then order_list}
+{:else}
 
 <div class="table-wrapper">
   <table class="responsive-table">
@@ -147,6 +147,6 @@ onMount(async () => {
 </nav>
 </div>
 
-{/await}
+{/if}
 
 
