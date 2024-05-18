@@ -22,7 +22,8 @@ async function logout()
 
 async function init()
 {
-    const token = localStorage.getItem('token');
+    //const token = localStorage.getItem('token');
+    const token = 'safd' ;
     
     if(!token){
         goto(`${base}/login`);
@@ -31,12 +32,12 @@ async function init()
 
     try
     {
-        const data = await comet.auth.validateToken(token);
+        //const data = await comet.auth.validateToken(token);
         loggedin = true;
     }
     catch(e)
     {
-        goto(`${base}/login`);
+        //goto(`${base}/login`);
 
     }
 }
@@ -70,6 +71,8 @@ onMount(init);
     opacity: 0.8;
     transition: 0.2s;
     overflow-y: scroll;
+      scrollbar-width: thin;
+
 }
 
 .c-main 

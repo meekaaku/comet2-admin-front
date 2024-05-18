@@ -50,7 +50,7 @@ $: check($navigating || $loading)
 progress {
     position: fixed;
     top: 0px;
-    height: 5px;
+    height: 3px;
     padding: 0;
     margin: 0;
     width: 100%;
