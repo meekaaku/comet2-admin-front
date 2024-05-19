@@ -1,6 +1,7 @@
 <script lang="ts">
 import { goto } from '$app/navigation';
 import { base } from '$app/paths';
+import { acl } from '$lib/stores';
 import { comet, logger } from '$lib'
 
 let tenant= '';
@@ -16,6 +17,8 @@ async function login()
 		error_data = null;
 		busy  = true;
 		const data = await comet.auth.login({tenant, username, password})
+		$acl = data.acl;
+		console.log(data);
 		busy = false;
 		goto(`${base}/app`);
 
