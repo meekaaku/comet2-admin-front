@@ -14,10 +14,10 @@ export class CometAdminClient
 		private readonly base_url: string,
 	) {
 		
-		console.log(`Initialising with ${base_url}`);
 		// Remove trailing slash if any
 		const base = base_url ? base_url.replace(/\/$/, '') : '';
 
+		console.log(`Initialising with ${base}`);
 		const _axios = axios.create({
 			baseURL: `${base}/`,
 		});

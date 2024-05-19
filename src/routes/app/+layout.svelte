@@ -43,6 +43,8 @@ async function init()
 }
 
 onMount(init);
+
+console.log('App Layout loaded');
 </script>
 <style>
 

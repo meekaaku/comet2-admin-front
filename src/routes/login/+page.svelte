@@ -3,9 +3,9 @@ import { goto } from '$app/navigation';
 import { base } from '$app/paths';
 import { comet, logger } from '$lib'
 
-let tenant_username = '';
-let user_username = '';
-let user_password = '';
+let tenant= '';
+let username = '';
+let password = '';
 let error_data: any|null = null;
 let busy = false;
 
@@ -15,7 +15,7 @@ async function login()
 	{
 		error_data = null;
 		busy  = true;
-		const { token } = await comet.auth.login({tenant_username, user_username, user_password})
+		const data = await comet.auth.login({tenant, username, password})
 		busy = false;
 		goto(`${base}/app`);
 
@@ -37,7 +37,7 @@ async function login()
 						<div class="text-center mt-4">
 							<h1 class="h2">Login</h1>
 							<p class="lead">
-								Sign in to your account to continue
+								Sign in to your account
 							</p>
 						</div>
 
@@ -46,17 +46,17 @@ async function login()
 								<div class="m-sm-3">
 									<form on:submit|preventDefault={login}>
 										<div class="mb-3 form-floating">
-											<input class="form-control form-control-lg" bind:value={tenant_username} type="text" name="tenant_username" placeholder=" You Organisation" />
+											<input class="form-control form-control-lg" bind:value={tenant} type="text" name="tenant_username" placeholder=" You Organisation" />
 											<label class="form-label">Organisation</label>
 										</div>									
 
 
 										<div class="mb-3 form-floating">
-											<input class="form-control form-control-lg" bind:value={user_username} type="text" name="username" placeholder="Enter your username" />
+											<input class="form-control form-control-lg" bind:value={username} type="text" name="username" placeholder="Enter your username" />
 											<label class="form-label">Username</label>
 										</div>
 										<div class="mb-3 form-floating">
-											<input class="form-control form-control-lg" bind:value={user_password} type="password" name="password" placeholder="Enter your password" />
+											<input class="form-control form-control-lg" bind:value={password} type="password" name="password" placeholder="Enter your password" />
 											<label class="form-label">Password</label>
 										</div>
 										<div>
