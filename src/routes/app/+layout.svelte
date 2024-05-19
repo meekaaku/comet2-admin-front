@@ -93,10 +93,10 @@ console.log('App Layout loaded');
     min-height: 3em;
     width: 100%;
 
-    box-shadow: 0px 15px 5px -15px rgba(0,0,0,0.65);    
-    border-bottom: solid 1px #eee;
 
-   /* box-shadow: 0px -4px 24px 0px rgba(0,0,0,0.65); */
+    -webkit-box-shadow: 0px 3px 5px 0px rgba(79,79,79,0.49);
+    -moz-box-shadow: 0px 3px 5px 0px rgba(79,79,79,0.49);
+    box-shadow: 0px 3px 5px 0px rgba(79,79,79,0.49);
 }
 
 .c-content{

@@ -1,7 +1,8 @@
 <script lang="ts">
 import { onNavigate, beforeNavigate } from '$app/navigation';
-import { assertPermission, hasPermission, getPermission } from '$lib';
+import { assertPermission, hasPermission, getPermission } from '$lib/acl';
 import * as UI from '$lib/ui';
+	import Unauthorized from '$lib/ui/Unauthorized.svelte';
 
 let authError:string|null = null;
 let access: string = '';
@@ -35,16 +36,16 @@ checkAuthorization() ;
 
 </script>
 
-<UI.Title>Products</UI.Title>
 
 <p>{access}</p>
 
 {#if authError}
-
-<div class="alert alert-danger" role="alert">
-    {authError} </div>
+<UI.Unauthorized>
+    {authError} 
+</UI.Unauthorized>
 
 {:else}
 
+<UI.Title>Products</UI.Title>
 Real content
 {/if}
