@@ -32,7 +32,13 @@ function checkAuthorization()
     }
 }
 
-checkAuthorization() ;
+//checkAuthorization() ;
+try {
+    assertPermission('catalog.products:list');
+}
+catch(e: any) {
+    authError = e.message || 'Some unknown error';
+}
 
 </script>
 

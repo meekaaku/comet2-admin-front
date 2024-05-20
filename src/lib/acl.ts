@@ -10,8 +10,15 @@ export function assertPermission(permission: string|string[]): void
 
 export function hasPermission(permission: string|string[]): boolean
 {
+    const p = Array.isArray(permission) ? permission : [permission];
     const _acl = get(acl);
-    return _acl[permission] ? true : false;
+
+    for (const perm of p) {
+        if(!_acl[perm]){
+            return false;
+        }
+    }
+    return true;
 }
 
 export function getPermission(permission: string): any
