@@ -2,6 +2,7 @@
 import { base } from '$app/paths'
 import { goto } from '$app/navigation';
 import { SidebarDrop, SidebarLink, Icon, Progress } from '$lib/ui';
+import { user } from '$lib/stores';
 import { comet } from '$lib';
 import { onMount } from 'svelte';
 
@@ -213,6 +214,7 @@ console.log('App Layout loaded');
 
             <div class="dropdown" style="margin-left: auto">
                 <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    {$user.username}
                     <Icon icon="bi-person" />
                 </button>
                 <ul class="dropdown-menu">

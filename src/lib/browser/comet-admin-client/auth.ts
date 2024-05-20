@@ -1,4 +1,4 @@
-import { acl, username } from "$lib/stores";
+import { acl, user } from "$lib/stores";
 export interface QLogin
 {
 	tenant: string;
@@ -10,6 +10,7 @@ export interface RLogin
 {
     access: string;
     refresh: string;
+	username: string;
     acl: Record<string, any>
 }
 
