@@ -1,8 +1,8 @@
 <script lang="ts">
-import { goto } from '$app/navigation';
 import { base } from '$app/paths';
-import { acl, user} from '$lib/stores';
-import { comet, logger } from '$lib'
+import { login } from '$lib/auth';
+import { Button } from '$lib/ui';
+import { loading } from '$lib/stores';
 
 let tenant= '';
 let username = '';
@@ -10,22 +10,18 @@ let password = '';
 let error_data: any|null = null;
 let busy = false;
 
-async function login()
+async function onLoginClick()
 {
 	try 
 	{
-		error_data = null;
-		busy  = true;
-		const data = await comet.auth.login({tenant, username, password})
-		$user = {username: data.username}
-		$acl = data.acl;
-		console.log(data);
-		busy = false;
-		goto(`${base}/app`);
-
+		$loading = true;
+		await login(tenant, username, password, `${base}/app`);
+		$loading = false;
 	}
 	catch (e: any)
 	{
+		$loading = false;
+		console.error('ERROR =============');
 		console.log(e);
 		busy = false;
 		error_data = e.response.data;
@@ -48,19 +44,19 @@ async function login()
 						<div class="card">
 							<div class="card-body">
 								<div class="m-sm-3">
-									<form on:submit|preventDefault={login}>
+									<form on:submit|preventDefault={onLoginClick}>
 										<div class="mb-3 form-floating">
-											<input class="form-control form-control-lg" bind:value={tenant} type="text" name="tenant_username" placeholder=" You Organisation" />
+											<input class="form-control" bind:value={tenant} type="text" name="tenant_username" placeholder=" You Organisation" />
 											<label class="form-label">Organisation</label>
 										</div>									
 
 
 										<div class="mb-3 form-floating">
-											<input class="form-control form-control-lg" bind:value={username} type="text" name="username" placeholder="Enter your username" />
+											<input class="form-control" bind:value={username} type="text" name="username" placeholder="Enter your username" />
 											<label class="form-label">Username</label>
 										</div>
 										<div class="mb-3 form-floating">
-											<input class="form-control form-control-lg" bind:value={password} type="password" name="password" placeholder="Enter your password" />
+											<input class="form-control" bind:value={password} type="password" name="password" placeholder="Enter your password" />
 											<label class="form-label">Password</label>
 										</div>
 										<div>
@@ -70,14 +66,8 @@ async function login()
 											</div>
 										</div>
 										<div class="d-grid gap-2 mt-3">
-											<button type="submit" class="btn btn-lg btn-primary">
-											{#if busy}
-												<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-												Loggin in 
-											{:else}
-												Login
-											{/if}
-											</button>
+											<Button busytext="Logging in" color="primary" on:click={onLoginClick} busy={$loading} disabled={$loading}>Login here</Button>
+											<input type="submit" class="d-none" />
 										</div>
 									</form>
 								

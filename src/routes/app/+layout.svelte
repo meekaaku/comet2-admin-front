@@ -1,10 +1,11 @@
 <script lang="ts">
+import { onMount } from 'svelte';
 import { base } from '$app/paths'
 import { goto } from '$app/navigation';
 import { SidebarDrop, SidebarLink, Icon, Progress } from '$lib/ui';
 import { user } from '$lib/stores';
+import { logout, login, refresh } from '$lib/auth';
 import { comet } from '$lib';
-import { onMount } from 'svelte';
 
 
 
@@ -19,24 +20,14 @@ function toggle()
 
 async function init()
 {
-    //const token = localStorage.getItem('token');
-    const token = 'safd' ;
-    
-    if(!token){
-        goto(`${base}/login`);
-        return;
-    }
-
-    try
-    {
-        //const data = await comet.auth.validateToken(token);
-        loggedin = true;
+    try {
+        await refresh();
     }
     catch(e)
     {
-        //goto(`${base}/login`);
-
+        goto(`${base}/login`);
     }
+    
 }
 
 onMount(init);
