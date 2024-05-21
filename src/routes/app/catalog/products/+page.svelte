@@ -1,6 +1,6 @@
 <script lang="ts">
 import { onNavigate, beforeNavigate } from '$app/navigation';
-import { assertPermission, hasPermission, getPermission } from '$lib/acl';
+import { assertPermission, hasPermission, getPermission } from '$lib/auth';
 import * as UI from '$lib/ui';
 	import Unauthorized from '$lib/ui/Unauthorized.svelte';
 
