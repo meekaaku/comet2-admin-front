@@ -1,3 +1,4 @@
+export { default as About } from './About.svelte';
 export { default as Button } from './Button.svelte';
 export { default as Icon } from './Icon.svelte';
 export { default as Progress} from './Progress.svelte';

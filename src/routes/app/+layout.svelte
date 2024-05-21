@@ -2,7 +2,7 @@
 import { onMount } from 'svelte';
 import { base } from '$app/paths'
 import { goto } from '$app/navigation';
-import { SidebarDrop, SidebarLink, Icon, Progress } from '$lib/ui';
+import { SidebarDrop, SidebarLink, Icon, Progress, About } from '$lib/ui';
 import { user } from '$lib/stores';
 import { logout, login, refresh } from '$lib/auth';
 import { comet } from '$lib';
@@ -32,7 +32,6 @@ async function init()
 
 onMount(init);
 
-console.log('App Layout loaded');
 </script>
 <style>
 
@@ -102,7 +101,7 @@ console.log('App Layout loaded');
 
     
 
-{#if loggedin}
+{#if $user}
 
 
 <Progress></Progress>
@@ -201,7 +200,7 @@ console.log('App Layout loaded');
 
             <div class="dropdown" style="margin-left: auto">
                 <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    {$user.username}
+                    {$user?.username}
                     <Icon icon="bi-person" />
                 </button>
                 <ul class="dropdown-menu">
@@ -225,6 +224,6 @@ console.log('App Layout loaded');
 
 {:else}
 
-Not logged in
+<About></About>
 
 {/if}
