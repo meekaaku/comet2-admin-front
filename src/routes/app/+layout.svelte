@@ -15,11 +15,7 @@ function toggle()
 {
     sidebarElement.style.marginLeft = (sidebarElement.style.marginLeft == "0px") ? "-240px" : "0px";
 }
-async function logout()
-{
-    await comet.auth.logout();
-	goto(`${base}/login`);
-}
+
 
 async function init()
 {
