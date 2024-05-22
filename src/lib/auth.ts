@@ -61,8 +61,16 @@ export function hasPermission(permission: string|string[]): boolean
 {
     const permissionArray  = Array.isArray(permission) ? permission : [permission];
     for (const perm of permissionArray) {
-        const [resource, requestedAccess] = perm.split(':');
-        const requestedAccessArray = splitAndTrim(requestedAccess, ',');
+        let [resource, requestedAccess] = perm.split(':');
+        let requestedAccessArray: string[]|boolean[] = [];
+        if(requestedAccess === undefined){
+            /* @ts-ignore */
+            requestedAccess =  true;
+        }
+        else {
+            requestedAccessArray = splitAndTrim(requestedAccess, ',');
+        }
+
         const availableAccess = getPermission(resource);
         if(!availableAccess) return false;
         if(Array.isArray(availableAccess)){

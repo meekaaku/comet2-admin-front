@@ -16,25 +16,10 @@ beforeNavigate(() => {
     console.log('beforeNavigate at products');
 });
 
-function checkAuthorization() 
-{
-    try 
-    {
-        assertPermission('catalog.products:listx');
-        if(!hasPermission('catalog.products:view')) {
-            access = 'You cannot view indivudal products, but you can list them'
-        }
 
-    }
-    catch(error: any)
-    {
-        authError = error?.message || 'Some unknown error';
-    }
-}
 
-//checkAuthorization() ;
 try {
-    assertPermission('catalog.products:list');
+    assertPermission('catalog.product:list');
 }
 catch(e: any) {
     authError = e.message || 'Some unknown error';

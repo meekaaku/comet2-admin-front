@@ -4,7 +4,7 @@ import { base } from '$app/paths'
 import { goto } from '$app/navigation';
 import { SidebarDrop, SidebarLink, Icon, Progress, About } from '$lib/ui';
 import { user } from '$lib/stores';
-import { logout, login, refresh } from '$lib/auth';
+import { logout, login, refresh, hasPermission } from '$lib/auth';
 import { comet } from '$lib';
 
 
@@ -121,72 +121,18 @@ onMount(init);
             <SidebarDrop name="Sales" icon="bi-activity">
                 <SidebarLink name="Orders" icon="bi-person" url="{base}/app/sales/orders/list" />
                 <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Shipments" icon="bi-person" url="{base}/app/sales/customers" />
             </SidebarDrop>
+
+            {#if hasPermission('menu.admin')}
+                <SidebarDrop name="Admin" icon="bi-activity">
+                    <SidebarLink name="Roles" icon="bi-person" url="{base}/app/sales/orders/list" />
+                    <SidebarLink name="Users" icon="bi-person" url="{base}/app/sales/customers" />
+                    <SidebarLink name="Access Control" icon="bi-person" url="{base}/app/sales/customers" />
+                </SidebarDrop>
+
+
+            {/if}
 
         </div>
     </div>
