@@ -21,7 +21,10 @@ export function formatAddress(str: string)
   return str.replaceAll('\n', '<br />')
 }
 
-
+export function splitAndTrim(str: string, delimiter = ','): string[]
+{
+    return str.split(delimiter).map(s => s.trim());
+}   
 
 function toClassName(value: any) {
   let result = '';

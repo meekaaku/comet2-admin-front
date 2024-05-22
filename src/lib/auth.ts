@@ -3,6 +3,7 @@ import { goto } from "$app/navigation";
 import { base } from "$app/paths";
 import { comet } from "$lib";
 import { acl, user } from "./stores";
+import { splitAndTrim } from "./utils";
 
 
 export async function logout()
@@ -59,16 +60,20 @@ export function assertPermission(permission: string|string[]): void
 export function hasPermission(permission: string|string[]): boolean
 {
     const permissionArray  = Array.isArray(permission) ? permission : [permission];
-    let result = false;
-
     for (const perm of permissionArray) {
         const [resource, requestedAccess] = perm.split(':');
+        const requestedAccessArray = splitAndTrim(requestedAccess, ',');
         const availableAccess = getPermission(resource);
-        if(!availableAccess) result = false;
+        if(!availableAccess) return false;
         if(Array.isArray(availableAccess)){
-            if(!availableAccess.includes(requestedAccess)) return false;
+            for(const ra of requestedAccessArray)
+            {
+                if(!availableAccess.includes(ra)) return false;
+            }
         }
-        if(availableAccess !== requestedAccess) return false;
+        else {
+            if(availableAccess !== requestedAccess) return false;
+        }
     }
     return true;
 }
@@ -80,3 +85,4 @@ export function getPermission(permission: string): any
     if(!_acl) return null;
     return _acl[resource];
 }
+
