@@ -23,9 +23,14 @@ function onPageChange(_page: number)
 async function loadOrders()
 {
     $loading = true;
-    order_list = await comet.orders.list({page, page_size, sort, filters});    
-    $loading = false
-    logger.info(`Orders loaded `, order_list)
+    try {
+      order_list = await comet.orders.list({page, page_size, sort, filters});    
+      $loading = false
+    }
+    catch(error) {
+        logger.error(`Error loading orders: `, error)
+        $loading = false
+    }
     return order_list;
 }
 
@@ -90,7 +95,7 @@ onMount(async () => {
 
 
 
-{#if $loading || !order_list}
+{#if $loading|| !order_list}
     Loading orders
 {:else}
 
