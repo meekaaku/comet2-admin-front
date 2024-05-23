@@ -1,24 +1,6 @@
-import { acl, user } from "$lib/stores";
-export interface QLogin
-{
-	tenant: string;
-	username: string;
-	password: string;
-}
+import { acl, profile } from "$lib/stores";
+import type { QLogin, RLogin, QRefresh } from "$lib/types";
 
-export interface RLogin
-{
-    access: string;
-    refresh: string;
-	username: string;
-    acl: Record<string, any>
-}
-
-export interface QRefresh
-{
-    access: string;
-    refresh: string;
-}
 
 export class Auth {
 
@@ -46,16 +28,7 @@ export class Auth {
 		return data;
 
 	}
-	/*
-	async validateToken(token: string)
-	{
-		const response = await this.client.post('auth/token', { token });
-		const newtoken = response.data.token;
-		await this.saveToken(newtoken);
-		this.setHeader('Authorization', `Bearer ${newtoken}`);
-		return { token: newtoken }
-	}
-	*/
+
 
 	setHeader(header: string, value: string)
 	{

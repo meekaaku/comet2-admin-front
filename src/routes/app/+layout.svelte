@@ -3,7 +3,7 @@ import { onMount } from 'svelte';
 import { base } from '$app/paths'
 import { goto } from '$app/navigation';
 import { SidebarDrop, SidebarLink, Icon, Progress, About } from '$lib/ui';
-import { user } from '$lib/stores';
+import { profile } from '$lib/stores';
 import { logout, login, refresh, hasPermission } from '$lib/auth';
 import { comet } from '$lib';
 
@@ -89,6 +89,7 @@ onMount(init);
 .c-content{
     padding: 1rem;
     overflow-y: auto;
+    font-size: 0.8rem;
 }
 
 
@@ -101,7 +102,7 @@ onMount(init);
 
     
 
-{#if $user}
+{#if $profile}
 
 
 <Progress></Progress>
@@ -141,12 +142,12 @@ onMount(init);
 
         <div class="c-navbar sticky-top">
             <div>
-                <button type="button" class="btn btn-link" on:click={toggle}><Icon icon="bi-layout-text-sidebar-reverse" /></button>
+                <button type="button" class="btn" on:click={toggle}><Icon icon="bi-layout-text-sidebar-reverse" /></button>
             </div> 
 
-            <div class="dropdown" style="margin-left: auto">
-                <button class="btn btn-link dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    {$user?.username}
+            <div class="dropdown" style="margin-left: auto; margin-right: 1em;">
+                {$profile?.name}
+                <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <Icon icon="bi-person" />
                 </button>
                 <ul class="dropdown-menu">
@@ -157,10 +158,8 @@ onMount(init);
             </div>
         </div>
         <div class="c-content">
-            <div class="container-containr">
 
             <slot />
-            </div>
         </div>
 
 

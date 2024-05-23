@@ -2,7 +2,7 @@ import { get } from "svelte/store";
 import { goto } from "$app/navigation";
 import { base } from "$app/paths";
 import { comet } from "$lib";
-import { acl, user } from "./stores";
+import { acl, profile} from "./stores";
 import { splitAndTrim } from "./utils";
 
 
@@ -20,7 +20,7 @@ export async function login(tenant: string, username: string, password: string, 
 		const data = await comet.auth.login({tenant, username, password})
         localStorage.setItem('access', data.access);
         localStorage.setItem('refresh', data.refresh);
-		user.set({username: data.username});
+		profile.set(data.profile);
 		acl.set(data.acl);
         if(redirect) goto(`${redirect}`);
 
@@ -40,7 +40,7 @@ export async function refresh(): Promise<void>
     const data = await comet.auth.refresh({access, refresh});
     localStorage.setItem('access', data.access);
     localStorage.setItem('refresh', data.refresh);
-    user.set({username: data.username});
+    profile.set(data.profile);
     acl.set(data.acl);
     
 }

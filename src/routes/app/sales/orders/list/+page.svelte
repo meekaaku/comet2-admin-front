@@ -93,7 +93,7 @@ onMount(async () => {
 
 <UI.Title>Sales Orders</UI.Title>
 
-
+<div class="sticky-top">Toolar</div>
 
 {#if $loading|| !order_list}
     Loading orders
