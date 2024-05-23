@@ -28,7 +28,6 @@ catch(e: any) {
 </script>
 
 
-<p>{access}</p>
 
 {#if authError}
 <UI.Unauthorized>

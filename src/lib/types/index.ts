@@ -1,2 +1,2 @@
 export * from './order.types';
-export * from './paginated.types';
+export * from './common.types';

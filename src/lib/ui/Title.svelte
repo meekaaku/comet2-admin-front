@@ -1,2 +1,2 @@
 
-<h1 class="h3 mb-3"><strong><slot></slot></strong></h1>
+<h3><slot></slot></h3>
