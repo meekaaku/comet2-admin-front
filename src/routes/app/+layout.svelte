@@ -89,7 +89,6 @@ onMount(init);
 .c-content{
     padding: 1rem;
     overflow-y: auto;
-    font-size: 0.8rem;
 }
 
 

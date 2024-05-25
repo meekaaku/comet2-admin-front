@@ -13,7 +13,19 @@ export function formatNumber(n: number|string, decimals: number = 2) {
 export function formatDate(str: string)
 {
   const dt = new Date(str)
-  return dt.toLocaleDateString();
+  const year = dt.getFullYear();
+  const month = dt.getMonth() + 1;
+  const monthstr = month < 10 ? '0' + month : month;
+  const day = dt.getDate();
+  const daystr = day < 10 ? '0' + day : day;
+
+  return `${year}-${monthstr}-${daystr}`;
+}
+
+export function formatTime(str: string)
+{
+  const dt = new Date(str)
+  return dt.toLocaleTimeString().substring(0, 5);
 }
 
 export function formatAddress(str: string)

@@ -3,7 +3,7 @@ import { onMount } from 'svelte';
 import * as UI from '$lib/ui';
 import { comet, logger } from '$lib';
 import { loading } from '$lib/stores';
-import { formatNumber, formatAddress, formatDate } from '$lib/utils';
+import { formatNumber, formatAddress, formatDate, formatTime } from '$lib/utils';
 import type { ROrderListRow, RPaginated } from '$lib/types';
 
 let order_list: RPaginated<ROrderListRow>|undefined = undefined;
@@ -117,7 +117,7 @@ onMount(async () => {
         {#each order_list.items as order}
         <tr>
             <td data-label="Order #" class="text-center">{order.order_no}</td>
-            <td data-label="Date" class="text-center">{formatDate(order.date_created)}</td>
+            <td data-label="Date" class="text-center">{formatDate(order.date_created)} {formatTime(order.date_created)}</td>
             <td data-label="Channel" class="text-center">{order.channel_name}</td>
             <td data-label="Ship To" class="text-center">{order.shipto_address}</td>
             <td data-label="Payment" class="text-center">{order.payment_method_code} - {order.payment_status_name}</td>
