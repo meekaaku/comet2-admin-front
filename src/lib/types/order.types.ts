@@ -19,13 +19,15 @@ export interface ROrderListRow
   date_created: string;
   billto_address: string;
   shipto_address: string;
-  shipping_method_code: string;
-  payment_method_code: string;
+  shipping_method_name: string;
+  payment_method_name: string;
   shipping_status_name: string;
   payment_status_name: string;
   customer_id: string;
   channel_id: string;
   channel_name: string;
+  customer_name: string;
   username: string;
   total_wtax: string;
+  data: any;
 }

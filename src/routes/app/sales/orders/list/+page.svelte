@@ -24,7 +24,8 @@ async function loadOrders()
 {
     $loading = true;
     try {
-      order_list = await comet.orders.list({page, page_size, sort, filters});    
+      const list = await comet.orders.list({page, page_size, sort, filters});    
+      order_list = processList(list);
       $loading = false
     }
     catch(error) {
@@ -34,6 +35,17 @@ async function loadOrders()
     return order_list;
 }
 
+function processList(list: RPaginated<ROrderListRow>)
+{
+    list.items.forEach(order => {
+        const lines = order.shipto_address.split('\n');
+        if(!order.data)  {
+          order.data = {}
+        }
+        order.data.shipto_lines = lines;
+    })
+    return list;
+}
 onMount(async () => {
     await loadOrders();
 });
@@ -106,10 +118,12 @@ onMount(async () => {
         <th style="width: 5%" class="text-center">Order #</th>
         <th style="width: 10%" class="text-center">Date</th>
         <th style="width: 10%" class="text-center">Channel</th>
+        <th style="width: 10%" class="text-center">Customer</th>
         <th  class="text-center">Ship To</th>
-        <th style="width: 10%" class="text-center">Payment</th>
-        <th style="width: 10%" class="text-center">Shipping</th>
+        <th style="width: 15%" class="text-center">Payment</th>
+        <th style="width: 15%" class="text-center">Shipping</th>
         <th style="width: 10%" class="text-center">Total</th>
+        <th style="width: 10%" class="text-center">Action</th>
       </tr>
     </thead>
     <tbody>
@@ -119,10 +133,28 @@ onMount(async () => {
             <td data-label="Order #" class="text-center">{order.order_no}</td>
             <td data-label="Date" class="text-center">{formatDate(order.date_created)} {formatTime(order.date_created)}</td>
             <td data-label="Channel" class="text-center">{order.channel_name}</td>
-            <td data-label="Ship To" class="text-center">{order.shipto_address}</td>
-            <td data-label="Payment" class="text-center">{order.payment_method_code} - {order.payment_status_name}</td>
-            <td data-label="Shipping" class="text-center">{order.shipping_method_code} - {order.shipping_status_name}</td>
+            <td data-label="Customer" class="text-center">{order.customer_name}</td>
+            <td data-label="Ship To" class="text-center">
+              {order.data.shipto_lines[0]},
+              {order.data.shipto_lines[4]}
+            </td>
+            <td data-label="Payment" class="text-end">{order.payment_method_name} - 
+              <span class:bg-warning={order.payment_status_name === 'pending'}
+                    class:text-white={order.payment_status_name === 'complete'}
+                    class:bg-success={order.payment_status_name === 'complete'}
+                    class="px-3"
+                    
+              >    
+              {order.payment_status_name}
+              </span>
+            
+            </td>
+            <td data-label="Shipping" class="text-end">{order.shipping_method_name} - {order.shipping_status_name}</td>
             <td data-label="Total" class="text-end">{order.currency_code} {formatNumber(order.total_wtax)}</td>
+            <td data-label="Action" class="text-center">
+                View, Ccanel
+
+            </td>
         </tr>
         {/each}
         {/if}

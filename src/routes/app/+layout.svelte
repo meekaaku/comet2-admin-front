@@ -60,7 +60,7 @@ onMount(init);
     opacity: 0.8;
     transition: 0.2s;
     overflow-y: scroll;
-      scrollbar-width: thin;
+    scrollbar-width: thin;
 
 }
 
@@ -152,12 +152,11 @@ onMount(init);
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="#"><Icon icon="bi-person-lines-fill"></Icon>Profile</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#" on:click={logout}>Logout</a></li>
+                    <li><a class="dropdown-item" href="#" on:click={logout}> <Icon icon="bi-box-arrow-right"></Icon>Logout</a></li>
                 </ul>
             </div>
         </div>
         <div class="c-content">
-
             <slot />
         </div>
 
