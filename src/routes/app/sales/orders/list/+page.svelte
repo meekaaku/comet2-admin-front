@@ -1,5 +1,7 @@
 <script lang="ts">
-import { onMount } from 'svelte';
+import { onMount, afterUpdate } from 'svelte';
+import { afterNavigate, goto } from '$app/navigation';
+import { page as svpage } from '$app/stores';
 import * as UI from '$lib/ui';
 import { comet, logger } from '$lib';
 import { loading } from '$lib/stores';
@@ -8,20 +10,22 @@ import type { ROrderListRow, RPaginated } from '$lib/types';
 
 let order_list: RPaginated<ROrderListRow>|undefined = undefined;
 let page = 1;
-let page_size = 20;
+let page_size = 5;
 let sort: string|undefined = undefined;
 let filters: any = undefined;
 
+  
 
 function onPageChange(_page: number)
 {
-    page = _page;
-    logger.info(`Page changed to ${page}`)
-    loadOrders();
+    $svpage.url.searchParams.set('page', _page.toString());
+    goto(`?${$svpage.url.searchParams.toString()}`);
 }
 
 async function loadOrders()
 {
+    let query = new URLSearchParams($svpage.url.searchParams.toString());
+    page = parseInt(query.get('page') || '1');
     $loading = true;
     try {
       const list = await comet.orders.list({page, page_size, sort, filters});    
@@ -46,60 +50,25 @@ function processList(list: RPaginated<ROrderListRow>)
     })
     return list;
 }
-onMount(async () => {
+/*
+afterNavigate(async () => {
+    console.log('running afternavigate')
     await loadOrders();
+})
+*/
+
+onMount(async () => {
+  await loadOrders();
+  afterNavigate(async () => {
+    console.log('running afternavigate')
+    await loadOrders();
+  })
 });
 
 </script>
 
 <style>
-/* Normal table styles */
-.responsive-table {
-  width: 100%;
-  border-collapse: collapse;
-  border-spacing: 0;
-}
 
-.responsive-table th,
-.responsive-table td {
-  border: 1px solid #ccc;
-  padding: 8px;
-  text-align: left;
-}
-
-/* Stacked table for small screens */
-@media (max-width: 720px) {
-  .responsive-table thead {
-    display: none;
-  }
-
-  .responsive-table tbody,
-  .responsive-table tr,
-  .responsive-table td {
-    display: block;
-    width: 100%;
-  }
-
-  .responsive-table tr {
-    margin-bottom: 15px;
-    border: solid 1px grey
-  }
-  .responsive-table td {
-    text-align: right; /* Adjust alignment for stacked layout */
-    /* Add more styles as needed */
-  }
-
-  .responsive-table td::before {
-    content: attr(data-label);
-    float: left;
-    font-weight: bold;
-  }
-
-  .responsive-table tbody td[data-label]:before {
-    display: block;
-    font-weight: bold;
-  }
-}
 
 </style>
 
@@ -111,8 +80,7 @@ onMount(async () => {
     Loading orders
 {:else}
 
-<div class="table-wrapper">
-  <table class="responsive-table">
+  <table class="ct-table table table-sm table-striped">
     <thead>
       <tr>
         <th style="width: 5%" class="text-center">Order #</th>
@@ -161,22 +129,21 @@ onMount(async () => {
       <!-- Add more rows as needed -->
     </tbody>
   </table>
-</div>
 <div class="d-flex justify-content-center mt-2">
 <nav aria-label="Page navigation example">
   <ul class="pagination">
     <li class="page-item">
-      <a class="page-link" href="#" aria-label="Previous">
+      <a class="page-link" href="#" aria-label="Previous" class:disabled={page === 1} on:click={()=> onPageChange(page-1)}>
         <span aria-hidden="true">&laquo;</span>
       </a>
     </li>
-    {#each Array(order_list.page_count) as _,page}
-    <li class="page-item" class:active = {page + 1 === order_list.page}>
-        <a class="page-link" href="#" on:click={()=> onPageChange(page+1)}>{page+1}</a>
+    {#each Array(order_list.page_count) as _, page0}
+    <li class="page-item" class:active = {page0 + 1 === order_list.page}>
+        <a class="page-link" href="#" on:click={()=> onPageChange(page0+1)}>{page0+1}</a>
     </li>
     {/each}
     <li class="page-item">
-      <a class="page-link" href="#" aria-label="Next">
+      <a class="page-link" href="#" aria-label="Next" class:disabled={page === order_list.page_count} on:click={()=> onPageChange(page+1)}>
         <span aria-hidden="true">&raquo;</span>
       </a>
     </li>
