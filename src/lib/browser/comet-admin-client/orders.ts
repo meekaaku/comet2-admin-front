@@ -18,4 +18,10 @@ export class Orders
 		const response = await this.client.get(`sales/orders/list?page=${page}&page_size=${page_size}&sort=${sort}&filters=${jfilters}`);
 		return response.data as RPaginated<ROrderListRow>;
 	}
+
+	async get(order_id: string): Promise<any>
+	{
+		const response = await this.client.get(`sales/orders/${order_id}`);
+		return response.data;
+	}
 }

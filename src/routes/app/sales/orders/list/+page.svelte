@@ -120,7 +120,9 @@ onMount(async () => {
             <td data-label="Shipping" class="text-end">{order.shipping_method_name} - {order.shipping_status_name}</td>
             <td data-label="Total" class="text-end">{order.currency_code} {formatNumber(order.total_wtax)}</td>
             <td data-label="Action" class="text-center">
-                View, Ccanel
+                <a on:click={comet.orders.get(order.order_id)}>View</a>
+                
+                , Ccanel
 
             </td>
         </tr>
