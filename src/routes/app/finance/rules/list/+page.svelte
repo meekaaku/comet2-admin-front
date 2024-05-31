@@ -2,15 +2,15 @@
 import { onMount, afterUpdate } from 'svelte';
 import { afterNavigate, goto } from '$app/navigation';
 import { page as svpage } from '$app/stores';
-import * as UI from '$lib/ui';
 import { comet, logger } from '$lib';
 import { loading } from '$lib/stores';
+import { Title, Toolbar, Button } from '$lib/ui';
 import type { RPaginated, RRule } from '$lib/types';
 
 
-let list: RPaginated<RRule>|undefined = undefined;
+let list: RPaginated<RRule & Record<string, any>> | undefined = undefined;
 let page = 1;
-let page_size = 5;
+let page_size = 50;
 let sort: string|undefined = undefined;
 let filters: any = undefined;
 
@@ -22,7 +22,7 @@ function onPageChange(_page: number)
     goto(`?${$svpage.url.searchParams.toString()}`);
 }
 
-async function loadRules()
+async function loadList()
 {
     let query = new URLSearchParams($svpage.url.searchParams.toString());
     page = parseInt(query.get('page') || '1');
@@ -41,16 +41,17 @@ async function loadRules()
 
 function processList(list: RPaginated<RRule>)
 {
+    list.items = list.items.sort((a, b) => a.sort < b.sort ? -1 : 1);
     return list;
 }
 
+afterNavigate(async () => {
+  await loadList();
+});
 
 onMount(async () => {
-  await loadRules();
-  afterNavigate(async () => {
-    console.log('running afternavigate')
-    await loadRules();
-  })
+  await loadList();
+
 });
 
 </script>
@@ -60,9 +61,13 @@ onMount(async () => {
 
 </style>
 
-<UI.Title>Finance Rules</UI.Title>
+<Title>Finance Rules</Title>
 
-<div class="sticky-top">Toolar</div>
+<Toolbar>
+  <Button icon="bi-plus" color="primary" on:click={()=> goto(`/app/finance/rules/edit`)}>Add Rule</Button>
+  <Button icon="bi-plus" color="primary" on:click={()=> goto(`/app/finance/rules/edit`)}>Add Rule</Button>
+
+</Toolbar>
 
 {#if $loading|| !list}
     Loading Rules 
@@ -71,16 +76,25 @@ onMount(async () => {
   <table class="ct-table table table-sm table-striped">
     <thead>
       <tr>
-        <th style="width: 5%" class="text-center">Name</th>
-        <th style="width: 10%" class="text-center">SQL</th>
+        <th style="width: 1%" class="text-center">Sort</th>
+        <th style="width: 20%" class="text-center">Name</th>
+        <th class="text-left">SQL</th>
+        <th style="width: 10%" class="text-center">Action</th>
       </tr>
     </thead>
     <tbody>
         {#if list}
         {#each list.items as rule}
         <tr>
-            <td data-label="Name" class="text-center">{rule.name}</td>
-            <td data-label="SQL" class="text-center">{rule.sql}</td>
+            <td data-label="Sort" class="text-right">{rule.sort}</td>
+            <td data-label="Name" class="text-right">{rule.name}</td>
+            <td data-label="SQL" class="text-center">
+              {rule.sql.substring(0, 100)}...
+            </td>
+            <td data-label="Action" class="text-center">
+                <Button size="sm" icon="bi-pencil" color="primary" on:click={()=> goto(`/app/finance/rules/edit/${rule.id}`)} />
+                <Button size="sm" icon="bi-trash" color="danger"/>
+            </td>
             
         </tr>
         {/each}

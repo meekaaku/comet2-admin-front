@@ -66,7 +66,7 @@ async function onLoginClick()
 										</div>
 									</div>
 									<div class="d-grid gap-2 mt-3">
-										<Button busytext="Logging in" color="primary" on:click={onLoginClick} busy={$loading} disabled={$loading}>Login here</Button>
+										<Button busytext="Logging in" color="primary" on:click={onLoginClick} icon="bi-box-arrow-in-right" busy={$loading} disabled={$loading}> &nbsp;Login</Button>
 										<input type="submit" class="d-none" />
 									</div>
 								</form>

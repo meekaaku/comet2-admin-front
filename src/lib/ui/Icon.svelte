@@ -8,7 +8,7 @@ const rest = icon.slice(3);
 </script>
 
 {#if prefix === 'bi'}
-    <i class="bi bi-{rest}" style="margin-right: 12px"></i>
+    <i class="bi bi-{rest}"></i>
 
 {:else if prefix === 'fi'}
     <i data-feather="{rest}"></i>

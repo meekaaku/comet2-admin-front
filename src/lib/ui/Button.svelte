@@ -1,16 +1,18 @@
 <script lang="ts">
 import { classnames } from '.'
+import Icon from './Icon.svelte'
 
-    let className = '';
+let className = '';
 export { className as class };
 export let active = false;
 export let block = false;
 export let close = false;
 export let color = 'primary';
 export let outline = false;
-export let size = null;
+export let size = '';
 export let busy = false;
 export let busytext = '';
+export let icon:string|undefined = undefined;
 
 
 
@@ -39,12 +41,16 @@ aria-label={ariaLabel || defaultAriaLabel}
 >
 {#if busy}
 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp; 
+
     {#if busytext}
         {busytext}
     {:else}
         <slot></slot>
     {/if}
 {:else}
-<slot></slot>
+    {#if icon}
+    <Icon icon={icon} />
+    {/if}
+    <slot></slot>
 {/if}
 </button>

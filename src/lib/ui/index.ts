@@ -7,6 +7,7 @@ export { default as SidebarItem } from './__SidebarItem_.svelte';
 export { default as SidebarLink } from './SidebarLink.svelte';
 export { default as Title } from './Title.svelte';
 export { default as Unauthorized} from './Unauthorized.svelte';
+export { default as Toolbar } from './Toolbar.svelte'
 
 
 
