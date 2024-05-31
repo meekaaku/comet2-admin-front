@@ -124,6 +124,11 @@ onMount(init);
                 <SidebarLink name="Shipments" icon="bi-person" url="{base}/app/sales/customers" />
             </SidebarDrop>
 
+            <SidebarDrop name="Finance" icon="bi-activity">
+                <SidebarLink name="Rules" icon="bi-person" url="{base}/app/finance/rules/list" />
+            </SidebarDrop>
+
+
             {#if hasPermission('menu.admin')}
                 <SidebarDrop name="Admin" icon="bi-activity">
                     <SidebarLink name="Roles" icon="bi-person" url="{base}/app/sales/orders/list" />
