@@ -1,9 +1,9 @@
 {
-	"name": "comet2-admin-front-adminkit",
+	"name": "comet2-admin-front",
 	"version": "0.0.1",
 	"private": true,
 	"engines": {
-		"node": "18.x"
+		"node": "21.x"
 	},
 	"scripts": {
 		"dev": "vite dev --host",
