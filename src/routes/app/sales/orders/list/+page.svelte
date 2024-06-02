@@ -133,7 +133,7 @@ onMount(async () => {
   </table>
 <div class="d-flex justify-content-center mt-2">
 <nav aria-label="Page navigation example">
-  <ul class="pagination">
+  <ul class="pagination" style="display:contents">
     <li class="page-item">
       <a class="page-link" href="#" aria-label="Previous" class:disabled={page === 1} on:click={()=> onPageChange(page-1)}>
         <span aria-hidden="true">&laquo;</span>
