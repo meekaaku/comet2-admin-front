@@ -11,7 +11,8 @@ import { comet } from '$lib';
 
 let sidebarElement: HTMLElement;
 let mainElement: HTMLElement;
-let loggedin = false;
+let navElement: HTMLElement;
+
 
 function toggle()
 {
@@ -20,12 +21,14 @@ function toggle()
     if(sidebarElement.style.marginLeft == "0px")
     {
        sidebarElement.style.marginLeft = "-240px";
-       mainElement.style.marginLeft = "0px";
+       //mainElement.style.marginLeft = "0px";
+       //navElement.style.marginLeft = "0px";
     }
     else {
 
        sidebarElement.style.marginLeft = "0px";
-       mainElement.style.marginLeft = "0px";
+       //mainElement.style.marginLeft = "-240px";
+       //navElement.style.marginLeft = "-240px";
     }
 }
 
@@ -47,11 +50,6 @@ onMount(init);
 </script>
 <style>
 
-@media screen and (max-width: 768px) {
-    .c-sidebar {
-        margin-left: -240px
-    }
-}
 
 .master
 {
@@ -105,7 +103,22 @@ onMount(init);
     overflow-y: auto;
 }
 
+@media screen and (max-width: 768px) {
+    .c-sidebar {
+        margin-left: -400px;
+        width: 400px;
+    }
+}
 
+
+
+/*
+@media screen and (max-width: 768px) {
+    .c-sidebar{
+        width: 400px;
+    }
+}
+*/
 
 
 </style>
@@ -158,7 +171,7 @@ onMount(init);
 
     <div bind:this={mainElement}   class="c-main">
 
-        <div class="c-navbar sticky-top shadow">
+        <div bind:this={navElement} class="c-navbar sticky-top shadow">
             <div>
                 <button type="button" class="btn" on:click={toggle}><Icon icon="bi-layout-text-sidebar-reverse" /></button>
             </div> 

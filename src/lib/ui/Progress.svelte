@@ -58,10 +58,4 @@ progress {
 }
 
 
-@media only screen and (max-width: 600px) 
-{
-    progress {
-        top: 2.5em;
-    }
-}
 </style>

@@ -52,10 +52,12 @@ function processList(list: RPaginated<RRule>)
 }
 
 afterNavigate(async () => {
+  console.log('afterNavigate');
   await loadList();
 });
 
 onMount(async () => {
+  console.log('onMount');
   await loadList();
 
 });
@@ -79,7 +81,27 @@ onMount(async () => {
   <Loading></Loading>
 {:else}
 
-  <table class="ct-table table table-sm table-striped table-hover">
+<div class="modal fade show" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        modal body stauff goes here
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<table class="ct-table table table-sm table-striped table-hover">
     <thead>
       <tr>
         <th style="width: 1%" class="text-center">Sort</th>
