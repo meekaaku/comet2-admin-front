@@ -9,11 +9,21 @@ import type { RPaginated, RRule } from '$lib/types';
 
 
 let list: RPaginated<RRule & Record<string, any>> | undefined = undefined;
+let editorDialog: HTMLDivElement;
+
 //let page = 1;
 //let page_size = 50;
 //let sort: string|undefined = undefined;
 //let filters: any = undefined;
 
+
+function onEditClick()
+{
+  console.log('onEditClick');
+  /* @ts-ignore */
+  const modal = new bootstrap.Modal(editorDialog);
+  modal.show();
+}
   
 function onPageChange({detail}: {detail: {page: number}})
 {
@@ -80,9 +90,9 @@ onMount(async () => {
 {#if !list}
   <Loading></Loading>
 {:else}
-
-<div class="modal fade show" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editor">Launch static backdrop modal</button>
+<div bind:this={editorDialog} id="editor" class="modal fade" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" >
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
@@ -90,6 +100,14 @@ onMount(async () => {
       </div>
       <div class="modal-body">
         modal body stauff goes here
+        <p>Some ting</p>
+        <p>Some ting</p>
+        <p>Some ting</p>
+        <p>Some ting</p>
+        <p>Some ting</p>
+        <p>Some ting</p>
+        <p>Some ting</p>
+        <p>Some ting</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -120,7 +138,7 @@ onMount(async () => {
               {rule.sql.substring(0, 100)}...
             </td>
             <td data-label="Action" class="text-center">
-                <Button size="sm" icon="bi-pencil" color="primary" on:click={()=> goto(`/app/finance/rules/edit/${rule.id}`)} />
+                <Button size="sm" icon="bi-pencil" color="primary" on:click={onEditClick} />
                 <Button size="sm" icon="bi-trash" color="danger"/>
             </td>
             
