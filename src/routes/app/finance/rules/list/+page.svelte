@@ -4,12 +4,13 @@ import { afterNavigate, goto } from '$app/navigation';
 import { page as svpage } from '$app/stores';
 import { comet, logger } from '$lib';
 import { loading } from '$lib/stores';
-import { Title, Toolbar, Button, Loading, Paginator } from '$lib/ui';
+import { Title, Toolbar, Button, Loading, Paginator, Dialog, DialogBody, DialogFooter } from '$lib/ui';
 import type { RPaginated, RRule } from '$lib/types';
 
 
 let list: RPaginated<RRule & Record<string, any>> | undefined = undefined;
 let editorDialog: HTMLDivElement;
+let editorOpen = false;
 
 //let page = 1;
 //let page_size = 50;
@@ -17,8 +18,16 @@ let editorDialog: HTMLDivElement;
 //let filters: any = undefined;
 
 
+function onSave()
+{
+  console.log('onSave');
+  editorOpen = false;
+}
+
 function onEditClick()
 {
+  editorOpen = true;
+  return;
   console.log('onEditClick');
   /* @ts-ignore */
   const modal = new bootstrap.Modal(editorDialog);
@@ -90,7 +99,18 @@ onMount(async () => {
 {#if !list}
   <Loading></Loading>
 {:else}
+
+
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editor">Launch static backdrop modal</button>
+
+<Dialog title="Edit Rule" bind:open={editorOpen}>
+  <DialogBody>Some content</DialogBody>
+  <DialogFooter>
+    <Button color="primary" on:click={onSave}>Save</Button>
+    <Button color="danger" on:click={()=> editorOpen = false}>Cancel</Button>
+  </DialogFooter>
+</Dialog>
+
 <div bind:this={editorDialog} id="editor" class="modal fade" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" >
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">

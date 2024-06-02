@@ -1,5 +1,8 @@
 export { default as About } from './About.svelte';
 export { default as Button } from './Button.svelte';
+export { default as Dialog} from './Dialog.svelte';
+export { default as DialogBody} from './DialogBody.svelte';
+export { default as DialogFooter} from './DialogFooter.svelte';
 export { default as Icon } from './Icon.svelte';
 export { default as Loading } from './Loading.svelte';
 export { default as Progress} from './Progress.svelte';
