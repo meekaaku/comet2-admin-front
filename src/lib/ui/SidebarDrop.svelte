@@ -44,7 +44,7 @@ export let name = '';
 <div class="accordion-item">
     <h6 class="accordion-header" id="flush-headingOne">
     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#{id}" aria-expanded="false" aria-controls="flush-collapseOne">
-        <Icon icon={icon}></Icon>{name}
+        <Icon icon={icon}></Icon>&nbsp {name}
     </button>
     </h6>
     <div id="{id}" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">

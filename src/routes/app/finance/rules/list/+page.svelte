@@ -64,8 +64,8 @@ onMount(async () => {
 <Title>Finance Rules</Title>
 
 <Toolbar>
-  <Button icon="bi-plus" color="primary" on:click={()=> goto(`/app/finance/rules/edit`)}>Add Rule</Button>
-  <Button icon="bi-plus" color="primary" on:click={()=> goto(`/app/finance/rules/edit`)}>Add Rule</Button>
+  <Button icon="bi-plus" size="sm" color="primary" on:click={()=> goto(`/app/finance/rules/edit`)}>Add Rule</Button>
+  <Button data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top" icon="bi-plus" size="sm" color="primary" on:click={()=> goto(`/app/finance/rules/edit`)}>Add Rule</Button>
 
 </Toolbar>
 
@@ -73,7 +73,7 @@ onMount(async () => {
     Loading Rules 
 {:else}
 
-  <table class="ct-table table table-sm table-striped">
+  <table class="ct-table table table-sm table-striped table-hover">
     <thead>
       <tr>
         <th style="width: 1%" class="text-center">Sort</th>

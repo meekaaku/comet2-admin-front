@@ -17,6 +17,6 @@ export let name = '';
 
 <li class="nav-item">
     <a class="nav-link active" aria-current="page" href="{url}">
-        <Icon {icon}></Icon>{name}
+        <Icon {icon}></Icon>&nbsp; {name}
     </a>
 </li>

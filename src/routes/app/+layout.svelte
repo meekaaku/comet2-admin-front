@@ -81,9 +81,11 @@ onMount(init);
     width: 100%;
 
 
+    /*
     -webkit-box-shadow: 0px 3px 5px 0px rgba(79,79,79,0.49);
     -moz-box-shadow: 0px 3px 5px 0px rgba(79,79,79,0.49);
     box-shadow: 0px 3px 5px 0px rgba(79,79,79,0.49);
+    */
 }
 
 .c-content{
@@ -118,19 +120,19 @@ onMount(init);
             </SidebarDrop>
 
 
-            <SidebarDrop name="Sales" icon="bi-activity">
+            <SidebarDrop name="Sales" icon="bi-bar-chart">
                 <SidebarLink name="Orders" icon="bi-person" url="{base}/app/sales/orders/list" />
                 <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
                 <SidebarLink name="Shipments" icon="bi-person" url="{base}/app/sales/customers" />
             </SidebarDrop>
 
-            <SidebarDrop name="Finance" icon="bi-activity">
+            <SidebarDrop name="Finance" icon="bi-cash-coin">
                 <SidebarLink name="Rules" icon="bi-person" url="{base}/app/finance/rules/list" />
             </SidebarDrop>
 
 
             {#if hasPermission('menu.admin')}
-                <SidebarDrop name="Admin" icon="bi-activity">
+                <SidebarDrop name="Admin" icon="bi-gear">
                     <SidebarLink name="Roles" icon="bi-person" url="{base}/app/sales/orders/list" />
                     <SidebarLink name="Users" icon="bi-person" url="{base}/app/sales/customers" />
                     <SidebarLink name="Access Control" icon="bi-person" url="{base}/app/sales/customers" />
@@ -144,7 +146,7 @@ onMount(init);
 
     <div class="c-main">
 
-        <div class="c-navbar sticky-top">
+        <div class="c-navbar sticky-top shadow">
             <div>
                 <button type="button" class="btn" on:click={toggle}><Icon icon="bi-layout-text-sidebar-reverse" /></button>
             </div> 
