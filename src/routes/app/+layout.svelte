@@ -10,11 +10,23 @@ import { comet } from '$lib';
 
 
 let sidebarElement: HTMLElement;
+let mainElement: HTMLElement;
 let loggedin = false;
 
 function toggle()
 {
-    sidebarElement.style.marginLeft = (sidebarElement.style.marginLeft == "0px") ? "-240px" : "0px";
+    //sidebarElement.style.marginLeft = (sidebarElement.style.marginLeft == "0px") ? "-240px" : "0px";
+    //mainElement.style.marginLeft = (sidebarElement.style.marginLeft == "0px") ? "0px" : "240px";
+    if(sidebarElement.style.marginLeft == "0px")
+    {
+       sidebarElement.style.marginLeft = "-240px";
+       mainElement.style.marginLeft = "0px";
+    }
+    else {
+
+       sidebarElement.style.marginLeft = "0px";
+       mainElement.style.marginLeft = "0px";
+    }
 }
 
 
@@ -144,7 +156,7 @@ onMount(init);
         </div>
     </div>
 
-    <div class="c-main">
+    <div bind:this={mainElement}   class="c-main">
 
         <div class="c-navbar sticky-top shadow">
             <div>
