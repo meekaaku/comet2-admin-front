@@ -4,7 +4,7 @@ import { afterNavigate, goto } from '$app/navigation';
 import { page as svpage } from '$app/stores';
 import { comet, logger } from '$lib';
 import { loading } from '$lib/stores';
-import { Title, Toolbar, Button } from '$lib/ui';
+import { Title, Toolbar, Button, Loading } from '$lib/ui';
 import type { RPaginated, RRule } from '$lib/types';
 
 
@@ -69,8 +69,8 @@ onMount(async () => {
 
 </Toolbar>
 
-{#if $loading|| !list}
-    Loading Rules 
+{#if !list}
+  <Loading></Loading>
 {:else}
 
   <table class="ct-table table table-sm table-striped table-hover">
@@ -102,27 +102,27 @@ onMount(async () => {
       <!-- Add more rows as needed -->
     </tbody>
   </table>
-<div class="d-flex justify-content-center mt-2">
-<nav aria-label="Page navigation example">
-  <ul class="pagination">
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Previous" class:disabled={page === 1} on:click={()=> onPageChange(page-1)}>
-        <span aria-hidden="true">&laquo;</span>
-      </a>
-    </li>
-    {#each Array(list.page_count) as _, page0}
-    <li class="page-item" class:active = {page0 + 1 === list.page}>
-        <a class="page-link" href="#" on:click={()=> onPageChange(page0+1)}>{page0+1}</a>
-    </li>
-    {/each}
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Next" class:disabled={page === list.page_count} on:click={()=> onPageChange(page+1)}>
-        <span aria-hidden="true">&raquo;</span>
-      </a>
-    </li>
-  </ul>
-</nav>
-</div>
+  <div class="d-flex justify-content-center mt-2">
+  <nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Previous" class:disabled={page === 1} on:click={()=> onPageChange(page-1)}>
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      {#each Array(list.page_count) as _, page0}
+      <li class="page-item" class:active = {page0 + 1 === list.page}>
+          <a class="page-link" href="#" on:click={()=> onPageChange(page0+1)}>{page0+1}</a>
+      </li>
+      {/each}
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Next" class:disabled={page === list.page_count} on:click={()=> onPageChange(page+1)}>
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  </div>
 
 {/if}
 
