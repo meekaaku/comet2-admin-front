@@ -11,6 +11,7 @@ import type { RPaginated, RRule, Editable } from '$lib/types';
 let list: RPaginated<RRule & Record<string, any>> | undefined = undefined;
 let editorOpen = false;
 let currentRule: Editable<RRule> | undefined = undefined;
+let editingIndex: number | undefined = undefined;
 
 //let page = 1;
 //let page_size = 50;
@@ -21,11 +22,35 @@ let currentRule: Editable<RRule> | undefined = undefined;
 async function onSave()
 {
   console.log('onSave', currentRule?.edited);
+  if(!currentRule?.edited) return;
+  if(!editingIndex) return;
+  if(!list) return;
+
+  try 
+  {
+    const updated = currentRule?.edited;
+    $loading = true;
+    const updatedRule = await comet.finance.rules.update(updated);
+    list.items[editingIndex] = updatedRule;
+    //currentRule.original = updatedRule;
+    list = list;
+    logger.info('List is ', list);
+    $loading = false;
+  }
+  catch(e)
+  {
+    logger.error('Error saving rule: ', e);
+    $loading = false;
+  }
+
   editorOpen = false;
 }
 
-function onEditClick(rule: RRule)
+function onEditClick(index: number)
 {
+  editingIndex = index;
+  const rule = list?.items[index];
+  if(!rule) return; 
   currentRule = { original: rule, edited: {...rule}}
   editorOpen = true;
   return;
@@ -125,7 +150,7 @@ onMount(async () => {
     </form>
   </DialogBody>
   <DialogFooter>
-    <Button color="primary" on:click={onSave}>Save</Button>
+    <Button color="primary" busytext="Saving" busy={$loading} on:click={onSave}>Save</Button>
     <Button color="danger" on:click={()=> editorOpen = false}>Cancel</Button>
   </DialogFooter>
   {/if}
@@ -142,7 +167,7 @@ onMount(async () => {
     </thead>
     <tbody>
         {#if list}
-        {#each list.items as rule}
+        {#each list.items as rule, i}
         <tr>
             <td data-label="Sort" class="text-right">{rule.sort}</td>
             <td data-label="Name" class="text-right">{rule.name}</td>
@@ -150,7 +175,7 @@ onMount(async () => {
               {rule.sql.substring(0, 100)}...
             </td>
             <td data-label="Action" class="text-center">
-                <Button size="sm" icon="bi-pencil" color="primary" on:click={() => onEditClick(rule)} />
+                <Button size="sm" icon="bi-pencil" color="primary" on:click={() => onEditClick(i)} />
                 <Button size="sm" icon="bi-trash" color="danger"/>
             </td>
             

@@ -20,6 +20,12 @@ class Rules
 		return response.data as RPaginated<RRule>;
 	}
 
+	async update(RRule: RRule): Promise<RRule>
+	{
+		const response = await this.client.put(`finance/rules/${RRule.id}`, RRule);
+		return response.data as RRule;
+	}
+
 
 }
 
