@@ -9,8 +9,8 @@ import type { RPaginated, RRule } from '$lib/types';
 
 
 let list: RPaginated<RRule & Record<string, any>> | undefined = undefined;
-let editorDialog: HTMLDivElement;
 let editorOpen = false;
+let currentRule: RRule | undefined = undefined;
 
 //let page = 1;
 //let page_size = 50;
@@ -24,8 +24,9 @@ function onSave()
   editorOpen = false;
 }
 
-function onEditClick()
+function onEditClick(rule: RRule)
 {
+  currentRule = rule;
   editorOpen = true;
   return;
   console.log('onEditClick');
@@ -104,40 +105,26 @@ onMount(async () => {
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editor">Launch static backdrop modal</button>
 
 <Dialog title="Edit Rule" bind:open={editorOpen}>
-  <DialogBody>Some content</DialogBody>
+  {#if currentRule}
+  <DialogBody>
+    <div class="form-floating mb-3">
+      <input type="text" bind:value={currentRule.name} class="form-control" id="floatingInput" placeholder="name@example.com">
+      <label for="floatingInput">Name</label>
+    </div>
+    <div class="form-floating mb-3">
+      <textarea class="form-control" id="floatingTextarea" placeholder="">
+        {currentRule.sql}
+      </textarea>
+      <label for="floatingInput">SQL</label>
+    </div>
+
+  </DialogBody>
   <DialogFooter>
     <Button color="primary" on:click={onSave}>Save</Button>
     <Button color="danger" on:click={()=> editorOpen = false}>Cancel</Button>
   </DialogFooter>
+  {/if}
 </Dialog>
-
-<div bind:this={editorDialog} id="editor" class="modal fade" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" >
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        modal body stauff goes here
-        <p>Some ting</p>
-        <p>Some ting</p>
-        <p>Some ting</p>
-        <p>Some ting</p>
-        <p>Some ting</p>
-        <p>Some ting</p>
-        <p>Some ting</p>
-        <p>Some ting</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Understood</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
 
 <table class="ct-table table table-sm table-striped table-hover">
     <thead>
@@ -158,7 +145,7 @@ onMount(async () => {
               {rule.sql.substring(0, 100)}...
             </td>
             <td data-label="Action" class="text-center">
-                <Button size="sm" icon="bi-pencil" color="primary" on:click={onEditClick} />
+                <Button size="sm" icon="bi-pencil" color="primary" on:click={() => onEditClick(rule)} />
                 <Button size="sm" icon="bi-trash" color="danger"/>
             </td>
             
