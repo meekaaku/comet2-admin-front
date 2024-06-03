@@ -81,3 +81,8 @@ export function replaceURLQuery(values: Record<string, string>)
   history.replaceState({}, '', url);
 };
 
+
+export function deepClone<T>(obj: T): T
+{
+  return JSON.parse(JSON.stringify(obj));
+}

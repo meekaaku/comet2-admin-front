@@ -3,6 +3,7 @@ import { createEventDispatcher } from "svelte";
 
 export let page_count: number = 1;
 export let page: number = 1;
+export let page_size: number = 10;
 let selectpage = page;
 
 const dispatch = createEventDispatcher();
@@ -32,7 +33,12 @@ const dispatch = createEventDispatcher();
             </a>
         </li>
     </ul>
-    
+    <select class="form-select form-select-sm" bind:value={page_size} on:change={()=> dispatch('pagechange', {page})}>
+        <option value="10">10</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+        <option value="500">500</option>
+    </select>
 </nav>
 <nav class="d-block d-sm-none" aria-label="Paginator small screen">
     <div class="input-group">
@@ -43,7 +49,6 @@ const dispatch = createEventDispatcher();
         {#each Array(page_count) as _, page0}
             <option value={page0+1}>{page0 + 1}</option>
         {/each}
-        <option>2</option>
     </select>
     <button class="btn btn-outline-primary"  aria-label="Next" class:disabled={page === page_count} on:click={()=> dispatch('pagechange', {page: page+1})}>
         <span aria-hidden="true">&raquo;</span>

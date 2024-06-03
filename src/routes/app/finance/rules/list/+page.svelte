@@ -5,61 +5,50 @@ import { page as svpage } from '$app/stores';
 import { comet, logger } from '$lib';
 import { loading } from '$lib/stores';
 import { Title, Toolbar, Button, Loading, Paginator, Dialog, DialogBody, DialogFooter } from '$lib/ui';
+import { deepClone } from '$lib/utils';
 import type { RPaginated, RRule, Editable } from '$lib/types';
 
 
 let list: RPaginated<RRule & Record<string, any>> | undefined = undefined;
 let editorOpen = false;
-let currentRule: Editable<RRule> | undefined = undefined;
-let editingIndex: number | undefined = undefined;
-
-//let page = 1;
-//let page_size = 50;
-//let sort: string|undefined = undefined;
-//let filters: any = undefined;
+let editingItem: RRule|undefined = undefined;
+let editingIndex: number|undefined = undefined;
+let error: string | null = null;
 
 
-async function onSave()
+
+async function onSaveClick()
 {
-  console.log('onSave', currentRule?.edited);
-  //if(!currentRule?.edited) return;
-  if(editingIndex === undefined) return;
-  if(!list) return;
+    if(editingIndex === undefined) return;
+    if(!editingItem) return;
+    if(!list) return;
 
-  try 
-  {
-    const updated = currentRule?.edited;
-    $loading = true;
-    const updatedRule = await comet.finance.rules.update(updated);
-    list.items[editingIndex] = updatedRule;
-    //currentRule.original = updatedRule;
-    list = list;
-    logger.info('List is ', list);
-    $loading = false;
-  }
-  catch(e)
-  {
-    logger.error('Error saving rule: ', e);
-    $loading = false;
-  }
+    try 
+    {
+        $loading = true;
+        error = null;
+        const updatedItem = await comet.finance.rules.update(editingItem);
+        list.items[editingIndex] = updatedItem;
+        list = list;
+        $loading = false;
+        editorOpen = false;
+    }
+    catch(e: any)
+    {
+        logger.error('Error saving rule: ', e);
+        error = e.response.data.message;
+        $loading = false;
+    }
 
-  editorOpen = false;
 }
 
 function onEditClick(index: number)
 {
-  logger.info('onEditClick', index)
-  logger.info(String(index));
-  editingIndex = index;
-  const rule = list?.items[index];
-  if(!rule) return; 
-  currentRule = { original: rule, edited: {...rule}}
-  editorOpen = true;
-  return;
-  console.log('onEditClick');
-  /* @ts-ignore */
-  const modal = new bootstrap.Modal(editorDialog);
-  modal.show();
+    editingIndex = index;
+    const item = list?.items[index];
+    if(!item) return; 
+    editingItem = deepClone(item) ;
+    editorOpen = true;
 }
   
 function onPageChange({detail}: {detail: {page: number}})
@@ -76,7 +65,7 @@ async function loadList()
 {
     let query = $svpage.url.searchParams;
     const page = parseInt(query.get('page') || '1');
-    const page_size = parseInt(query.get('page_size') || '10');
+    const page_size = parseInt(query.get('page_size') || '100');
     const sort = query.get('sort') || '';
     const filters = query.get('filters') || ''
     $loading = true;
@@ -99,13 +88,13 @@ function processList(list: RPaginated<RRule>)
 }
 
 afterNavigate(async () => {
-  console.log('afterNavigate');
-  await loadList();
+    console.log('afterNavigate');
+    await loadList();
 });
 
 onMount(async () => {
-  console.log('onMount');
-  await loadList();
+    console.log('onMount');
+    await loadList();
 
 });
 
@@ -128,31 +117,31 @@ onMount(async () => {
   <Loading></Loading>
 {:else}
 
-
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editor">Launch static backdrop modal</button>
-
 <Dialog title="Edit Rule" bind:open={editorOpen}>
-  {#if currentRule}
+  {#if editingItem}
   <DialogBody>
     <form>
       <div class="form-floating mb-3">
-        <input type="text" bind:value={currentRule.edited.name} class="form-control" id="name" placeholder="A name for hte rule">
+        <input type="text" bind:value={editingItem.name} class="form-control" id="name" placeholder="A name for hte rule">
         <label for="floatingInput">Name</label>
       </div>
       <div class="form-floating mb-3">
         <textarea class="form-control" id="sql" placeholder="Postgres compatible SQL" style="height: 10em;">
-          {currentRule.edited.sql}
+          {editingItem.sql}
         </textarea>
         <label for="floatingInput">SQL</label>
       </div>
       <div class="form-floating mb-3">
-        <input type="number" bind:value={currentRule.edited.sort} class="form-control" id="sort" placeholder="Sort order">
+        <input type="number" bind:value={editingItem.sort} class="form-control" id="sort" placeholder="Sort order">
         <label for="floatingInput">Name</label>
       </div>
     </form>
   </DialogBody>
   <DialogFooter>
-    <Button color="primary" busytext="Saving" busy={$loading} on:click={onSave}>Save</Button>
+    {#if error}
+      <span class="text-danger">{error}</span> &nbsp; &nbsp;
+    {/if}
+    <Button color="primary" busytext="Saving" busy={$loading} on:click={onSaveClick} disabled={$loading}>Save</Button>
     <Button color="danger" on:click={()=> editorOpen = false}>Cancel</Button>
   </DialogFooter>
   {/if}
@@ -187,32 +176,10 @@ onMount(async () => {
       <!-- Add more rows as needed -->
     </tbody>
   </table>
-  <!--
-  <div class="d-flex justify-content-center mt-2">
-    <nav aria-label="Paginator">
-      <ul class="pagination">
-        <li class="page-item">
-          <a class="page-link" href="#" aria-label="Previous" class:disabled={page === 1} on:click={()=> onPageChange(page-1)}>
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-        </li>
-        {#each Array(list.page_count) as _, page0}
-        <li class="page-item" class:active = {page0 + 1 === list.page}>
-            <a class="page-link" href="#" on:click={()=> onPageChange(page0+1)}>{page0+1}</a>
-        </li>
-        {/each}
-        <li class="page-item">
-          <a class="page-link" href="#" aria-label="Next" class:disabled={page === list.page_count} on:click={()=> onPageChange(page+1)}>
-            <span aria-hidden="true">&raquo;</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </div>
-  -->
+
 
   <div class="d-flex justify-content-center mt-2">
-    <Paginator page={list.page} page_count={list.page_count} on:pagechange={onPageChange} />
+    <Paginator page={list.page} page_count={list.page_count} page_size={list.page_size} on:pagechange={onPageChange} />
   </div>
 {/if}
 
