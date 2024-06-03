@@ -22,8 +22,8 @@ let editingIndex: number | undefined = undefined;
 async function onSave()
 {
   console.log('onSave', currentRule?.edited);
-  if(!currentRule?.edited) return;
-  if(!editingIndex) return;
+  //if(!currentRule?.edited) return;
+  if(editingIndex === undefined) return;
   if(!list) return;
 
   try 
@@ -48,6 +48,8 @@ async function onSave()
 
 function onEditClick(index: number)
 {
+  logger.info('onEditClick', index)
+  logger.info(String(index));
   editingIndex = index;
   const rule = list?.items[index];
   if(!rule) return; 
