@@ -5,12 +5,12 @@ import { page as svpage } from '$app/stores';
 import { comet, logger } from '$lib';
 import { loading } from '$lib/stores';
 import { Title, Toolbar, Button, Loading, Paginator, Dialog, DialogBody, DialogFooter } from '$lib/ui';
-import type { RPaginated, RRule } from '$lib/types';
+import type { RPaginated, RRule, Editable } from '$lib/types';
 
 
 let list: RPaginated<RRule & Record<string, any>> | undefined = undefined;
 let editorOpen = false;
-let currentRule: RRule | undefined = undefined;
+let currentRule: Editable<RRule> | undefined = undefined;
 
 //let page = 1;
 //let page_size = 50;
@@ -18,15 +18,15 @@ let currentRule: RRule | undefined = undefined;
 //let filters: any = undefined;
 
 
-function onSave()
+async function onSave()
 {
-  console.log('onSave');
+  console.log('onSave', currentRule?.edited);
   editorOpen = false;
 }
 
 function onEditClick(rule: RRule)
 {
-  currentRule = rule;
+  currentRule = { original: rule, edited: {...rule}}
   editorOpen = true;
   return;
   console.log('onEditClick');
@@ -107,17 +107,22 @@ onMount(async () => {
 <Dialog title="Edit Rule" bind:open={editorOpen}>
   {#if currentRule}
   <DialogBody>
-    <div class="form-floating mb-3">
-      <input type="text" bind:value={currentRule.name} class="form-control" id="floatingInput" placeholder="name@example.com">
-      <label for="floatingInput">Name</label>
-    </div>
-    <div class="form-floating mb-3">
-      <textarea class="form-control" id="floatingTextarea" placeholder="">
-        {currentRule.sql}
-      </textarea>
-      <label for="floatingInput">SQL</label>
-    </div>
-
+    <form>
+      <div class="form-floating mb-3">
+        <input type="text" bind:value={currentRule.edited.name} class="form-control" id="name" placeholder="A name for hte rule">
+        <label for="floatingInput">Name</label>
+      </div>
+      <div class="form-floating mb-3">
+        <textarea class="form-control" id="sql" placeholder="Postgres compatible SQL" style="height: 10em;">
+          {currentRule.edited.sql}
+        </textarea>
+        <label for="floatingInput">SQL</label>
+      </div>
+      <div class="form-floating mb-3">
+        <input type="number" bind:value={currentRule.edited.sort} class="form-control" id="sort" placeholder="Sort order">
+        <label for="floatingInput">Name</label>
+      </div>
+    </form>
   </DialogBody>
   <DialogFooter>
     <Button color="primary" on:click={onSave}>Save</Button>
