@@ -14,6 +14,7 @@ let editorOpen = false;
 let editingItem: RRule|undefined = undefined;
 let editingIndex: number|undefined = undefined;
 let error: string | null = null;
+let justMounted = false;
 
 
 
@@ -51,11 +52,14 @@ function onEditClick(index: number)
     editorOpen = true;
 }
   
-function onPageChange({detail}: {detail: {page: number}})
+function onPageChange({detail}: {detail: {page: number, page_size?: number}})
 {
+    console.log({detail});
     const _page = detail.page;
+    const _page_size = detail.page_size || 100;
     console.log(detail);
     $svpage.url.searchParams.set('page', _page.toString());
+    $svpage.url.searchParams.set('page_size', _page_size.toString());
     goto(`?${$svpage.url.searchParams.toString()}`);
 }
 
@@ -88,12 +92,14 @@ function processList(list: RPaginated<RRule>)
 }
 
 afterNavigate(async () => {
-    console.log('afterNavigate');
-    await loadList();
+  if(justMounted) return;
+  await loadList();
+  justMounted = false;
 });
 
 onMount(async () => {
     console.log('onMount');
+    justMounted = true;
     await loadList();
 
 });
@@ -108,8 +114,8 @@ onMount(async () => {
 <Title>Finance Rules</Title>
 
 <Toolbar>
-  <Button icon="bi-plus" size="sm" color="primary" on:click={()=> goto(`/app/finance/rules/edit`)}>Add Rule</Button>
-  <Button data-bs-toggle="tooltip" data-bs-placement="top" title="Tooltip on top" icon="bi-plus" size="sm" color="primary" on:click={()=> goto(`/app/finance/rules/edit`)}>Add Rule</Button>
+  
+  <Button width="5em" icon="bi-plus-lg" size="sm" color="primary" on:click={()=> goto(`/app/finance/rules/edt`)} disabled>Add</Button>
 
 </Toolbar>
 
@@ -133,7 +139,7 @@ onMount(async () => {
       </div>
       <div class="form-floating mb-3">
         <input type="number" bind:value={editingItem.sort} class="form-control" id="sort" placeholder="Sort order">
-        <label for="floatingInput">Name</label>
+        <label for="floatingInput">Sort</label>
       </div>
     </form>
   </DialogBody>
@@ -162,7 +168,7 @@ onMount(async () => {
         <tr>
             <td data-label="Sort" class="text-right">{rule.sort}</td>
             <td data-label="Name" class="text-right">{rule.name}</td>
-            <td data-label="SQL" class="text-center">
+            <td data-label="SQL" class="text-left">
               {rule.sql.substring(0, 100)}...
             </td>
             <td data-label="Action" class="text-center">

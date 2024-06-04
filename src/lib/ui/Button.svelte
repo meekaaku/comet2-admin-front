@@ -14,6 +14,8 @@ export let busy = false;
 export let busytext = '';
 export let icon:string|undefined = undefined;
 
+export let width: string|undefined = undefined;
+
 
 
 $: ariaLabel = $$props['aria-label'];
@@ -37,6 +39,7 @@ block ? 'd-block w-100' : false,
 on:click 
 
 class={classes} type="button"
+style:width={width}
 aria-label={ariaLabel || defaultAriaLabel}
 >
 {#if busy}
