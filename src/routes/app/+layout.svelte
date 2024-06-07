@@ -16,19 +16,14 @@ let navElement: HTMLElement;
 
 function toggle()
 {
-    //sidebarElement.style.marginLeft = (sidebarElement.style.marginLeft == "0px") ? "-240px" : "0px";
-    //mainElement.style.marginLeft = (sidebarElement.style.marginLeft == "0px") ? "0px" : "240px";
+    const w = screen.width < 768 ? "-400px" : "-240px";
     if(sidebarElement.style.marginLeft == "0px")
     {
-       sidebarElement.style.marginLeft = "-240px";
-       //mainElement.style.marginLeft = "0px";
-       //navElement.style.marginLeft = "0px";
+       //sidebarElement.style.marginLeft = "-240px";
+       sidebarElement.style.marginLeft = w;
     }
     else {
-
        sidebarElement.style.marginLeft = "0px";
-       //mainElement.style.marginLeft = "-240px";
-       //navElement.style.marginLeft = "-240px";
     }
 }
 
@@ -49,7 +44,6 @@ onMount(init);
 
 </script>
 <style>
-
 
 .master
 {
@@ -108,7 +102,10 @@ onMount(init);
         margin-left: -400px;
         width: 400px;
     }
+
 }
+
+
 
 
 
@@ -133,34 +130,34 @@ onMount(init);
 
 <Progress></Progress>
 <div class="master">
-    <div bind:this={sidebarElement} class="c-sidebar">
+    <div bind:this={sidebarElement} class="c-sidebar" >
         <div class="accordion accordion-flush" id="accordionFlushExample">
             <div class="logo" style="height: 3rem;">
                 Logo
             </div>
 
             <SidebarDrop name="Catalog" icon="bi-book">
-                <SidebarLink name="Products" icon="bi-person" url="{base}/app/catalog/products" />
-                <SidebarLink name="Collections" icon="bi-activity" url="{base}/app/catalog/collections" />
+                <SidebarLink name="Products" icon="bi-person" {toggle} url="{base}/app/catalog/products" />
+                <SidebarLink name="Collections" icon="bi-activity" {toggle} url="{base}/app/catalog/collections" />
             </SidebarDrop>
 
 
             <SidebarDrop name="Sales" icon="bi-bar-chart">
-                <SidebarLink name="Orders" icon="bi-person" url="{base}/app/sales/orders/list" />
-                <SidebarLink name="Customers" icon="bi-person" url="{base}/app/sales/customers" />
-                <SidebarLink name="Shipments" icon="bi-person" url="{base}/app/sales/customers" />
+                <SidebarLink name="Orders" icon="bi-person" {toggle} url="{base}/app/sales/orders/list" />
+                <SidebarLink name="Customers" icon="bi-person" {toggle} url="{base}/app/sales/customers" />
+                <SidebarLink name="Shipments" icon="bi-person" {toggle} url="{base}/app/sales/customers" />
             </SidebarDrop>
 
             <SidebarDrop name="Finance" icon="bi-cash-coin">
-                <SidebarLink name="Rules" icon="bi-person" url="{base}/app/finance/rules/list" />
+                <SidebarLink name="Rules" icon="bi-person" {toggle} url="{base}/app/finance/rules/list" />
             </SidebarDrop>
 
 
             {#if hasPermission('menu.admin')}
                 <SidebarDrop name="Admin" icon="bi-gear">
-                    <SidebarLink name="Roles" icon="bi-person" url="{base}/app/sales/orders/list" />
-                    <SidebarLink name="Users" icon="bi-person" url="{base}/app/sales/customers" />
-                    <SidebarLink name="Access Control" icon="bi-person" url="{base}/app/sales/customers" />
+                    <SidebarLink name="Roles" icon="bi-person" {toggle} url="{base}/app/sales/orders/list" />
+                    <SidebarLink name="Users" icon="bi-person" {toggle} url="{base}/app/sales/customers" />
+                    <SidebarLink name="Access Control" icon="bi-person" {toggle} url="{base}/app/sales/customers" />
                 </SidebarDrop>
 
 
