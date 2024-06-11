@@ -178,7 +178,7 @@ onMount(init);
                 <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <Icon icon="bi-person" />
                 </button>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu" style="z-index: 100">
                     <li><a class="dropdown-item" href="#"><Icon icon="bi-person-lines-fill"></Icon>Profile</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="#" on:click={logout}> <Icon icon="bi-box-arrow-right"></Icon>Logout</a></li>

@@ -76,11 +76,11 @@ async function loadList()
     try {
       const _list = await comet.finance.rules.list({page, page_size, sort, filters});    
       list = processList(_list);
-      $loading = false
+      $loading = false;
     }
     catch(error) {
         logger.error(`Error loading orders: `, error)
-        $loading = false
+        $loading = false;
     }
     return list;
 }
@@ -91,15 +91,14 @@ function processList(list: RPaginated<RRule>)
     return list;
 }
 
-afterNavigate(async () => {
-  if(justMounted) return;
-  await loadList();
+afterNavigate(() => {
+    if(justMounted) return;
+    loadList();
 });
 
-onMount(async () => {
+onMount(() => {
     justMounted = true;
-    await loadList();
-
+    loadList();
 });
 
 </script>
@@ -151,7 +150,7 @@ onMount(async () => {
   {/if}
 </Dialog>
 
-<table class="ct-table table table-sm table-striped table-hover">
+  <table class="ct-table table table-sm table-striped table-hover">
     <thead>
       <tr>
         <th style="width: 1%" class="text-center">Sort</th>

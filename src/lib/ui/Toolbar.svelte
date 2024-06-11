@@ -19,7 +19,7 @@
     
 </style>
 
-<div class="sticky-top shadow">
+<div class="sticky-top shadow" style="z-index: 90">
     <slot></slot>
 </div>
 
