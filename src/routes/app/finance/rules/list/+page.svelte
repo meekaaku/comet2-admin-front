@@ -54,7 +54,7 @@ function onEditClick(index: number)
   
 function onPageChange({detail}: {detail: {page: number, page_size?: number}})
 {
-    console.log({detail});
+    justMounted = false;
     const _page = detail.page;
     const _page_size = detail.page_size || 100;
     console.log(detail);
@@ -94,11 +94,9 @@ function processList(list: RPaginated<RRule>)
 afterNavigate(async () => {
   if(justMounted) return;
   await loadList();
-  justMounted = false;
 });
 
 onMount(async () => {
-    console.log('onMount');
     justMounted = true;
     await loadList();
 
