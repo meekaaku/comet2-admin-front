@@ -150,6 +150,7 @@ onMount(init);
 
             <SidebarDrop name="Finance" icon="bi-cash-coin">
                 <SidebarLink name="Rules" icon="bi-person" {toggle} url="{base}/app/finance/rules/list" />
+                <SidebarLink name="P&L" icon="bi-person" {toggle} url="{base}/app/finance/profitloss" />
             </SidebarDrop>
 
 
