@@ -10,6 +10,7 @@
     margin-bottom: 1em;
     display: flex;
     flex-wrap: wrap;
+    justify-content: flex-end;
     row-gap: 5px;
     column-gap: 5px;
     top: -0.8em;

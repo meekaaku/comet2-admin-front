@@ -25,16 +25,30 @@ class Rules
 		const response = await this.client.put(`finance/rules/${RRule.id}`, RRule);
 		return response.data as RRule;
 	}
+}
 
+class Reports
+{
 
+	constructor(private readonly client: any) {}
+
+	async profitloss(spec: any): Promise<any>
+	{
+		const { date_from, date_to, group_by } = spec;
+		const response = await this.client.get(`finance/reports/profitloss?date_from=${date_from}&date_to=${date_to}&group_by=${group_by}`);
+		return response.data;
+	}
 }
 
 export class Finance 
 {
 	rules: Rules;
+	reports: Reports;
+
 	constructor(private readonly client: any) 
 	{
 		this.rules = new Rules(client);
+		this.reports = new Reports(client);
 	}
 
 
