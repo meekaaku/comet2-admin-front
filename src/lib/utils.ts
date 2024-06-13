@@ -1,6 +1,6 @@
 import * as currency from 'currency.js';
-
-
+import { toasts } from './stores';
+import type { IToast } from './types';
 
 // Formats a number to user's locale
 export function formatNumber(n: number|string, decimals: number = 2) {
@@ -85,4 +85,10 @@ export function replaceURLQuery(values: Record<string, string>)
 export function deepClone<T>(obj: T): T
 {
   return JSON.parse(JSON.stringify(obj));
+}
+
+export function notify(toast: IToast)
+{
+    toasts.update(t => [...t, toast]);
+    setTimeout(() => toasts.update(t => t.filter(x => x !== toast)), 5000);
 }

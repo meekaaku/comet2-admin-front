@@ -12,3 +12,9 @@ export interface Editable<T>
   original: T;
   edited: T;
 }
+
+export interface IToast 
+{
+  message: string;
+  heading: string;
+}

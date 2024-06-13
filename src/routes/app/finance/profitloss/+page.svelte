@@ -3,8 +3,8 @@ import { goto, afterNavigate} from '$app/navigation';
 import { onMount } from 'svelte';
 import { page as svpage } from '$app/stores';
 import { loading } from '$lib/stores';
-import { comet } from '$lib';
-import {logger} from '$lib';
+import { comet, logger } from '$lib';
+import { notify } from '$lib/utils';
 import { Title, Toolbar, Button } from '$lib/ui';
 
 let justMounted = false;
@@ -27,6 +27,7 @@ async function load()
       const _report = await comet.finance.reports.profitloss(spec);    
       report = processReport(_report);
       $loading = false;
+      notify({heading: 'Success', message: 'Report loaded successfully' + Math.random()});
     }
     catch(error) {
         logger.error(`Error loading orders: `, error)
@@ -66,7 +67,8 @@ onMount(() => {
 </script>
 
 
-<Title>Profit & Loss</Title>
+<Title>PL</Title>
+
 <Toolbar>
   
     <div class="input-group input-group-sm" style="width: 11em;">

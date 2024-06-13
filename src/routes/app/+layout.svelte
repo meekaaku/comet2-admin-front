@@ -2,7 +2,7 @@
 import { onMount } from 'svelte';
 import { base } from '$app/paths'
 import { goto } from '$app/navigation';
-import { SidebarDrop, SidebarLink, Icon, Progress, About } from '$lib/ui';
+import { SidebarDrop, SidebarLink, Icon, Progress, About, Toaster } from '$lib/ui';
 import { profile } from '$lib/stores';
 import { logout, login, refresh, hasPermission } from '$lib/auth';
 import { comet } from '$lib';
@@ -129,6 +129,7 @@ onMount(init);
 
 
 <Progress></Progress>
+<Toaster></Toaster>
 <div class="master">
     <div bind:this={sidebarElement} class="c-sidebar" >
         <div class="accordion accordion-flush" id="accordionFlushExample">
