@@ -15,6 +15,7 @@ export interface Editable<T>
 
 export interface IToast 
 {
+  type: 'info' | 'error'
   message: string;
   heading: string;
 }

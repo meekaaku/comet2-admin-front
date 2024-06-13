@@ -89,6 +89,6 @@ export function deepClone<T>(obj: T): T
 
 export function notify(toast: IToast)
 {
-    toasts.update(t => [...t, toast]);
-    setTimeout(() => toasts.update(t => t.filter(x => x !== toast)), 5000);
+    toasts.update(t => [toast, ...t]);
+    setTimeout(() => toasts.update(t => t.filter(x => x !== toast)), 8000);
 }

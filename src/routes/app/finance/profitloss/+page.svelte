@@ -1,4 +1,5 @@
 <script lang="ts">
+import type { AxiosError} from 'axios';
 import { goto, afterNavigate} from '$app/navigation';
 import { onMount } from 'svelte';
 import { page as svpage } from '$app/stores';
@@ -14,7 +15,7 @@ let date_to: string;
 let group_by: string;
 
 
-
+let n = 0;
 async function load()
 {
     let query = $svpage.url.searchParams;
@@ -27,10 +28,9 @@ async function load()
       const _report = await comet.finance.reports.profitloss(spec);    
       report = processReport(_report);
       $loading = false;
-      notify({heading: 'Success', message: 'Report loaded successfully' + Math.random()});
     }
-    catch(error) {
-        logger.error(`Error loading orders: `, error)
+    catch(error: any) {
+        notify({type: 'error', heading: 'Error', message: error.response.data.message})
         $loading = false;
     }
     return report;

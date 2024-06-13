@@ -1,6 +1,7 @@
 <script lang="ts">
 import { fade } from 'svelte/transition';
 import { toasts } from '$lib/stores';
+import { Icon } from '$lib/ui';
 
 
 
@@ -8,11 +9,19 @@ import { toasts } from '$lib/stores';
 
 
 <div class="toast-container" style="bottom: 1em; right: 1em;">
-    {#each $toasts as {heading, message}}
+    {#each $toasts as {type, heading, message}}
       <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" in:fade out:fade>
-        <div class="toast-header">
+        <div class="toast-header text-white" 
+          class:bg-danger={type === 'error'} 
+          class:bg-primary={type === 'info'}
+        >
+          {#if type === 'info'}
+            <Icon icon="bi-check-circle"/>
+          {:else if type === 'error'}
+            <Icon icon="bi-exclamation-triangle"/>
+          {/if}
           <!-- <img src="..." class="rounded me-2" alt="..."> -->
-          <strong class="me-auto">{heading}</strong>
+          &nbsp; &nbsp; <strong class="me-auto">{heading}</strong>
           <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
         <div class="toast-body">
@@ -21,3 +30,15 @@ import { toasts } from '$lib/stores';
       </div>
   {/each}
 </div>
+
+<style>
+.error
+{
+  background-color: rgb(255, 155, 97);
+}
+
+.info 
+{
+  background-color: rgb(172, 255, 181);
+}
+</style>
