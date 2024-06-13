@@ -6,7 +6,7 @@ import { page as svpage } from '$app/stores';
 import { loading } from '$lib/stores';
 import { comet, logger } from '$lib';
 import { notify } from '$lib/utils';
-import { Title, Toolbar, Button } from '$lib/ui';
+import { Title, Toolbar, Button, Loading } from '$lib/ui';
 
 let justMounted = false;
 let report: any = undefined;
@@ -94,3 +94,42 @@ onMount(() => {
 
 
 </Toolbar>
+
+
+
+{#if !report}
+  <Loading></Loading>
+{:else}
+<table class="ct-table table table-sm table-striped table-hover">
+    <thead>
+        <tr>
+        <th class="text-center">Account</th>
+        <th class="text-center">Job</th>
+        {#each report.periods as period}
+        <th class="text-center">{period}</th>
+        {/each}
+        </tr>
+    </thead>
+    <tbody>
+
+        {#each report.lines as line}
+        <tr>
+            <td data-label={line.account_name} class="text-right">{line.account_name}</td>
+            <td data-label={line.job_name} class="text-right">{line.job_name}</td>
+                
+            {#each report.periods as period}
+            <td data-label={period} class="text-left">
+                {line[period]}
+            </td>
+            {/each}
+            <td data-label="Action" class="text-center">
+                <Button size="sm" icon="bi-pencil" color="primary" on:click={() => 1} />
+                <Button size="sm" icon="bi-trash" color="danger"/>
+            </td>
+          
+        </tr>
+        {/each}
+  </tbody>
+</table>
+
+{/if}

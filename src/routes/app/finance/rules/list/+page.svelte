@@ -150,34 +150,34 @@ onMount(() => {
   {/if}
 </Dialog>
 
-  <table class="ct-table table table-sm table-striped table-hover">
-    <thead>
+<table class="ct-table table table-sm table-striped table-hover">
+  <thead>
+    <tr>
+      <th style="width: 1%" class="text-center">Sort</th>
+      <th style="width: 20%" class="text-center">Name</th>
+      <th class="text-left">SQL</th>
+      <th style="width: 10%" class="text-center">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+      {#if list}
+      {#each list.items as rule, i}
       <tr>
-        <th style="width: 1%" class="text-center">Sort</th>
-        <th style="width: 20%" class="text-center">Name</th>
-        <th class="text-left">SQL</th>
-        <th style="width: 10%" class="text-center">Action</th>
+          <td data-label="Sort" class="text-right">{rule.sort}</td>
+          <td data-label="Name" class="text-right">{rule.name}</td>
+          <td data-label="SQL" class="text-left">
+            {rule.sql.substring(0, 100)}...
+          </td>
+          <td data-label="Action" class="text-center">
+              <Button size="sm" icon="bi-pencil" color="primary" on:click={() => onEditClick(i)} />
+              <Button size="sm" icon="bi-trash" color="danger"/>
+          </td>
+          
       </tr>
-    </thead>
-    <tbody>
-        {#if list}
-        {#each list.items as rule, i}
-        <tr>
-            <td data-label="Sort" class="text-right">{rule.sort}</td>
-            <td data-label="Name" class="text-right">{rule.name}</td>
-            <td data-label="SQL" class="text-left">
-              {rule.sql.substring(0, 100)}...
-            </td>
-            <td data-label="Action" class="text-center">
-                <Button size="sm" icon="bi-pencil" color="primary" on:click={() => onEditClick(i)} />
-                <Button size="sm" icon="bi-trash" color="danger"/>
-            </td>
-            
-        </tr>
-        {/each}
-        {/if}
-      <!-- Add more rows as needed -->
-    </tbody>
+      {/each}
+      {/if}
+    <!-- Add more rows as needed -->
+  </tbody>
   </table>
 
 
