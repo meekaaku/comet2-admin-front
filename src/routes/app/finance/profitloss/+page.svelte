@@ -5,7 +5,7 @@ import { onMount } from 'svelte';
 import { page as svpage } from '$app/stores';
 import { loading } from '$lib/stores';
 import { comet, logger } from '$lib';
-import { notify } from '$lib/utils';
+import { notify, formatNumber } from '$lib/utils';
 import { Title, Toolbar, Button, Loading } from '$lib/ui';
 
 let justMounted = false;
@@ -67,7 +67,7 @@ onMount(() => {
 </script>
 
 
-<Title>PL</Title>
+<Title>Profit & Loss</Title>
 
 <Toolbar>
   
@@ -98,8 +98,12 @@ onMount(() => {
 
 
 {#if !report}
-  <Loading></Loading>
+<Loading></Loading>
 {:else}
+    <h3>{report.title}</h3>
+<p>
+    {report.brief}
+</p>
 <table class="ct-table table table-sm table-striped table-hover">
     <thead>
         <tr>
@@ -108,6 +112,7 @@ onMount(() => {
         {#each report.periods as period}
         <th class="text-center">{period}</th>
         {/each}
+        <th class="text-center">Action</th>
         </tr>
     </thead>
     <tbody>
@@ -115,16 +120,18 @@ onMount(() => {
         {#each report.lines as line}
         <tr>
             <td data-label={line.account_name} class="text-right">{line.account_name}</td>
-            <td data-label={line.job_name} class="text-right">{line.job_name}</td>
+            <td data-label={line.job_name} class="text-right">{line.job_name || ''}</td>
                 
             {#each report.periods as period}
-            <td data-label={period} class="text-left">
-                {line[period]}
+            <td data-label={period} class="text-end">
+                {formatNumber(line[period])}
             </td>
             {/each}
             <td data-label="Action" class="text-center">
-                <Button size="sm" icon="bi-pencil" color="primary" on:click={() => 1} />
+                <!-- 
+                <Button size="sm" outline icon="bi-pencil" color="primary" on:click={() => 1} />
                 <Button size="sm" icon="bi-trash" color="danger"/>
+                -->
             </td>
           
         </tr>
