@@ -13,6 +13,8 @@ let report: any = undefined;
 let date_from: string;
 let date_to: string;
 let group_by: string;
+let date_from2: string;
+let date_to2: string;
 
 
 let n = 0;
@@ -35,6 +37,16 @@ async function load()
     }
     return report;
 }
+function onGroupByChange()
+{
+    if(group_by === 'compare')
+    {
+        date_from = new Date().getFullYear() + '-01-01';
+        date_to = new Date().getFullYear() + '-12-31';
+    }
+
+}
+
 
 function onUpdateClick()
 {
@@ -81,7 +93,7 @@ onMount(() => {
     </div>
     <div class="input-group input-group-sm" style="width: 11em;">
         <span class="input-group-text" id="basic-addon1">Group by</span>
-        <select bind:value={group_by} class="form-select" aria-label="Group by select">
+        <select bind:value={group_by} on:change={onGroupByChange} class="form-select" aria-label="Group by select">
             <option value="none" selected>None</option>
             <option value="month">Month</option>
             <option value="quarter">Quarter</option>
@@ -89,6 +101,19 @@ onMount(() => {
             <option value="compare">Compare</option>
         </select>
     </div>
+
+    {#if group_by === 'compare'}
+    <div class="input-group input-group-sm" style="width: 11em;">
+        <span class="input-group-text" id="basic-addon1">From</span>
+        <input type="date" class="form-control" bind:value={date_from2} placeholder="From" aria-label="From date" aria-describedby="From date">
+    </div>
+    <div class="input-group input-group-sm" style="width: 11em;">
+        <span class="input-group-text" id="basic-addon1">To</span>
+        <input type="date" class="form-control" bind:value={date_to2} placeholder="To" aria-label="To date" aria-describedby="From date">
+    </div>
+    {/if}
+
+
     <Button width="8em" icon="bi-arrow-clockwise" busy={$loading} busytext="Updating" size="sm" color="primary" on:click={onUpdateClick} disabled={$loading}>Update</Button>
 
 
@@ -100,10 +125,10 @@ onMount(() => {
 {#if !report}
 <Loading></Loading>
 {:else}
-    <h3>{report.title}</h3>
-<p>
-    {report.brief}
-</p>
+    <h3 class="text-center">{report.title}</h3>
+    <p class="text-center">
+        {report.brief}
+    </p>
 <table class="ct-table table table-sm table-striped table-hover">
     <thead>
         <tr>
