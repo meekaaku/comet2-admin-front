@@ -15,20 +15,13 @@ export async function logout()
 
 export async function login(tenant: string, username: string, password: string, redirect: string|undefined = undefined): Promise<void>
 {
-	try 
-	{
-		const data = await comet.auth.login({tenant, username, password})
-        localStorage.setItem('access', data.access);
-        localStorage.setItem('refresh', data.refresh);
-		profile.set(data.profile);
-		acl.set(data.acl);
-        if(redirect) goto(`${redirect}`);
+    const data = await comet.auth.login({tenant, username, password})
+    localStorage.setItem('access', data.access);
+    localStorage.setItem('refresh', data.refresh);
+    profile.set(data.profile);
+    acl.set(data.acl);
+    if(redirect) goto(`${redirect}`);
 
-	}
-	catch (e: any)
-	{
-        throw new Error(e.response.data);
-	}
 }
 
 export async function refresh(): Promise<void>

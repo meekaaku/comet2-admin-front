@@ -21,10 +21,10 @@ async function onLoginClick()
 	}
 	catch (e: any)
 	{
-		console.log('Login page eror', e);
+		const message = e.response?.data?.message || 'An error occurred. Pls check connection'
 		$loading = false;
 		busy = false;
-		notify({ type: 'error', heading: 'Error', message: e.message })
+		notify({ type: 'error', heading: 'Error', message })
 	}
 }
 </script>
