@@ -1,3 +1,79 @@
+import type { Q, QPaginated, RPaginated } from '$lib/types';
+
+export interface QTransactionList extends Q, QPaginated
+{
+    account_id: string;
+    job_id: string|null|undefined;
+    date_from?: string;
+    date_to?: string;
+    period?: string;
+}
+
+export interface QTransaction extends Q
+{
+    id: string;
+} 
+
+export interface RTransaction 
+{
+    id: string;
+    date_created: string;
+    description: string;
+    reference: string
+    job_id: string|null;
+    job_name: string|null;
+    user_id: string;
+    user_name: string;
+}
+
+export interface RTransactionLine
+{
+    id: string;
+    date_created: string;
+    user_id: string;
+    user_name: string;
+    transaction_id: string;
+    description: string;
+    currency_code: string;
+    amount: string;
+    
+}
+
+export interface RTransactionLineList extends  RPaginated<RTransactionLine>
+{
+
+}
+/* Profit *& Loss staement */
+export interface QProfitLoss  extends Q
+{
+    date_from: string;
+    date_to: string;
+    group_by: 'month'|'quarter'|'year'|'none'|'compare';
+}
+
+export interface RProfitLoss
+{
+    title: string;
+    brief: string;
+    date_from: string;
+    date_to: string;
+    group_by: 'month' | 'quarter' | 'year' | 'none' | 'compare';
+    currency_code: string;
+    headers: string[];
+    rows: RProfitLossRow[];
+}
+
+interface RProfitLossRow
+{
+    sort: number;
+    account_id: string;
+    job_id: string;
+    job_name: string;
+    [key:string]: string | number | string;
+
+}
+/* End of Profit & Loss statement */
+
 export interface RCashbookListRow
 {
     id: string;

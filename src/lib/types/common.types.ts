@@ -1,3 +1,14 @@
+/* All requests shuld have these */
+export interface Q {
+  tenant_id: string;
+  user_id: string
+}
+export interface QPaginated
+{
+  page: number;
+  page_size: number;
+}
+
 export interface RPaginated<T> 
 {
   page: number;
@@ -7,6 +18,7 @@ export interface RPaginated<T>
   items: T[];
 }
 
+export const RDefaultPaginated: RPaginated<any> = {page: 0, page_size: 0, page_count: 0,  items: [], item_count: 0};
 export interface Editable<T> 
 {
   original: T;

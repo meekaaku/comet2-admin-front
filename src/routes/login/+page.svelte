@@ -1,8 +1,9 @@
 <script lang="ts">
 import { base } from '$app/paths';
 import { login } from '$lib/auth';
-import { Button } from '$lib/ui';
+import { Button, Toaster } from '$lib/ui';
 import { loading } from '$lib/stores';
+import { notify } from '$lib/utils';
 
 let tenant= '';
 let username = '';
@@ -20,14 +21,15 @@ async function onLoginClick()
 	}
 	catch (e: any)
 	{
+		console.log('Login page eror', e);
 		$loading = false;
-		console.error('ERROR =============');
-		console.log(e);
 		busy = false;
-		error_data = e.response.data;
+		notify({ type: 'error', heading: 'Error', message: e.message })
 	}
 }
 </script>
+
+<Toaster></Toaster>
 <main class="d-flex w-100">
 	<div class="container d-flex flex-column">
 		<div class="row vh-100">

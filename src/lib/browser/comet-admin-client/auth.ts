@@ -8,7 +8,14 @@ export class Auth {
 
 	async login(credentials: QLogin) 
 	{
+		try  {
 		const response = await this.client.post('auth/login', credentials);
+	}
+	catch (error: any) {
+		console.log('In library error', error)
+		throw error;
+	}
+		console.log('Response received', response.data);
 		const data = response.data as RLogin;
 		this.setHeader('Authorization', `Bearer ${data.access}`);
 		return data;

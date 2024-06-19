@@ -6,7 +6,9 @@ import { page as svpage } from '$app/stores';
 import { loading } from '$lib/stores';
 import { comet, logger } from '$lib';
 import { notify, formatNumber } from '$lib/utils';
-import { Title, Toolbar, Button, Loading } from '$lib/ui';
+import { Title, Toolbar, Button, Loading, Dialog, DialogBody, DialogFooter } from '$lib/ui';
+import DialogTransactions from './DialogTransactions.svelte'
+	import type { RTransactionLineList } from '$lib/types';
 
 let justMounted = false;
 let report: any = undefined;
@@ -15,6 +17,8 @@ let date_to: string;
 let group_by: string;
 let date_from2: string;
 let date_to2: string;
+let dialogOpen = false;
+let transactionsList: RTransactionLineList;
 
 
 let n = 0;
@@ -37,6 +41,25 @@ async function load()
     }
     return report;
 }
+
+async function onAmountClick(row:any, period:string)
+{
+    try {
+
+        console.log(row, period);
+        $loading = true;
+        transactionsList = await comet.finance.transactions.lines({account_id: row.account_id, job_id: row.job_id, period });
+        dialogOpen = true;
+
+        $loading = false;
+    }
+    catch(error: any)
+    {
+        notify({type: 'error', heading: 'Error', message: error.response.data.message})
+        $loading = false;
+    }
+}
+
 function onGroupByChange()
 {
     if(group_by === 'compare')
@@ -120,6 +143,10 @@ onMount(() => {
 
 </Toolbar>
 
+<DialogTransactions bind:open={dialogOpen} data={transactionsList} />
+
+
+
 
 
 {#if !report}
@@ -134,22 +161,22 @@ onMount(() => {
         <tr>
         <th class="text-center">Account</th>
         <th class="text-center">Job</th>
-        {#each report.periods as period}
-        <th class="text-center">{period}</th>
+        {#each report.headers as header}
+            <th class="text-center">{header}</th>
         {/each}
         <th class="text-center">Action</th>
         </tr>
     </thead>
     <tbody>
 
-        {#each report.lines as line}
+        {#each report.rows as row}
         <tr>
-            <td data-label={line.account_name} class="text-right">{line.account_name}</td>
-            <td data-label={line.job_name} class="text-right">{line.job_name || ''}</td>
+            <td data-label={row.account_name} class="text-right">{row.account_name}</td>
+            <td data-label={row.job_name} class="text-right">{row.job_name || ''}</td>
                 
-            {#each report.periods as period}
-            <td data-label={period} class="text-end">
-                {formatNumber(line[period])}
+            {#each report.headers as header}
+            <td data-label={header} class="text-end">
+                <a href="#" class="link-dark" on:click={() => onAmountClick(row, header)}>{formatNumber(row[header])}</a>
             </td>
             {/each}
             <td data-label="Action" class="text-center">
