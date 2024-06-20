@@ -33,7 +33,10 @@ export interface RTransactionLine
     user_id: string;
     user_name: string;
     transaction_id: string;
-    description: string;
+    transaction_description: string;
+    transaction_line_description: string;
+    cashbook_name: string|null;
+    cashbook_line_id: string|null;
     currency_code: string;
     amount: string;
     

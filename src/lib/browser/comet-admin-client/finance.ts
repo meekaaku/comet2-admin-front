@@ -52,16 +52,31 @@ class Transactions
 	}
 
 }
+
+class Cashbooks 
+{
+	constructor(private readonly client: any) {}
+
+	async line(id: string): Promise<any>
+	{
+		const response = await this.client.get(`finance/cashbooks/line/${id}`);
+		return response.data;
+	}
+
+}
+
 export class Finance 
 {
 	rules: Rules;
 	reports: Reports;
+	cashbooks: Cashbooks;
 	transactions: Transactions;
 
 	constructor(private readonly client: any) 
 	{
 		this.rules = new Rules(client);
 		this.reports = new Reports(client);
+		this.cashbooks = new Cashbooks(client);
 		this.transactions = new Transactions(client);
 	}
 

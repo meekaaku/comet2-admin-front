@@ -3,6 +3,7 @@ import { onMount } from "svelte";
 
 export let title = 'Title';
 export let open = false;
+export let size: 'lg'|'sm'|'xl'| '' = '';
 
 let dialog: HTMLDivElement;
 let modal: any;
@@ -31,7 +32,13 @@ else {
 }
 
 </script>
-<div bind:this={dialog} id="dialog" class="modal modal-lg fade" tabindex="-1" data-bs-backdrop="static" >
+<div 
+  bind:this={dialog} 
+  id="dialog" 
+  class:modal-lg={size === 'lg'} 
+  class:modal-sm={size === 'sm'} 
+  class:modal-xl={size === 'xl'} 
+  class="modal fade" tabindex="-1" data-bs-backdrop="static" >
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">

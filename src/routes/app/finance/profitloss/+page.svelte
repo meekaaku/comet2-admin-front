@@ -46,7 +46,6 @@ async function onAmountClick(row:any, period:string)
 {
     try {
 
-        console.log(row, period);
         $loading = true;
         transactionsList = await comet.finance.transactions.lines({account_id: row.account_id, job_id: row.job_id, period });
         dialogOpen = true;
@@ -55,7 +54,8 @@ async function onAmountClick(row:any, period:string)
     }
     catch(error: any)
     {
-        notify({type: 'error', heading: 'Error', message: error.response.data.message})
+        const message = error.response?.data?.message || 'An error occurred. Pls check connection';
+        notify({type: 'error', heading: 'Error', message })
         $loading = false;
     }
 }
