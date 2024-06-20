@@ -1,4 +1,4 @@
-import type { RRule, RPaginated, RProfitLoss, RTransaction, RTransactionLineList } from "$lib/types";
+import type { RRule, RPaginated, RProfitLoss, RTransaction, RTransactionLineList, RCashbookLine, RFinanceClass } from "$lib/types";
 
 type TListSpec = {
 	page: number;
@@ -48,7 +48,7 @@ class Transactions
 		const { account_id, job_id, period } = spec;
 		const job_id_str = job_id ? `&job_id=${job_id}` : '';
 		const response = await this.client.get(`finance/transactions/lines-list?account_id=${account_id}&period=${period}&${job_id_str}`);
-		return response.data;
+		return response.data as RTransactionLineList;
 	}
 
 }
@@ -57,10 +57,28 @@ class Cashbooks
 {
 	constructor(private readonly client: any) {}
 
-	async line(id: string): Promise<any>
+	async line(id: string): Promise<RCashbookLine>
 	{
 		const response = await this.client.get(`finance/cashbooks/line/${id}`);
-		return response.data;
+		return response.data as RCashbookLine;
+	}
+
+	async updateLine(id: string, data: any): Promise<RCashbookLine>
+	{
+		const response = await this.client.put(`finance/cashbooks/line/${id}`, data);
+		return response.data as RCashbookLine;
+	}
+
+}
+
+class Classes
+{
+	constructor(private readonly client: any) {}
+
+	async all(): Promise<RFinanceClass[]>
+	{
+		const response = await this.client.get(`finance/classes/all`);
+		return response.data as RFinanceClass[];
 	}
 
 }
@@ -70,6 +88,7 @@ export class Finance
 	rules: Rules;
 	reports: Reports;
 	cashbooks: Cashbooks;
+	classes: Classes;
 	transactions: Transactions;
 
 	constructor(private readonly client: any) 
@@ -77,8 +96,8 @@ export class Finance
 		this.rules = new Rules(client);
 		this.reports = new Reports(client);
 		this.cashbooks = new Cashbooks(client);
+		this.classes = new Classes(client);
 		this.transactions = new Transactions(client);
 	}
-
 
 }

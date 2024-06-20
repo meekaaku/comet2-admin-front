@@ -46,6 +46,35 @@ export interface RTransactionLineList extends  RPaginated<RTransactionLine>
 {
 
 }
+
+
+export interface RFinanceClass
+{
+    id: string;
+    name: string;
+    sort: number;
+}
+
+export interface RCashbookLine
+{
+    id :string;
+    date_settle: string;
+    name :string;
+    description :string;
+    ref1 :string;
+    ref2 :string;
+    ref3 :string;
+    currency_code :string;
+    amount :string;
+    cashbook_name :string;
+    class_name :string;
+    class_id :string;
+    job_id :string;
+    job_name :string;
+}
+
+
+
 /* Profit *& Loss staement */
 export interface QProfitLoss  extends Q
 {
