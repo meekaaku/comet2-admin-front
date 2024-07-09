@@ -12,7 +12,7 @@ let cashbookLine: RCashbookLine;
 let classes: RFinanceClass[] = [];
 let step: 'transactionline'|'cashbookline' = 'transactionline';
 let title = "Profit & Loss Transactions";
-let size = "lg";
+let size: 'lg'|'sm'|'xl'| '' = "lg";
 let selected_class_id: string|null = null;
 
 
@@ -102,15 +102,15 @@ async function saveCashbookLine()
     <DialogBody>
         <form>
         <div class="form-floating form-control-sm mb-3">
-            <input type="text" value={cashbookLine.cashbook_name} class="form-control" id="name" placeholder={cashbookLine.cashbook_name} disabled>
+            <input type="text" value={cashbookLine.source_name} class="form-control" id="name" placeholder={cashbookLine.source_name} disabled>
             <label for="floatingInput">Source</label>
         </div>
         <div class="form-floating form-control-sm mb-3">
-            <input type="text" value={`${formatDate(cashbookLine.date_settle)}`} class="form-control" id="name" placeholder='date settled' disabled>
+            <input type="text" value={`${formatDate(cashbookLine.date_created)}`} class="form-control" id="name" placeholder='date created' disabled>
             <label for="floatingInput">Date</label>
         </div>
         <div class="form-floating form-control-sm mb-3">
-            <input type="text" value={cashbookLine.ref1} class="form-control" id="name" placeholder='date settled' disabled>
+            <input type="text" value={cashbookLine.reference} class="form-control" id="name" placeholder='date settled' disabled>
             <label for="floatingInput">Reference</label>
         </div>
         <div class="form-floating form-control-sm mb-3">
@@ -129,7 +129,7 @@ async function saveCashbookLine()
                 <option value={cls.id}>{cls.name}</option>
                 {/each}
             </select>
-            <label for="floatingSelect">Works with selects</label>
+            <label for="floatingSelect">Class</label>
         </div>
         {/if}
 

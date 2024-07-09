@@ -60,21 +60,18 @@ export interface RFinanceClass
 export interface RCashbookLine
 {
     id :string;
-    date_settle: string;
+    date_created: string;
     name :string;
     description :string;
-    ref1 :string;
-    ref2 :string;
-    ref3 :string;
+    reference:string;
     currency_code :string;
     amount :string;
-    cashbook_name :string;
+    source_name :string;
     class_name :string;
     class_id :string;
     job_id :string;
     job_name :string;
 }
-
 
 
 /* Profit *& Loss staement */
