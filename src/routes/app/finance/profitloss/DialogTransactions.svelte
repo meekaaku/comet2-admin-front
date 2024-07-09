@@ -67,9 +67,9 @@ async function saveCashbookLine()
             <tr>
                 <th class="text-center">Date</th>
                 <th class="text-center">Description</th>
+                <th class="text-center">Name</th>
                 <th class="text-center">Amount</th>
                 <th class="text-center">Source</th>
-                <th class="text-center">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -77,13 +77,14 @@ async function saveCashbookLine()
             <tr>
                 <td data-label="Date" class="text-start">{formatDate(item.date_created)}</td>
                 <td data-label="Description" class="text-start">{item.transaction_description || ''}</td>
-                <td data-label="Amount" class="text-end">{item.currency_code} {formatNumber(item.amount)}</td>
+                <td data-label="Name" class="text-start">{item.name || ''}</td>
+                <td data-label="Amount" class="text-end">
+                    <a href="#"  class="link-dark" on:click={()=> onViewSourceClick(item.source_line_id)}>{item.currency_code} {formatNumber(item.amount)}</a>
+                </td>
                 <td data-label="Source" class="text-start">
-                    <a href="#"  class="link-dark" on:click={()=> onViewSourceClick(item.cashbook_line_id)}>{item.cashbook_name}</a>
+                   {item.source_name}
+                </td>
 
-                </td>
-                <td data-label="Action" class="text-end">action
-                </td>
             </tr>
             {/each}
   

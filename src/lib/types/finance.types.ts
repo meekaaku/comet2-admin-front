@@ -32,14 +32,16 @@ export interface RTransactionLine
     date_created: string;
     user_id: string;
     user_name: string;
-    transaction_id: string;
     transaction_description: string;
     transaction_line_description: string;
-    cashbook_name: string|null;
-    cashbook_line_id: string|null;
+    reference: string;
+    name: string;
+    job_id: string;
+    source_name: string;
+    source_line_id: string;
+    transaction_id: string;
     currency_code: string;
     amount: string;
-    
 }
 
 export interface RTransactionLineList extends  RPaginated<RTransactionLine>
