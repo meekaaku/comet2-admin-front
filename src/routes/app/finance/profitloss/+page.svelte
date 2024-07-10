@@ -8,7 +8,7 @@ import { comet, logger } from '$lib';
 import { notify, formatNumber } from '$lib/utils';
 import { Title, Toolbar, Button, Loading, Dialog, DialogBody, DialogFooter } from '$lib/ui';
 import DialogTransactions from './DialogTransactions.svelte'
-	import type { RTransactionLineList } from '$lib/types';
+import type { RTransactionLineList } from '$lib/types';
 
 let justMounted = false;
 let report: any = undefined;

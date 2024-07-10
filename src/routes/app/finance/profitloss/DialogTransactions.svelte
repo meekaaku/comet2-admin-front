@@ -76,7 +76,10 @@ async function saveCashbookLine()
             {#each data.items as item}
             <tr>
                 <td data-label="Date" class="text-start">{formatDate(item.date_created)}</td>
-                <td data-label="Description" class="text-start">{item.transaction_description || ''}</td>
+                <td data-label="Description" class="text-start">
+                    {item.transaction_description || ''}
+                    {#if item.transaction_line_description} ({item.transaction_line_description}){/if}
+                </td>
                 <td data-label="Name" class="text-start">{item.name || ''}</td>
                 <td data-label="Amount" class="text-end">
                     <a href="#"  class="link-dark" on:click={()=> onViewSourceClick(item.source_line_id)}>{item.currency_code} {formatNumber(item.amount)}</a>
@@ -96,11 +99,17 @@ async function saveCashbookLine()
     </DialogBody>
     <DialogFooter>
       
-      <Button color="danger" on:click={()=> open = false}>Close</Button>
+      <Button color="danger" icon="bi-x-lg" on:click={()=> open = false}>Close</Button>
     </DialogFooter>
     {:else if step === 'cashbookline' && cashbookLine}
     <DialogBody>
         <form>
+        <div class="form-floating form-control-sm mb-3">
+            <input type="text" value={cashbookLine.id} class="form-control" id="name" placeholder={cashbookLine.id} disabled>
+            <label for="floatingInput">Id</label>
+        </div>       
+
+
         <div class="form-floating form-control-sm mb-3">
             <input type="text" value={cashbookLine.source_name} class="form-control" id="name" placeholder={cashbookLine.source_name} disabled>
             <label for="floatingInput">Source</label>
@@ -142,8 +151,9 @@ async function saveCashbookLine()
 
     </DialogBody>
     <DialogFooter>
-      <Button color="danger" on:click={() => {step = 'transactionline'; size = "lg"}}>Back</Button>
-      <Button color="success" on:click={saveCashbookLine}>Save</Button>
+      <Button icon="bi-arrow-left" color="danger" on:click={() => {step = 'transactionline'; size = "lg"}}>Back</Button>
+
+      <Button icon="bi-floppy" busy={$loading} busytext="Saving"  color="success" on:click={saveCashbookLine} disabled={$loading}>Save</Button>
     </DialogFooter>
 
     {/if}
