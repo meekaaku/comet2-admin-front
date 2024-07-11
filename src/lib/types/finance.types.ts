@@ -1,6 +1,6 @@
 import type { Q, QPaginated, RPaginated } from '$lib/types';
 
-export interface QTransactionList extends Q, QPaginated
+export interface QAccountTransactionList extends Q, QPaginated
 {
     account_id: string;
     job_id: string|null|undefined;
@@ -14,6 +14,13 @@ export interface QTransaction extends Q
     id: string;
 } 
 
+export interface QTransactionLine
+{
+
+}
+
+
+
 export interface RTransaction 
 {
     id: string;
@@ -24,6 +31,25 @@ export interface RTransaction
     job_name: string|null;
     user_id: string;
     user_name: string;
+}
+
+export interface RAccountTransaction
+{
+    id: string;
+    date_created: string;
+    description: string;
+    reference: string;
+    name: string;
+    job_id: string;
+
+    line_id: string;
+    line_description: string;
+    currency_code: string;
+    currency_rate: string;
+    amount: string;
+
+    source_name: string;
+    source_line_id: string;
 }
 
 export interface RTransactionLine
@@ -49,15 +75,7 @@ export interface RTransactionLineList extends  RPaginated<RTransactionLine>
 
 }
 
-
-export interface RFinanceClass
-{
-    id: string;
-    name: string;
-    sort: number;
-}
-
-export interface RCashbookLine
+export interface RSourceLine
 {
     id :string;
     date_created: string;
@@ -72,6 +90,14 @@ export interface RCashbookLine
     job_id :string;
     job_name :string;
 }
+
+export interface RFinanceClass
+{
+    id: string;
+    name: string;
+    sort: number;
+}
+
 
 
 /* Profit *& Loss staement */

@@ -8,7 +8,7 @@ import { comet, logger } from '$lib';
 import { notify, formatNumber } from '$lib/utils';
 import { Title, Toolbar, Button, Loading, Dialog, DialogBody, DialogFooter } from '$lib/ui';
 import DialogTransactions from './DialogTransactions.svelte'
-import type { RTransactionLineList } from '$lib/types';
+import type { RAccountTransaction, RPaginated } from '$lib/types';
 
 let justMounted = false;
 let report: any = undefined;
@@ -18,7 +18,7 @@ let group_by: string;
 let date_from2: string;
 let date_to2: string;
 let dialogOpen = false;
-let transactionsList: RTransactionLineList;
+let transactionsList: RPaginated<RAccountTransaction>;
 
 
 let n = 0;
@@ -47,7 +47,7 @@ async function onAmountClick(row:any, period:string)
     try {
 
         $loading = true;
-        transactionsList = await comet.finance.transactions.lines({account_id: row.account_id, job_id: row.job_id, period });
+        transactionsList = await comet.finance.transactions.accountTransactions({account_id: row.account_id, job_id: row.job_id, period });
         dialogOpen = true;
 
         $loading = false;

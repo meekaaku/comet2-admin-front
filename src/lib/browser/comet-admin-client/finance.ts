@@ -1,4 +1,4 @@
-import type { RRule, RPaginated, RProfitLoss, RTransaction, RTransactionLineList, RCashbookLine, RFinanceClass } from "$lib/types";
+import type { RRule, RPaginated, RProfitLoss, RTransaction, RTransactionLineList, RSourceLine, RFinanceClass, RAccountTransaction } from "$lib/types";
 
 type TListSpec = {
 	page: number;
@@ -43,30 +43,30 @@ class Transactions
 {
 	constructor(private readonly client: any) {}
 
-	async lines(spec: any): Promise<RTransactionLineList>
+	async accountTransactions(spec: any): Promise<RPaginated<RAccountTransaction>>
 	{
 		const { account_id, job_id, period } = spec;
 		const job_id_str = job_id ? `&job_id=${job_id}` : '';
-		const response = await this.client.get(`finance/transactions/lines-list?account_id=${account_id}&period=${period}&${job_id_str}`);
-		return response.data as RTransactionLineList;
+		const response = await this.client.get(`finance/transactions/account-transactions?account_id=${account_id}&period=${period}&${job_id_str}`);
+		return response.data as RPaginated<RAccountTransaction>;
 	}
 
 }
 
-class Cashbooks 
+class Sources 
 {
 	constructor(private readonly client: any) {}
 
-	async line(id: string): Promise<RCashbookLine>
+	async line(id: string): Promise<RSourceLine>
 	{
-		const response = await this.client.get(`finance/cashbooks/line/${id}`);
-		return response.data as RCashbookLine;
+		const response = await this.client.get(`finance/sources/line/${id}`);
+		return response.data as RSourceLine;
 	}
 
-	async updateLine(id: string, data: any): Promise<RCashbookLine>
+	async updateLine(id: string, data: any): Promise<RSourceLine>
 	{
-		const response = await this.client.put(`finance/cashbooks/line/${id}`, data);
-		return response.data as RCashbookLine;
+		const response = await this.client.put(`finance/sources/line/${id}`, data);
+		return response.data as RSourceLine;
 	}
 
 }
@@ -87,7 +87,7 @@ export class Finance
 {
 	rules: Rules;
 	reports: Reports;
-	cashbooks: Cashbooks;
+	sources: Sources;
 	classes: Classes;
 	transactions: Transactions;
 
@@ -95,7 +95,7 @@ export class Finance
 	{
 		this.rules = new Rules(client);
 		this.reports = new Reports(client);
-		this.cashbooks = new Cashbooks(client);
+		this.sources = new Sources(client);
 		this.classes = new Classes(client);
 		this.transactions = new Transactions(client);
 	}

@@ -1,14 +1,14 @@
 <script lang="ts">
-import type { RTransactionLineList, RCashbookLine, RFinanceClass } from '$lib/types';
+import type { RTransactionLineList, RPaginated, RSourceLine, RFinanceClass, RAccountTransaction } from '$lib/types';
 import {Dialog, DialogBody, DialogFooter, Button} from '$lib/ui';
 import { formatDate, formatNumber, notify } from '$lib/utils';
 import { loading } from '$lib/stores';
 import { comet } from '$lib';
 
 export let open = false;
-export let data: RTransactionLineList|undefined ;
+export let data: RPaginated<RAccountTransaction>|undefined ;
 
-let cashbookLine: RCashbookLine;
+let cashbookLine: RSourceLine;
 let classes: RFinanceClass[] = [];
 let step: 'transactionline'|'cashbookline' = 'transactionline';
 let title = "Profit & Loss Transactions";
@@ -23,7 +23,7 @@ async function onViewSourceClick(id: string|null)
     if(!id) return;
     try {
         $loading = true;
-        cashbookLine = await comet.finance.cashbooks.line(id);
+        cashbookLine = await comet.finance.sources.line(id);
         selected_class_id = cashbookLine.class_id;
         classes = await comet.finance.classes.all();
         $loading = false;
@@ -39,12 +39,12 @@ async function onViewSourceClick(id: string|null)
     
 }
 
-async function saveCashbookLine()
+async function saveSourceLine()
 {
     if(!selected_class_id) return;
     try {
         $loading = true;
-        const updated = await comet.finance.cashbooks.updateLine(cashbookLine.id, {class_id: selected_class_id});
+        const updated = await comet.finance.sources.updateLine(cashbookLine.id, {class_id: selected_class_id});
         notify({type: 'info', heading: 'Success', message: 'Changes saved successfully'});
         $loading = false;
         step = 'transactionline';
@@ -77,8 +77,8 @@ async function saveCashbookLine()
             <tr>
                 <td data-label="Date" class="text-start">{formatDate(item.date_created)}</td>
                 <td data-label="Description" class="text-start">
-                    {item.transaction_description || ''}
-                    {#if item.transaction_line_description} ({item.transaction_line_description}){/if}
+                    {item.description  || ''}
+                    {#if item.line_description} ({item.line_description}){/if}
                 </td>
                 <td data-label="Name" class="text-start">{item.name || ''}</td>
                 <td data-label="Amount" class="text-end">
@@ -153,7 +153,7 @@ async function saveCashbookLine()
     <DialogFooter>
       <Button icon="bi-arrow-left" color="danger" on:click={() => {step = 'transactionline'; size = "lg"}}>Back</Button>
 
-      <Button icon="bi-floppy" busy={$loading} busytext="Saving"  color="success" on:click={saveCashbookLine} disabled={$loading}>Save</Button>
+      <Button icon="bi-floppy" busy={$loading} busytext="Saving"  color="success" on:click={saveSourceLine} disabled={$loading}>Save</Button>
     </DialogFooter>
 
     {/if}
