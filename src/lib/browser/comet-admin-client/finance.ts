@@ -32,10 +32,17 @@ class Reports
 
 	constructor(private readonly client: any) {}
 
-	async profitloss(spec: any): Promise<RProfitLoss>
+	async profitLoss(spec: any): Promise<RProfitLoss>
 	{
 		const { date_from, date_to, group_by } = spec;
 		const response = await this.client.get(`finance/reports/profitloss?date_from=${date_from}&date_to=${date_to}&group_by=${group_by}`);
+		return response.data;
+	}
+
+	async balanceSheet(spec: any): Promise<any>
+	{
+		const { date_at } = spec;
+		const response = await this.client.get(`finance/reports/balancesheet?date_at=${date_at}`);
 		return response.data;
 	}
 }
