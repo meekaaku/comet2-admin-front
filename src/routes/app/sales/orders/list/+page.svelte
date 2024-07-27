@@ -2,26 +2,60 @@
 import { onMount, afterUpdate } from 'svelte';
 import { afterNavigate, goto } from '$app/navigation';
 import { page as svpage } from '$app/stores';
-import { Title, Paginator } from '$lib/ui';
+import { Title, Paginator, Loading } from '$lib/ui';
 import { comet, logger } from '$lib';
 import { loading } from '$lib/stores';
 import { formatNumber, formatAddress, formatDate, formatTime } from '$lib/utils';
 import type { ROrderListRow, RPaginated } from '$lib/types';
 
-let order_list: RPaginated<ROrderListRow>|undefined = undefined;
+let list: RPaginated<ROrderListRow>|undefined = undefined;
 let page = 1;
 let page_size = 5;
 let sort: string|undefined = undefined;
 let filters: any = undefined;
+let justMounted = false;
 
-  
+function onPageChange({detail}: {detail: {page: number, page_size?: number}})
+{
+    justMounted = false;
+    const _page = detail.page;
+    const _page_size = detail.page_size || 100;
+    console.log(detail);
+    $svpage.url.searchParams.set('page', _page.toString());
+    $svpage.url.searchParams.set('page_size', _page_size.toString());
+    goto(`?${$svpage.url.searchParams.toString()}`);
+}
 
-function onPageChange(_page: number)
+
+ 
+
+function _onPageChange(_page: number)
 {
     $svpage.url.searchParams.set('page', _page.toString());
     goto(`?${$svpage.url.searchParams.toString()}`);
 }
 
+async function loadList()
+{
+    let query = $svpage.url.searchParams;
+    const page = parseInt(query.get('page') || '1');
+    const page_size = parseInt(query.get('page_size') || '100');
+    const sort = query.get('sort') || '';
+    const filters = query.get('filters') || ''
+    $loading = true;
+    try {
+      const _list = await comet.orders.list({page, page_size, sort, filters});    
+      list = processList(_list);
+      $loading = false;
+    }
+    catch(error) {
+        logger.error(`Error loading orders: `, error)
+        $loading = false;
+    }
+    return list;
+}
+
+/*
 async function loadOrders()
 {
     let query = new URLSearchParams($svpage.url.searchParams.toString());
@@ -38,17 +72,18 @@ async function loadOrders()
     }
     return order_list;
 }
+    */
 
-function processList(list: RPaginated<ROrderListRow>)
+function processList(_list: RPaginated<ROrderListRow>)
 {
-    list.items.forEach(order => {
+    _list.items.forEach(order => {
         const lines = order.shipto_address.split('\n');
         if(!order.data)  {
           order.data = {}
         }
         order.data.shipto_lines = lines;
     })
-    return list;
+    return _list;
 }
 /*
 afterNavigate(async () => {
@@ -57,12 +92,24 @@ afterNavigate(async () => {
 })
 */
 
+/*
 onMount(async () => {
   await loadOrders();
   afterNavigate(async () => {
     console.log('running afternavigate')
     await loadOrders();
   })
+});
+*/
+
+afterNavigate(() => {
+    if(justMounted) return;
+    loadList();
+});
+
+onMount(() => {
+    justMounted = true;
+    loadList();
 });
 
 </script>
@@ -76,8 +123,8 @@ onMount(async () => {
 
 <div class="sticky-top">Toolar</div>
 
-{#if $loading|| !order_list}
-    Loading orders
+{#if !list}
+  <Loading></Loading>
 {:else}
 
   <table class="ct-table table table-sm table-striped">
@@ -95,8 +142,7 @@ onMount(async () => {
       </tr>
     </thead>
     <tbody>
-        {#if order_list}
-        {#each order_list.items as order}
+        {#each list.items as order}
         <tr>
             <td data-label="Order #" class="text-center">{order.order_no}</td>
             <td data-label="Date" class="text-center">{formatDate(order.date_created)} {formatTime(order.date_created)}</td>
@@ -127,10 +173,16 @@ onMount(async () => {
             </td>
         </tr>
         {/each}
-        {/if}
       <!-- Add more rows as needed -->
     </tbody>
   </table>
+
+
+<div class="d-flex justify-content-center mt-2">
+  <Paginator page={list.page} page_count={list.page_count} page_size={list.page_size} on:pagechange={onPageChange} />
+</div>
+
+<!-- 
 <div class="d-flex justify-content-center mt-2">
 <nav aria-label="Page navigation example">
   <ul class="pagination" style="display:contents">
@@ -152,6 +204,7 @@ onMount(async () => {
   </ul>
 </nav>
 </div>
+-->
 {/if}
 
 
