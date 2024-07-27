@@ -2,7 +2,7 @@
 import { onMount, afterUpdate } from 'svelte';
 import { afterNavigate, goto } from '$app/navigation';
 import { page as svpage } from '$app/stores';
-import * as UI from '$lib/ui';
+import { Title, Paginator } from '$lib/ui';
 import { comet, logger } from '$lib';
 import { loading } from '$lib/stores';
 import { formatNumber, formatAddress, formatDate, formatTime } from '$lib/utils';
@@ -72,7 +72,7 @@ onMount(async () => {
 
 </style>
 
-<UI.Title>Sales Orders</UI.Title>
+<Title>Sales Orders</Title>
 
 <div class="sticky-top">Toolar</div>
 
