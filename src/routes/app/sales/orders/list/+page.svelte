@@ -166,7 +166,7 @@ onMount(() => {
             <td data-label="Shipping" class="text-end">{order.shipping_method_name} - {order.shipping_status_name}</td>
             <td data-label="Total" class="text-end">{order.currency_code} {formatNumber(order.total_wtax)}</td>
             <td data-label="Action" class="text-center">
-                <a on:click={comet.orders.get(order.order_id)}>View</a>
+                <a on:click ={ () => comet.orders.get(order.order_id)} href="#" aria-details="get order button">View</a>
                 
                 , Ccanel
 
