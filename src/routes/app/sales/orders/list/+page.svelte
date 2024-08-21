@@ -168,7 +168,7 @@ onMount(() => {
             <td data-label="Action" class="text-center">
                 <a on:click ={ () => comet.orders.get(order.order_id)} href="#" aria-details="get order button">View</a>
                 
-                , Ccanel
+                , Cancel
 
             </td>
         </tr>
