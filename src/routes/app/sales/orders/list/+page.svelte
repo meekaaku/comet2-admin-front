@@ -27,8 +27,6 @@ function onPageChange({detail}: {detail: {page: number, page_size?: number}})
     goto(`?${$svpage.url.searchParams.toString()}`);
 }
 
-
-
 async function loadList()
 {
     let query = $svpage.url.searchParams;
@@ -49,6 +47,7 @@ async function loadList()
     return list;
 }
 
+
 function processList(_list: RPaginated<ROrderListRow>)
 {
     _list.items.forEach(order => {
@@ -60,6 +59,10 @@ function processList(_list: RPaginated<ROrderListRow>)
     })
     return _list;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> bb78c17 (changes)
 
 afterNavigate(() => {
     if(justMounted) return;
@@ -84,6 +87,11 @@ onMount(() => {
 <Toolbar>
   
   <Button width="5em" icon="bi-plus-lg" size="sm" color="primary" on:click={()=> goto(`/app/finance/rules/edt`)} disabled>Add</Button>
+<<<<<<< HEAD
+=======
+
+</Toolbar>
+>>>>>>> bb78c17 (changes)
 
 </Toolbar>
 
