@@ -2,29 +2,16 @@
 import { onMount, afterUpdate } from 'svelte';
 import { afterNavigate, goto } from '$app/navigation';
 import { page as svpage } from '$app/stores';
-import * as UI from '$lib/ui';
-import { Paginator } from '$lib/ui';
+import { Title, Toolbar, Button, Paginator, Loading } from '$lib/ui';
 import { comet, logger } from '$lib';
 import { loading } from '$lib/stores';
 import { formatNumber, formatAddress, formatDate, formatTime } from '$lib/utils';
 import type { ROrderListRow, RPaginated } from '$lib/types';
 
 let list: RPaginated<ROrderListRow>|undefined = undefined;
-let page = 1;
-let page_size = 5;
-let sort: string|undefined = undefined;
-let filters: any = undefined;
 let justMounted = false;
 
-  
 
-/*
-function onPageChange(_page: number)
-{
-    $svpage.url.searchParams.set('page', _page.toString());
-    goto(`?${$svpage.url.searchParams.toString()}`);
-}
-*/
 
 function onPageChange({detail}: {detail: {page: number, page_size?: number}})
 {
@@ -37,24 +24,26 @@ function onPageChange({detail}: {detail: {page: number, page_size?: number}})
     goto(`?${$svpage.url.searchParams.toString()}`);
 }
 
-
-
 async function loadList()
 {
-    let query = new URLSearchParams($svpage.url.searchParams.toString());
-    page = parseInt(query.get('page') || '1');
+    let query = $svpage.url.searchParams;
+    const page = parseInt(query.get('page') || '1');
+    const page_size = parseInt(query.get('page_size') || '100');
+    const sort = query.get('sort') || '';
+    const filters = query.get('filters') || ''
     $loading = true;
     try {
       const _list = await comet.orders.list({page, page_size, sort, filters});    
       list = processList(_list);
-      $loading = false
+      $loading = false;
     }
     catch(error) {
         logger.error(`Error loading orders: `, error)
-        $loading = false
+        $loading = false;
     }
     return list;
 }
+
 
 function processList(_list: RPaginated<ROrderListRow>)
 {
@@ -67,12 +56,7 @@ function processList(_list: RPaginated<ROrderListRow>)
     })
     return _list;
 }
-/*
-afterNavigate(async () => {
-    console.log('running afternavigate')
-    await loadOrders();
-})
-*/
+
 
 afterNavigate(() => {
     if(justMounted) return;
@@ -93,12 +77,17 @@ onMount(() => {
 
 </style>
 
-<UI.Title>Sales Orders</UI.Title>
+<Title>Sales Orders</Title>
+<Toolbar>
+  
+  <Button width="5em" icon="bi-plus-lg" size="sm" color="primary" on:click={()=> goto(`/app/finance/rules/edt`)} disabled>Add</Button>
+
+</Toolbar>
 
 <div class="sticky-top">Toolar</div>
 
-{#if $loading|| !list}
-    Loading orders
+{#if !list}
+  <Loading></Loading>
 {:else}
 
   <table class="ct-table table table-sm table-striped">
