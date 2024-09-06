@@ -27,13 +27,6 @@ function onPageChange({detail}: {detail: {page: number, page_size?: number}})
 }
 
 
- 
-
-function _onPageChange(_page: number)
-{
-    $svpage.url.searchParams.set('page', _page.toString());
-    goto(`?${$svpage.url.searchParams.toString()}`);
-}
 
 async function loadList()
 {
@@ -55,25 +48,6 @@ async function loadList()
     return list;
 }
 
-/*
-async function loadOrders()
-{
-    let query = new URLSearchParams($svpage.url.searchParams.toString());
-    page = parseInt(query.get('page') || '1');
-    $loading = true;
-    try {
-      const list = await comet.orders.list({page, page_size, sort, filters});    
-      order_list = processList(list);
-      $loading = false
-    }
-    catch(error) {
-        logger.error(`Error loading orders: `, error)
-        $loading = false
-    }
-    return order_list;
-}
-    */
-
 function processList(_list: RPaginated<ROrderListRow>)
 {
     _list.items.forEach(order => {
@@ -92,16 +66,6 @@ afterNavigate(async () => {
 })
 */
 
-/*
-onMount(async () => {
-  await loadOrders();
-  afterNavigate(async () => {
-    console.log('running afternavigate')
-    await loadOrders();
-  })
-});
-*/
-
 afterNavigate(() => {
     if(justMounted) return;
     loadList();
@@ -111,6 +75,8 @@ onMount(() => {
     justMounted = true;
     loadList();
 });
+
+
 
 </script>
 
@@ -182,29 +148,7 @@ onMount(() => {
   <Paginator page={list.page} page_count={list.page_count} page_size={list.page_size} on:pagechange={onPageChange} />
 </div>
 
-<!-- 
-<div class="d-flex justify-content-center mt-2">
-<nav aria-label="Page navigation example">
-  <ul class="pagination" style="display:contents">
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Previous" class:disabled={page === 1} on:click={()=> onPageChange(page-1)}>
-        <span aria-hidden="true">&laquo;</span>
-      </a>
-    </li>
-    {#each Array(order_list.page_count) as _, page0}
-    <li class="page-item" class:active = {page0 + 1 === order_list.page}>
-        <a class="page-link" href="#" on:click={()=> onPageChange(page0+1)}>{page0+1}</a>
-    </li>
-    {/each}
-    <li class="page-item">
-      <a class="page-link" href="#" aria-label="Next" class:disabled={page === order_list.page_count} on:click={()=> onPageChange(page+1)}>
-        <span aria-hidden="true">&raquo;</span>
-      </a>
-    </li>
-  </ul>
-</nav>
-</div>
--->
+
 {/if}
 
 
