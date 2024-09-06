@@ -1,6 +1,6 @@
 import axios, { type AxiosInstance } from 'axios';
 import { Auth } from './auth';
-import { Orders } from './orders';
+import { Sales } from './sales';
 import { Finance } from './finance';
 
 
@@ -8,7 +8,7 @@ export class CometAdminClient
 {
 	readonly axios: AxiosInstance ;
 	readonly auth: Auth;
-	readonly orders: Orders;
+	readonly sales: Sales;
 	readonly finance: Finance;
 
 	constructor(
@@ -24,7 +24,7 @@ export class CometAdminClient
 		});
 		//_axios.defaults.withCredentials = true;
 		this.auth = new Auth(_axios);
-		this.orders = new Orders(_axios);
+		this.sales = new Sales(_axios);
 		this.finance = new Finance(_axios);
 
 		/*

@@ -24,6 +24,8 @@ function onPageChange({detail}: {detail: {page: number, page_size?: number}})
     goto(`?${$svpage.url.searchParams.toString()}`);
 }
 
+
+
 async function loadList()
 {
     let query = $svpage.url.searchParams;
@@ -33,7 +35,7 @@ async function loadList()
     const filters = query.get('filters') || ''
     $loading = true;
     try {
-      const _list = await comet.orders.list({page, page_size, sort, filters});    
+      const _list = await comet.sales.orders.list({page, page_size, sort, filters});    
       list = processList(_list);
       $loading = false;
     }
@@ -43,7 +45,6 @@ async function loadList()
     }
     return list;
 }
-
 
 function processList(_list: RPaginated<ROrderListRow>)
 {
@@ -56,7 +57,6 @@ function processList(_list: RPaginated<ROrderListRow>)
     })
     return _list;
 }
-
 
 afterNavigate(() => {
     if(justMounted) return;
@@ -84,8 +84,6 @@ onMount(() => {
 
 </Toolbar>
 
-<div class="sticky-top">Toolar</div>
-
 {#if !list}
   <Loading></Loading>
 {:else}
@@ -105,7 +103,6 @@ onMount(() => {
       </tr>
     </thead>
     <tbody>
-        {#if list}
         {#each list.items as order}
         <tr>
             <td data-label="Order #" class="text-center">{order.order_no}</td>
@@ -130,21 +127,21 @@ onMount(() => {
             <td data-label="Shipping" class="text-end">{order.shipping_method_name} - {order.shipping_status_name}</td>
             <td data-label="Total" class="text-end">{order.currency_code} {formatNumber(order.total_wtax)}</td>
             <td data-label="Action" class="text-center">
-                <a on:click={comet.orders.get(order.order_id)}>View</a>
+                <a on:click ={ () => comet.orders.get(order.order_id)} href="#" aria-details="get order button">View</a>
                 
                 , Cancel
 
             </td>
         </tr>
         {/each}
-        {/if}
       <!-- Add more rows as needed -->
     </tbody>
   </table>
 
-  <div class="d-flex justify-content-center mt-2">
-    <Paginator page={list.page} page_count={list.page_count} page_size={list.page_size} on:pagechange={onPageChange} />
-  </div>
+
+<div class="d-flex justify-content-center mt-2">
+  <Paginator page={list.page} page_count={list.page_count} page_size={list.page_size} on:pagechange={onPageChange} />
+</div>
 
 
 {/if}

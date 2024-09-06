@@ -150,7 +150,9 @@ onMount(() => {
 
 
 {#if !report}
-<Loading></Loading>
+    {#if $loading}
+        <Loading></Loading> loading
+    {/if}
 {:else}
     <h3 class="text-center">{report.title}</h3>
     <p class="text-center">
