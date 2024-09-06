@@ -2,7 +2,7 @@
 import { onMount, afterUpdate } from 'svelte';
 import { afterNavigate, goto } from '$app/navigation';
 import { page as svpage } from '$app/stores';
-import { Title, Paginator, Loading } from '$lib/ui';
+import { Title, Paginator, Loading, Toolbar, Button } from '$lib/ui';
 import { comet, logger } from '$lib';
 import { loading } from '$lib/stores';
 import { formatNumber, formatAddress, formatDate, formatTime } from '$lib/utils';
@@ -37,7 +37,7 @@ async function loadList()
     const filters = query.get('filters') || ''
     $loading = true;
     try {
-      const _list = await comet.orders.list({page, page_size, sort, filters});    
+      const _list = await comet.sales.orders.list({page, page_size, sort, filters});    
       list = processList(_list);
       $loading = false;
     }
@@ -86,8 +86,11 @@ onMount(() => {
 </style>
 
 <Title>Sales Orders</Title>
+<Toolbar>
+  
+  <Button width="5em" icon="bi-plus-lg" size="sm" color="primary" on:click={()=> goto(`/app/finance/rules/edt`)} disabled>Add</Button>
 
-<div class="sticky-top">Toolar</div>
+</Toolbar>
 
 {#if !list}
   <Loading></Loading>
