@@ -11,7 +11,10 @@ import type { ROrderListRow, RPaginated } from '$lib/types';
 let list: RPaginated<ROrderListRow>|undefined = undefined;
 let justMounted = false;
 
-
+export async function load()
+{
+  console.log('load');
+}
 
 function onPageChange({detail}: {detail: {page: number, page_size?: number}})
 {
