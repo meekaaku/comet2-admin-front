@@ -138,15 +138,7 @@ onMount(() => {
 
 
     <Button width="8em" icon="bi-arrow-clockwise" busy={$loading} busytext="Updating" size="sm" color="primary" on:click={onUpdateClick} disabled={$loading}>Update</Button>
-
-
-
 </Toolbar>
-
-<DialogTransactions bind:open={dialogOpen} data={transactionsList} />
-
-
-
 
 
 {#if !report}

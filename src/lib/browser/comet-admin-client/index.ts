@@ -2,6 +2,7 @@ import axios, { type AxiosInstance } from 'axios';
 import { Auth } from './auth';
 import { Sales } from './sales';
 import { Finance } from './finance';
+import { Catalog } from './catalog';
 
 
 export class CometAdminClient 
@@ -10,6 +11,7 @@ export class CometAdminClient
 	readonly auth: Auth;
 	readonly sales: Sales;
 	readonly finance: Finance;
+	readonly catalog: Catalog;
 
 	constructor(
 		private readonly base_url: string,
@@ -26,15 +28,8 @@ export class CometAdminClient
 		this.auth = new Auth(_axios);
 		this.sales = new Sales(_axios);
 		this.finance = new Finance(_axios);
+		this.catalog = new Catalog(_axios);
 
-		/*
-		this.collections = new Collections(client);
-		this.channels = new Channels(client);
-		this.customer = new Customer(client);
-		this.products = new Products(client);
-		this.shipping = new Shipping(client);
-		this.payments = new Payments(client)
-		*/
 		this.axios = _axios;
 	}
 }

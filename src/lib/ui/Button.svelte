@@ -36,7 +36,7 @@ block ? 'd-block w-100' : false,
 
 <button 
 {...$$restProps}
-on:click 
+on:click
 
 class={classes} type="button"
 style:width={width}

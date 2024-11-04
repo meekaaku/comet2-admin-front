@@ -92,3 +92,29 @@ export function notify(toast: IToast)
     toasts.update(t => [toast, ...t]);
     setTimeout(() => toasts.update(t => t.filter(x => x !== toast)), 8000);
 }
+
+
+export function clickoutside(node: HTMLElement) {
+	// the node has been mounted in the DOM
+	
+	window.addEventListener('click', handleClick);
+  console.log('added click listener to ', node);
+	
+	function handleClick(e: MouseEvent){   
+    console.log('outclick target is ', e.target);
+    if (!node.contains(e.target as Node)){
+      console.log('not contained')
+      node.dispatchEvent(new CustomEvent('outclick'))
+    }
+    else {
+      console.log('contained')
+    }
+  }
+
+	return {
+		destroy() {
+			// the node has been removed from the DOM
+			window.removeEventListener('click', handleClick)
+		}
+	};
+} 
