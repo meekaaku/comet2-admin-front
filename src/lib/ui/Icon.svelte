@@ -1,6 +1,10 @@
 <script lang="ts">
 
-export let icon = 'bi-arrow-right';
+    interface Props {
+        icon?: string;
+    }
+
+    let { icon = 'bi-arrow-right' }: Props = $props();
 
 const prefix = icon.slice(0,2)  // bi - bootstrap icons, fi - feather icons, sh - streamlinehq 
 const rest = icon.slice(3);

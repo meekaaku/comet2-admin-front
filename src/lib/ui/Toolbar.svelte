@@ -1,4 +1,9 @@
 <script lang="ts">
+    interface Props {
+        children?: import('svelte').Snippet;
+    }
+
+    let { children }: Props = $props();
 
 </script>
 
@@ -21,7 +26,7 @@
 </style>
 
 <div class="sticky-top shadow" style="z-index: 90">
-    <slot></slot>
+    {@render children?.()}
 </div>
 
 

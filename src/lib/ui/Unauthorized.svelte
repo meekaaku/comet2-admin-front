@@ -1,8 +1,16 @@
+<script>
+    interface Props {
+        children?: import('svelte').Snippet;
+    }
+
+    let { children }: Props = $props();
+</script>
+
 
 <!-- <div class="alert alert-danger" role="alert"> -->
 <div class="outer">
     <div class="alert alert-danger" role="alert">
-    <slot></slot>
+    {@render children?.()}
     </div>
 </div>
 

@@ -1,8 +1,18 @@
 <script lang="ts">
 import { Icon } from '$lib/ui';
-export let id = Math.random().toString(36).substring(7);
-export let icon = '';
-export let name = '';
+    interface Props {
+        id?: any;
+        icon?: string;
+        name?: string;
+        children?: import('svelte').Snippet;
+    }
+
+    let {
+        id = Math.random().toString(36).substring(7),
+        icon = '',
+        name = '',
+        children
+    }: Props = $props();
 
 </script>
 
@@ -17,7 +27,7 @@ export let name = '';
         <span class="align-middle">{name}</span>
     </a>
     <ul id={id} class="sidebar-dropdown list-unstyled collapse " data-bs-parent="#sidebar" style="padding-left: 2rem;">
-    <slot></slot>
+    {@render children?.()}
     </ul>
 </li>
 

@@ -1,6 +1,10 @@
 <script lang="ts">
 
-export let message = 'Loading...';
+	interface Props {
+		message?: string;
+	}
+
+	let { message = 'Loading...' }: Props = $props();
 </script>
 
 <main class="d-flex w-100">

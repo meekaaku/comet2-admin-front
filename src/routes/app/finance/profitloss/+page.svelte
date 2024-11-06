@@ -11,12 +11,12 @@ import DialogTransactions from './DialogTransactions.svelte'
 import type { RAccountTransaction, RPaginated } from '$lib/types';
 
 let justMounted = false;
-let report: any = undefined;
-let date_from: string;
-let date_to: string;
-let group_by: string;
-let date_from2: string;
-let date_to2: string;
+let report: any = $state(undefined);
+let date_from: string = $state();
+let date_to: string = $state();
+let group_by: string = $state();
+let date_from2: string = $state();
+let date_to2: string = $state();
 let dialogOpen = false;
 let transactionsList: RPaginated<RAccountTransaction>;
 
@@ -116,7 +116,7 @@ onMount(() => {
     </div>
     <div class="input-group input-group-sm" style="width: 11em;">
         <span class="input-group-text" id="basic-addon1">Group by</span>
-        <select bind:value={group_by} on:change={onGroupByChange} class="form-select" aria-label="Group by select">
+        <select bind:value={group_by} onchange={onGroupByChange} class="form-select" aria-label="Group by select">
             <option value="none" selected>None</option>
             <option value="month">Month</option>
             <option value="quarter">Quarter</option>
@@ -170,7 +170,7 @@ onMount(() => {
                 
             {#each report.headers as header}
             <td data-label={header} class="text-end">
-                <a href="#" class="link-dark" on:click={() => onAmountClick(row, header)}>{formatNumber(row[header])}</a>
+                <a href="#" class="link-dark" onclick={() => onAmountClick(row, header)}>{formatNumber(row[header])}</a>
             </td>
             {/each}
             <td data-label="Action" class="text-center">

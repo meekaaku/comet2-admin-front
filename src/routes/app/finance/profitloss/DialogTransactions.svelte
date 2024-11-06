@@ -5,15 +5,19 @@ import { formatDate, formatNumber, notify } from '$lib/utils';
 import { loading } from '$lib/stores';
 import { comet } from '$lib';
 
-export let open = false;
-export let data: RPaginated<RAccountTransaction>|undefined ;
+  interface Props {
+    open?: boolean;
+    data: RPaginated<RAccountTransaction>|undefined;
+  }
 
-let cashbookLine: RSourceLine;
-let classes: RFinanceClass[] = [];
-let step: 'transactionline'|'cashbookline' = 'transactionline';
+  let { open = $bindable(false), data }: Props = $props();
+
+let cashbookLine: RSourceLine = $state();
+let classes: RFinanceClass[] = $state([]);
+let step: 'transactionline'|'cashbookline' = $state('transactionline');
 let title = "Profit & Loss Transactions";
-let size: 'lg'|'sm'|'xl'| '' = "lg";
-let selected_class_id: string|null = null;
+let size: 'lg'|'sm'|'xl'| '' = $state("lg");
+let selected_class_id: string|null = $state(null);
 
 
 
@@ -82,7 +86,7 @@ async function saveSourceLine()
                 </td>
                 <td data-label="Name" class="text-start">{item.name || ''}</td>
                 <td data-label="Amount" class="text-end">
-                    <a href="#"  class="link-dark" on:click={()=> onViewSourceClick(item.source_line_id)}>{item.currency_code} {formatNumber(item.amount)}</a>
+                    <a href="#"  class="link-dark" onclick={()=> onViewSourceClick(item.source_line_id)}>{item.currency_code} {formatNumber(item.amount)}</a>
                 </td>
                 <td data-label="Source" class="text-start">
                    {item.source_name}

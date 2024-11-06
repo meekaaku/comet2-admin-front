@@ -1,13 +1,15 @@
 <script lang="ts">
+	import { preventDefault } from 'svelte/legacy';
+
 import { base } from '$app/paths';
 import { login } from '$lib/auth';
 import { Button, Toaster } from '$lib/ui';
 import { loading } from '$lib/stores';
 import { notify } from '$lib/utils';
 
-let tenant= '';
-let username = '';
-let password = '';
+let tenant= $state('');
+let username = $state('');
+let password = $state('');
 let error_data: any|null = null;
 let busy = false;
 
@@ -46,7 +48,7 @@ async function onLoginClick()
 					<div class="card">
 						<div class="card-body">
 							<div class="m-sm-3">
-								<form on:submit|preventDefault={onLoginClick}>
+								<form onsubmit={preventDefault(onLoginClick)}>
 									<div class="mb-3 form-floating">
 										<input class="form-control" bind:value={tenant} type="text" name="tenant_username" placeholder=" You Organisation" />
 										<label class="form-label">Organisation</label>

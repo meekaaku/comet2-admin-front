@@ -9,8 +9,8 @@ import { notify, formatNumber } from '$lib/utils';
 import { Title, Toolbar, Button, Loading, Dialog, DialogBody, DialogFooter } from '$lib/ui';
 
 let justMounted = false;
-let report: any = undefined;
-let date_at: string;
+let report: any = $state(undefined);
+let date_at: string = $state();
 let n = 0;
 
 async function load()
@@ -121,7 +121,7 @@ onMount(() => {
                 
             {#each report.headers as header}
             <td data-label={header} class="text-end">
-                <a href="#" class="link-dark" on:click={() => onAmountClick(row, header)}>{formatNumber(row[header])}</a>
+                <a href="#" class="link-dark" onclick={() => onAmountClick(row, header)}>{formatNumber(row[header])}</a>
             </td>
             {/each}
             <td data-label="Action" class="text-center">

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { onMount, afterUpdate } from 'svelte';
+import { onMount, } from 'svelte';
 import { afterNavigate, goto } from '$app/navigation';
 import { page as svpage } from '$app/stores';
 import { comet, logger } from '$lib';
@@ -9,11 +9,11 @@ import { deepClone } from '$lib/utils';
 import type { RPaginated, RRule, Editable } from '$lib/types';
 
 
-let list: RPaginated<RRule & Record<string, any>> | undefined = undefined;
-let editorOpen = false;
-let editingItem: RRule|undefined = undefined;
+let list: RPaginated<RRule & Record<string, any>> | undefined = $state(undefined);
+let editorOpen = $state(false);
+let editingItem: RRule|undefined = $state(undefined);
 let editingIndex: number|undefined = undefined;
-let error: string | null = null;
+let error: string | null = $state(null);
 let justMounted = false;
 
 

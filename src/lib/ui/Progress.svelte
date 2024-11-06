@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { run } from 'svelte/legacy';
+
 import { navigating } from '$app/stores';
 import { progress, loading } from '$lib/stores'
 
@@ -35,7 +37,9 @@ function check(n: any)
 }
 
 
-$: check($navigating || $loading)
+run(() => {
+        check($navigating || $loading)
+    });
 </script>
 
 

@@ -2,11 +2,21 @@
 import { createEventDispatcher } from 'svelte';
 import { Icon } from '$lib/ui';
 
-export let id = Math.random().toString(36).substring(7);
-export let icon = '';
-export let url = ''
-export let name = '';
-export let toggle = () => {};
+    interface Props {
+        id?: any;
+        icon?: string;
+        url?: string;
+        name?: string;
+        toggle?: any;
+    }
+
+    let {
+        id = Math.random().toString(36).substring(7),
+        icon = '',
+        url = '',
+        name = '',
+        toggle = () => {}
+    }: Props = $props();
 
 const dispatch = createEventDispatcher();
 
@@ -25,7 +35,7 @@ function pretoggle() {
 </style>
 
 <li class="nav-item">
-    <a class="nav-link active" aria-current="page" on:click={pretoggle} href="{url}">
+    <a class="nav-link active" aria-current="page" onclick={pretoggle} href="{url}">
         <Icon {icon}></Icon>&nbsp; {name}
     </a>
 </li>

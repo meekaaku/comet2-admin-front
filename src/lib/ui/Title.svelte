@@ -1,2 +1,10 @@
+<script>
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
 
-<h3><slot></slot></h3>
+	let { children }: Props = $props();
+</script>
+
+
+<h3>{@render children?.()}</h3>

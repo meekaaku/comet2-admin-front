@@ -1,14 +1,21 @@
 <script lang="ts">
+	import { run } from 'svelte/legacy';
+
 import { onMount } from "svelte";
 import { goto } from '$app/navigation';
 
 import * as UI from '$lib/ui';
 import { activeMenu } from "$lib/stores";
 import { comet, logger } from "$lib";
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
 
-let sidebarElement: HTMLElement;
-let navbarElement: HTMLElement;
-let sidebarCollapsed: boolean ;
+	let { children }: Props = $props();
+
+let sidebarElement: HTMLElement = $state();
+let navbarElement: HTMLElement = $state();
+let sidebarCollapsed: boolean = $state() ;
 function toggle()
 {
 
@@ -34,7 +41,9 @@ function logout()
 }
 onMount(toggle);
 
-$: console.log(activeMenu)
+run(() => {
+		console.log(activeMenu)
+	});
 </script>
 
 <style>
@@ -144,7 +153,7 @@ main {
 
 		<div class="main">
 			<nav bind:this={navbarElement} class="navbar navbar-expand navbar-light navbar-bg " class:navbar-narrow={!sidebarCollapsed} class:navbar-wide={sidebarCollapsed}>
-				<a class="sidebar-toggle js-sidebar-toggle" on:click={toggle}>
+				<a class="sidebar-toggle js-sidebar-toggle" onclick={toggle}>
           <i class="hamburger align-self-center"></i>
         </a>
 
@@ -297,7 +306,7 @@ main {
 								<a class="dropdown-item" href=""><i class="align-middle me-1" data-feather="settings"></i> Settings & Privacy</a>
 								<a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="help-circle"></i> Help Center</a>
 								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="#" on:click={logout}>Log out</a>
+								<a class="dropdown-item" href="#" onclick={logout}>Log out</a>
 							</div>
 						</li>
 					</ul>
@@ -307,7 +316,7 @@ main {
 			<main class="content">
 				<div class="container-fluid p-0">
 
-					<slot />
+					{@render children?.()}
 
 					<div class="row d-none">
 						<div class="col-xl-6 col-xxl-5 d-flex">

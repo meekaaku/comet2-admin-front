@@ -6,12 +6,17 @@ import { SidebarDrop, SidebarLink, Icon, Progress, About, Toaster } from '$lib/u
 import { profile } from '$lib/stores';
 import { logout, login, refresh, hasPermission } from '$lib/auth';
 import { comet } from '$lib';
+    interface Props {
+        children?: import('svelte').Snippet;
+    }
+
+    let { children }: Props = $props();
 
 
 
-let sidebarElement: HTMLElement;
-let mainElement: HTMLElement;
-let navElement: HTMLElement;
+let sidebarElement: HTMLElement = $state();
+let mainElement: HTMLElement = $state();
+let navElement: HTMLElement = $state();
 
 
 function toggle()
@@ -173,7 +178,7 @@ onMount(init);
 
         <div bind:this={navElement} class="c-navbar sticky-top shadow">
             <div>
-                <button type="button" class="btn" on:click={toggle}><Icon icon="bi-layout-text-sidebar-reverse" /></button>
+                <button type="button" class="btn" onclick={toggle}><Icon icon="bi-layout-text-sidebar-reverse" /></button>
             </div> 
 
             <div class="dropdown" style="margin-left: auto; margin-right: 1em;">
@@ -184,12 +189,12 @@ onMount(init);
                 <ul class="dropdown-menu" style="z-index: 100">
                     <li><a class="dropdown-item" href="#"><Icon icon="bi-person-lines-fill"></Icon>Profile</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#" on:click={logout}> <Icon icon="bi-box-arrow-right"></Icon>Logout</a></li>
+                    <li><a class="dropdown-item" href="#" onclick={logout}> <Icon icon="bi-box-arrow-right"></Icon>Logout</a></li>
                 </ul>
             </div>
         </div>
         <div class="c-content">
-            <slot />
+            {@render children?.()}
         </div>
 
 

@@ -5,12 +5,12 @@ import { assertPermission, hasPermission, getPermission } from '$lib/auth';
 import { Unauthorized, Title, Toolbar, Button } from '$lib/ui';
 import { comet } from '$lib';
 
-let authError:string|null = null;
+let authError:string|null = $state(null);
 let access: string = '';
-let importDropdownOpen: boolean = false;
+let importDropdownOpen: boolean = $state(false);
 let file: File|null = null;
-let uploadReady: boolean = false;
-let message: string|null = null;
+let uploadReady: boolean = $state(false);
+let message: string|null = $state(null);
 
 onNavigate(() => {
     console.log('onNavigate at products');
@@ -106,7 +106,7 @@ function onFileSelect(e: Event) {
         <div class="dropdown-menu dropdown-menu-end p-3 show" style="min-width: 300px; right: 1em; z-index: 1000;">
             <div class="mb-3">
                 <label for="fileUpload" class="form-label">Choose file to upload</label>
-                <input class="form-control form-control-sm" type="file" id="fileUpload" on:change={onFileSelect}  accept=".csv">
+                <input class="form-control form-control-sm" type="file" id="fileUpload" onchange={onFileSelect}  accept=".csv">
             </div>
             <div class="d-grid">
                 <Button size="sm" color="primary" on:click={onUploadClick} disabled={!uploadReady || $loading} busy={$loading} busytext="Uploading...">Upload</Button>

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { onMount, afterUpdate } from 'svelte';
+import { onMount, } from 'svelte';
 import { afterNavigate, goto } from '$app/navigation';
 import { page as svpage } from '$app/stores';
 import { Title, Toolbar, Button, Paginator, Loading } from '$lib/ui';
@@ -8,7 +8,7 @@ import { loading } from '$lib/stores';
 import { formatNumber, formatAddress, formatDate, formatTime } from '$lib/utils';
 import type { ROrderListRow, RPaginated } from '$lib/types';
 
-let list: RPaginated<ROrderListRow>|undefined = undefined;
+let list: RPaginated<ROrderListRow>|undefined = $state(undefined);
 let justMounted = false;
 
 export async function load()
@@ -130,7 +130,7 @@ onMount(() => {
             <td data-label="Shipping" class="text-end">{order.shipping_method_name} - {order.shipping_status_name}</td>
             <td data-label="Total" class="text-end">{order.currency_code} {formatNumber(order.total_wtax)}</td>
             <td data-label="Action" class="text-center">
-                <a on:click ={ () => comet.orders.get(order.order_id)} href="#" aria-details="get order button">View</a>
+                <a onclick={() => comet.orders.get(order.order_id)} href="#" aria-details="get order button">View</a>
                 
                 , Cancel
 

@@ -1,12 +1,24 @@
-<script lang="ts"> 
+<script lang="ts">
+  import { run } from 'svelte/legacy';
+ 
 import { onMount } from "svelte";
 
-export let title = 'Title';
-export let open = false;
-export let size: 'lg'|'sm'|'xl'| '' = '';
+  interface Props {
+    title?: string;
+    open?: boolean;
+    size?: 'lg'|'sm'|'xl'| '';
+    children?: import('svelte').Snippet;
+  }
 
-let dialog: HTMLDivElement;
-let modal: any;
+  let {
+    title = 'Title',
+    open = $bindable(false),
+    size = '',
+    children
+  }: Props = $props();
+
+let dialog: HTMLDivElement = $state();
+let modal: any = $state();
 
 onMount(() => {
     /* @ts-ignore */
@@ -22,14 +34,16 @@ const handleEscape = (e: KeyboardEvent) => {
     }
 }
 
-$: if (open) {
-    window.addEventListener('keydown', handleEscape);
-    modal?.show();
-}
-else {
-    window.removeEventListener('keydown', handleEscape);
-    modal?.hide();
-}
+run(() => {
+    if (open) {
+      window.addEventListener('keydown', handleEscape);
+      modal?.show();
+  }
+  else {
+      window.removeEventListener('keydown', handleEscape);
+      modal?.hide();
+  }
+  });
 
 </script>
 <div 
@@ -43,9 +57,9 @@ else {
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" id="dialog">{title}</h1>
-        <button type="button" class="btn-close" aria-label="Close" on:click={()=> open = false}></button>
+        <button type="button" class="btn-close" aria-label="Close" onclick={()=> open = false}></button>
       </div>
-        <slot></slot>
+        {@render children?.()}
     </div>
   </div>
 </div>

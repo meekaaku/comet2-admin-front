@@ -1,9 +1,19 @@
 <script lang="ts">
 import { Icon } from '$lib/ui';
 
-export let id = 'id' + Math.random().toString(16).substring(7);
-export let icon = '';
-export let name = '';
+    interface Props {
+        id?: any;
+        icon?: string;
+        name?: string;
+        children?: import('svelte').Snippet;
+    }
+
+    let {
+        id = 'id' + Math.random().toString(16).substring(7),
+        icon = '',
+        name = '',
+        children
+    }: Props = $props();
 
 
 
@@ -50,7 +60,7 @@ export let name = '';
     <div id="{id}" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
         <div class="accordion-body">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <slot />
+                {@render children?.()}
             </ul>
         </div>
     </div>
