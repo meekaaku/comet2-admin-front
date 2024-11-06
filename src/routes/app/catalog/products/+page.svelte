@@ -41,6 +41,8 @@ async function onUploadClick() {
 
     $loading = true;
     try {
+        message = null;
+        $loading = true;
         const upload_response = await comet.catalog.products.uploadCSV(formData);
         /*
         uploaded = true;
@@ -92,8 +94,7 @@ function onFileSelect(e: Event) {
 
     <div class="dropdown d-inline-block ms-2">
         <Button
-            width="8em" icon="bi-cloud-upload"
-            class="dropdown-toggle"
+            width="8em" icon="bi-caret-down"
             size="sm" color="primary"  disabled={$loading}
             on:click={() => importDropdownOpen = !importDropdownOpen}
         >
@@ -108,7 +109,7 @@ function onFileSelect(e: Event) {
                 <input class="form-control form-control-sm" type="file" id="fileUpload" on:change={onFileSelect}  accept=".csv">
             </div>
             <div class="d-grid">
-                <Button size="sm" color="primary" on:click={onUploadClick} disabled={!uploadReady || $loading}>Upload</Button>
+                <Button size="sm" color="primary" on:click={onUploadClick} disabled={!uploadReady || $loading} busy={$loading} busytext="Uploading...">Upload</Button>
             </div>
 
             {#if message}

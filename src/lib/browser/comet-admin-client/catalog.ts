@@ -16,7 +16,7 @@ class Products
 
 	async uploadCSV(formData: FormData): Promise<any>
 	{
-		const response = await this.client.post(`catalog/products/upload-csv`, formData);
+		const response = await this.client.post(`catalog/products/import-csv`, formData);
 		return response.data;
 	}
 }
