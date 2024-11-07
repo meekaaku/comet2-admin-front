@@ -2,8 +2,9 @@
 import { onNavigate, beforeNavigate } from '$app/navigation';
 import { loading } from '$lib/stores';
 import { assertPermission, hasPermission, getPermission } from '$lib/auth';
-import { Unauthorized, Title, Toolbar, Button } from '$lib/ui';
+import { Unauthorized, Title, Toolbar, Button, Toaster } from '$lib/ui';
 import { comet } from '$lib';
+import { notify } from '$lib/utils';
 
 let authError:string|null = $state(null);
 let access: string = '';
@@ -52,10 +53,14 @@ async function onUploadClick() {
         */
 
         $loading = false;
+
+		notify({ type: 'info', heading: 'Success', message: 'File uploaded successfully' })
     } catch (error: any) {
         $loading = false;
+        notify({ type: 'error', heading: 'Error', message: error.response?.data?.message || 'An error occurred. Please try again later' })
         if (error.response) {
             message = error.response.data.message;
+
         } else {
             message = 'An error occurred. Please try again later';
         }
@@ -86,7 +91,7 @@ function onFileSelect(e: Event) {
 </Unauthorized>
 
 {:else}
-
+<Toaster />
 <Title>Products</Title>
 
 <Toolbar>

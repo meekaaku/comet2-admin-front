@@ -1,5 +1,4 @@
 <script lang="ts">
-
 import { page } from '$app/stores';
 import { base } from '$app/paths';
 import { login } from '$lib/auth';
@@ -13,8 +12,9 @@ let password = $state('');
 let error_data: any|null = null;
 let busy = false;
 
-async function onLoginClick()
+async function onLoginClick(event: Event)
 {
+	event.preventDefault();
 	try 
 	{
 		$loading = true;
@@ -51,7 +51,7 @@ console.log($page.params.tenant)
 					<div class="card">
 						<div class="card-body">
 							<div class="m-sm-3">
-								<form onsubmit={preventDefault(onLoginClick)}>
+								<form onsubmit={onLoginClick}>
 									<div class="mb-3 form-floating">
 										<input class="form-control" value={$page.params.tenant} type="text" name="tenant_username" placeholder=" You Organisation" disabled/>
 										<label class="form-label">Organisation</label>
