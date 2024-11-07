@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { preventDefault } from 'svelte/legacy';
 
 import { base } from '$app/paths';
 import { login } from '$lib/auth';
