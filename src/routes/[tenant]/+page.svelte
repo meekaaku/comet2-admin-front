@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { preventDefault } from 'svelte/legacy';
 
 import { page } from '$app/stores';
 import { base } from '$app/paths';
@@ -7,6 +6,7 @@ import { login } from '$lib/auth';
 import { Button, Toaster } from '$lib/ui';
 import { loading } from '$lib/stores';
 import { notify } from '$lib/utils';
+import { version } from '$lib/constants';
 
 let username = $state('');
 let password = $state('');
@@ -75,6 +75,10 @@ console.log($page.params.tenant)
 									<div class="d-grid gap-2 mt-3">
 										<Button busytext="Logging in" color="primary" on:click={onLoginClick} icon="bi-box-arrow-in-right" busy={$loading} disabled={$loading}> &nbsp;Login</Button>
 										<input type="submit" class="d-none" />
+									</div>
+
+									<div class="d-grid gap-2 mt-3 text-center">
+										<span class="text-small">Version {version}</span>
 									</div>
 								</form>
 							
