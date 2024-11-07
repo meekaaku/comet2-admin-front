@@ -59,10 +59,6 @@ function processList(_list: RPaginated<ROrderListRow>)
     })
     return _list;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> bb78c17 (changes)
 
 afterNavigate(() => {
     if(justMounted) return;
@@ -87,11 +83,6 @@ onMount(() => {
 <Toolbar>
   
   <Button width="5em" icon="bi-plus-lg" size="sm" color="primary" on:click={()=> goto(`/app/finance/rules/edt`)} disabled>Add</Button>
-<<<<<<< HEAD
-=======
-
-</Toolbar>
->>>>>>> bb78c17 (changes)
 
 </Toolbar>
 
