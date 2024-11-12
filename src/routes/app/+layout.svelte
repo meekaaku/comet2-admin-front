@@ -5,29 +5,32 @@ import { goto } from '$app/navigation';
 import { SidebarDrop, SidebarLink, Icon, Progress, About, Toaster } from '$lib/ui';
 import { profile } from '$lib/stores';
 import { logout, login, refresh, hasPermission } from '$lib/auth';
+import { version } from '$lib/constants';
 import { comet } from '$lib';
-    interface Props {
-        children?: import('svelte').Snippet;
-    }
-
-    let { children }: Props = $props();
 
 
+interface Props {
+    children?: import('svelte').Snippet;
+}
 
-let sidebarElement: HTMLElement = $state();
-let mainElement: HTMLElement = $state();
-let navElement: HTMLElement = $state();
+/* @ts-ignore */
+let { data, children }: Props = $props();
+
+
+let sidebarElement: HTMLElement;
+let mainElement: HTMLElement;
+let navElement: HTMLElement;
 
 
 function toggle()
 {
     const w = screen.width < 768 ? "-400px" : "-240px";
-    if(sidebarElement.style.marginLeft == "0px")
+    if(sidebarElement && sidebarElement.style.marginLeft == "0px")
     {
        //sidebarElement.style.marginLeft = "-240px";
        sidebarElement.style.marginLeft = w;
     }
-    else {
+    else if(sidebarElement) {
        sidebarElement.style.marginLeft = "0px";
     }
 }
@@ -170,7 +173,9 @@ onMount(init);
 
 
             {/if}
-
+            <div style="bottom: 0; left: 2em; position: absolute;" class="text-center">
+                    {version} ({data.build})
+            </div>
         </div>
     </div>
 
