@@ -11,7 +11,6 @@ let access: string = '';
 let importDropdownOpen: boolean = $state(false);
 let file: File|null = null;
 let uploadReady: boolean = $state(false);
-let message: string|null = $state(null);
 
 onNavigate(() => {
     console.log('onNavigate at products');
@@ -32,7 +31,6 @@ catch(e: any) {
 }
 
 async function onUploadClick() {
-    console.log('onUploadClick, uploading file', file);
     if (!file) return;
 
 
@@ -42,28 +40,17 @@ async function onUploadClick() {
 
     $loading = true;
     try {
-        message = null;
         $loading = true;
         const upload_response = await comet.catalog.products.uploadCSV(formData);
-        /*
-        uploaded = true;
-        setTimeout(() => {
-            upload_button_text = 'Upload';
-        }, 5000);
-        */
-
         $loading = false;
+        importDropdownOpen = false;
 
 		notify({ type: 'info', heading: 'Success', message: 'File uploaded successfully' })
     } catch (error: any) {
         $loading = false;
+        importDropdownOpen = false;
         notify({ type: 'error', heading: 'Error', message: error.response?.data?.message || 'An error occurred. Please try again later' })
-        if (error.response) {
-            message = error.response.data.message;
-
-        } else {
-            message = 'An error occurred. Please try again later';
-        }
+       
     }
 
 
@@ -117,11 +104,6 @@ function onFileSelect(e: Event) {
                 <Button size="sm" color="primary" on:click={onUploadClick} disabled={!uploadReady || $loading} busy={$loading} busytext="Uploading...">Upload</Button>
             </div>
 
-            {#if message}
-            <div class="alert alert-danger mt-3" role="alert">
-                {message}
-            </div>
-            {/if}
         </div>
         {/if}
 
