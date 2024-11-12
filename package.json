@@ -6,8 +6,8 @@
 		"node": "20.x"
 	},
 	"scripts": {
-		"dev": "BUILD=$(git rev-parse --short HEAD) vite dev --host",
-		"build": "BUILD=$(git rev-parse --short HEAD) vite build",
+		"dev": "VITE_BUILD=$(git rev-parse --short HEAD) vite dev --host",
+		"build": "VITE_BUILD=$(git rev-parse --short HEAD) vite build",
 		"ppreview": "vite preview",
 		"start:prod": "node build/",
 		"test": "npm run test:integration && npm run test:unit",
