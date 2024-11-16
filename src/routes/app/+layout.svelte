@@ -192,9 +192,9 @@ onMount(init);
                     <Icon icon="bi-person" />
                 </button>
                 <ul class="dropdown-menu" style="z-index: 100">
-                    <li><a class="dropdown-item" href="#"><Icon icon="bi-person-lines-fill"></Icon>Profile</a></li>
+                    <li><a class="dropdown-item" href="#"><Icon icon="bi-person-lines-fill"></Icon>&nbsp; Profile</a></li>
                     <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#" onclick={logout}> <Icon icon="bi-box-arrow-right"></Icon>Logout</a></li>
+                    <li><a class="dropdown-item" href="#" onclick={logout}> <Icon icon="bi-box-arrow-right"></Icon>&nbsp;  Logout</a></li>
                 </ul>
             </div>
         </div>
