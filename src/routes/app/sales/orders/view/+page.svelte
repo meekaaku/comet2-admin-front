@@ -1,5 +1,6 @@
 <script lang="ts">
 import { onMount, } from 'svelte';
+import { error } from '@sveltejs/kit';
 import { afterNavigate, goto } from '$app/navigation';
 import { page as svpage } from '$app/stores';
 import { Title, Toolbar, Button, Paginator, Loading } from '$lib/ui';
@@ -8,7 +9,7 @@ import { loading } from '$lib/stores';
 import { formatNumber, formatAddress, formatDate, formatTime } from '$lib/utils';
 import type { ROrderListRow, RPaginated } from '$lib/types';
 
-let list: RPaginated<ROrderListRow>|undefined = $state(undefined);
+let order: any|undefined = $state(undefined);
 let justMounted = false;
 
 function onPageChange({detail}: {detail: {page: number, page_size?: number}})
@@ -25,13 +26,14 @@ function onPageChange({detail}: {detail: {page: number, page_size?: number}})
 async function loadOrder()
 {
     let query = $svpage.url.searchParams;
-    const page = query.get('order_id')
-    const page_size = parseInt(query.get('page_size') || '100');
-    const sort = query.get('sort') || '';
-    const filters = query.get('filters') || ''
+    const order_id = query.get('order_id');
+    if(!order_id)  {
+      alert('no order id');
+      return;
+    }
     $loading = true;
     try {
-      const _list = await comet.sales.orders.list({page, page_size, sort, filters});    
+      const _list = await comet.sales.orders.get(order_id);    
       list = processList(_list);
       $loading = false;
     }
@@ -81,7 +83,7 @@ onMount(() => {
 
 </Toolbar>
 
-{#if !list}
+{#if !order}
   <Loading></Loading>
 {:else}
 
@@ -124,7 +126,7 @@ onMount(() => {
             <td data-label="Shipping" class="text-end">{order.shipping_method_name} - {order.shipping_status_name}</td>
             <td data-label="Total" class="text-end">{order.currency_code} {formatNumber(order.total_wtax)}</td>
             <td data-label="Action" class="text-center">
-                <a onclick={() => comet.orders.get(order.order_id)} href="#" aria-details="get order button">View</a>
+                <a onclick={() => comet.sales.orders.get(order.order_id)} href="#" aria-details="get order button">View</a>
                 
                 , Cancel
 
