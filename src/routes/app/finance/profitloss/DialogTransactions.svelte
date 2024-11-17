@@ -2,7 +2,7 @@
 import type { RTransactionLineList, RPaginated, RSourceLine, RFinanceClass, RAccountTransaction } from '$lib/types';
 import {Dialog, DialogBody, DialogFooter, Button} from '$lib/ui';
 import { formatDate, formatNumber, notify } from '$lib/utils';
-import { $loading } from '$lib/stores';
+import { loading } from '$lib/stores';
 import { comet } from '$lib';
 
   interface Props {
@@ -12,7 +12,7 @@ import { comet } from '$lib';
 
   let { open = $bindable(false), data }: Props = $props();
 
-let cashbookLine: RSourceLine = $state();
+let cashbookLine: RSourceLine|undefined = $state(undefined);
 let classes: RFinanceClass[] = $state([]);
 let step: 'transactionline'|'cashbookline' = $state('transactionline');
 let title = "Profit & Loss Transactions";

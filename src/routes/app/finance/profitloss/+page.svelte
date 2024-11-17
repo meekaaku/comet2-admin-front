@@ -3,20 +3,20 @@ import type { AxiosError} from 'axios';
 import { goto, afterNavigate} from '$app/navigation';
 import { onMount } from 'svelte';
 import { page as svpage } from '$app/stores';
-import { $loading } from '$lib/stores';
+import { loading } from '$lib/stores';
 import { comet, logger } from '$lib';
 import { notify, formatNumber } from '$lib/utils';
-import { Title, Toolbar, Button, $loading, Dialog, DialogBody, DialogFooter } from '$lib/ui';
+import { Title, Toolbar, Button, Loading, Dialog, DialogBody, DialogFooter } from '$lib/ui';
 import DialogTransactions from './DialogTransactions.svelte'
 import type { RAccountTransaction, RPaginated } from '$lib/types';
 
 let justMounted = false;
 let report: any = $state(undefined);
-let date_from: string = $state();
-let date_to: string = $state();
-let group_by: string = $state();
-let date_from2: string = $state();
-let date_to2: string = $state();
+let date_from: string = $state('');
+let date_to: string = $state('');
+let group_by: string = $state('');
+let date_from2: string = $state('');
+let date_to2: string = $state('');
 let dialogOpen = false;
 let transactionsList: RPaginated<RAccountTransaction>;
 
@@ -143,7 +143,7 @@ onMount(() => {
 
 {#if !report}
     {#if $loading}
-        <$loading></$loading> $loading
+        <Loading></Loading>
     {/if}
 {:else}
     <h3 class="text-center">{report.title}</h3>
