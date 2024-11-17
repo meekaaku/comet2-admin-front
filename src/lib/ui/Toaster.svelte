@@ -4,7 +4,7 @@ import { toasts } from '$lib/stores';
 import { Icon } from '$lib/ui';
 
 
-
+//let list = $derived($toasts);
 </script>
 
 
@@ -32,13 +32,5 @@ import { Icon } from '$lib/ui';
 </div>
 
 <style>
-.error
-{
-  background-color: rgb(255, 155, 97);
-}
 
-.info 
-{
-  background-color: rgb(172, 255, 181);
-}
 </style>

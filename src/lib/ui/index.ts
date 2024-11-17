@@ -1,4 +1,5 @@
 export { default as About } from './About.svelte';
+export { default as AuthGuard } from './AuthGuard.svelte';
 export { default as Button } from './Button.svelte';
 export { default as Dialog} from './Dialog.svelte';
 export { default as DialogBody} from './DialogBody.svelte';

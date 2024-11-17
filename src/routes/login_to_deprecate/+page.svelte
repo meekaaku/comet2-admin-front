@@ -3,7 +3,7 @@
 import { base } from '$app/paths';
 import { login } from '$lib/auth';
 import { Button, Toaster } from '$lib/ui';
-import { loading } from '$lib/stores';
+import { $loading } from '$lib/stores';
 import { notify } from '$lib/utils';
 
 let tenant= $state('');

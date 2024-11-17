@@ -3,25 +3,12 @@ import { onMount, } from 'svelte';
 import { error } from '@sveltejs/kit';
 import { afterNavigate, goto } from '$app/navigation';
 import { page as svpage } from '$app/stores';
-import { Title, Toolbar, Button, Paginator, Loading } from '$lib/ui';
+import { Title, Toolbar, Button, Paginator, Loading, AuthGuard, Toaster } from '$lib/ui';
 import { comet, logger } from '$lib';
 import { loading } from '$lib/stores';
-import { formatNumber, formatAddress, formatDate, formatTime } from '$lib/utils';
+import { formatNumber, formatAddress, formatDate, formatTime, notify } from '$lib/utils';
 import type { ROrderListRow, RPaginated } from '$lib/types';
 
-let order: any|undefined = $state(undefined);
-let justMounted = false;
-
-function onPageChange({detail}: {detail: {page: number, page_size?: number}})
-{
-    justMounted = false;
-    const _page = detail.page;
-    const _page_size = detail.page_size || 100;
-    console.log(detail);
-    $svpage.url.searchParams.set('page', _page.toString());
-    $svpage.url.searchParams.set('page_size', _page_size.toString());
-    goto(`?${$svpage.url.searchParams.toString()}`);
-}
 
 async function loadOrder()
 {
@@ -33,30 +20,24 @@ async function loadOrder()
     }
     $loading = true;
     try {
-      const _list = await comet.sales.orders.get(order_id);    
-      list = processList(_list);
+      const order = await comet.sales.orders.get(order_id);    
+      console.log(order);
       $loading = false;
+      return order
     }
-    catch(error) {
-        logger.error(`Error loading orders: `, error)
-        $loading = false;
+    catch(error: any) {
+        console.log('Notifying error')
+        notify({
+            heading: 'Error',
+            message: error.message,
+            type: 'error'
+        });
     }
-    return list;
 }
 
 
-function processList(_list: RPaginated<ROrderListRow>)
-{
-    _list.items.forEach(order => {
-        const lines = order.shipto_address.split('\n');
-        if(!order.data)  {
-          order.data = {}
-        }
-        order.data.shipto_lines = lines;
-    })
-    return _list;
-}
 
+/*
 afterNavigate(() => {
     if(justMounted) return;
     loadOrder();
@@ -66,6 +47,7 @@ onMount(() => {
     justMounted = true;
     loadOrder();
 });
+*/
 
 
 
@@ -76,17 +58,32 @@ onMount(() => {
 
 </style>
 
+<AuthGuard permissions="sales.order:create,update,read">
+
+{#await loadOrder()}
+  {#if $loading}
+    <Loading></Loading>
+  {/if}
+{:then order}
+
 <Title>Sales Orders</Title>
 <Toolbar>
   
   <Button width="5em" icon="bi-plus-lg" size="sm" color="primary" on:click={()=> goto(`/app/finance/rules/edt`)} disabled>Add</Button>
 
+  <Button onclick={() => {notify({
+    heading: 'Info',
+    message: 'This is a test toast',
+    type: 'info'
+  }); $loading = true;}}>
+  Notify
+</Button>
+
 </Toolbar>
 
-{#if !order}
-  <Loading></Loading>
-{:else}
+  
 
+  <!--
   <table class="ct-table table table-sm table-striped">
     <thead>
       <tr>
@@ -133,16 +130,18 @@ onMount(() => {
             </td>
         </tr>
         {/each}
-      <!-- Add more rows as needed -->
     </tbody>
   </table>
+  -->
 
 
 <div class="d-flex justify-content-center mt-2">
-  <Paginator page={list.page} page_count={list.page_count} page_size={list.page_size} on:pagechange={onPageChange} />
+  <!-- <Paginator page={list.page} page_count={list.page_count} page_size={list.page_size} on:pagechange={onPageChange} /> -->
 </div>
 
 
-{/if}
+{/await}
 
 
+
+</AuthGuard>

@@ -4,7 +4,7 @@
 		message?: string;
 	}
 
-	let { message = 'Loading...' }: Props = $props();
+	let { message = '$loading...' }: Props = $props();
 </script>
 
 <main class="d-flex w-100">

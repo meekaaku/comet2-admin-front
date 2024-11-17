@@ -3,10 +3,10 @@ import type { AxiosError} from 'axios';
 import { goto, afterNavigate} from '$app/navigation';
 import { onMount } from 'svelte';
 import { page as svpage } from '$app/stores';
-import { loading } from '$lib/stores';
+import { $loading } from '$lib/stores';
 import { comet, logger } from '$lib';
 import { notify, formatNumber } from '$lib/utils';
-import { Title, Toolbar, Button, Loading, Dialog, DialogBody, DialogFooter } from '$lib/ui';
+import { Title, Toolbar, Button, $loading, Dialog, DialogBody, DialogFooter } from '$lib/ui';
 
 let justMounted = false;
 let report: any = $state(undefined);
@@ -94,7 +94,7 @@ onMount(() => {
 
 
 {#if !report}
-<Loading></Loading>
+<$loading></$loading>
 {:else if 0}
     <h3 class="text-center">{report.title}</h3>
     <p class="text-center">

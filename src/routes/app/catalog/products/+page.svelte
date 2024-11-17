@@ -101,7 +101,7 @@ function onFileSelect(e: Event) {
                 <input class="form-control form-control-sm" type="file" id="fileUpload" onchange={onFileSelect}  accept=".csv">
             </div>
             <div class="d-grid">
-                <Button size="sm" color="primary" on:click={onUploadClick} disabled={!uploadReady || $loading} busy={$loading} busytext="Uploading...">Upload</Button>
+                <Button size="sm" color="primary" on:click={onUploadClick} disabled={!uploadReady || $loading} busy={$loading} busytext="Up$loading...">Upload</Button>
             </div>
 
         </div>

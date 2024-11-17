@@ -1,5 +1,6 @@
 <script lang="ts">
 import { onMount, } from 'svelte';
+import { base } from '$app/paths';
 import { afterNavigate, goto } from '$app/navigation';
 import { page as svpage } from '$app/stores';
 import { Title, Toolbar, Button, Paginator, Loading } from '$lib/ui';
@@ -41,7 +42,7 @@ async function loadList()
       $loading = false;
     }
     catch(error) {
-        logger.error(`Error loading orders: `, error)
+        logger.error(`Error $loading orders: `, error)
         $loading = false;
     }
     return list;
@@ -129,11 +130,8 @@ onMount(() => {
             <td data-label="Shipping" class="text-end">{order.shipping_method_name} - {order.shipping_status_name}</td>
             <td data-label="Total" class="text-end">{order.currency_code} {formatNumber(order.total_wtax)}</td>
             <td data-label="Action" class="text-center">
-                <a onclick={() => comet.orders.get(order.order_id)} href="#" aria-details="get order button">View</a>
+                <a href="{base}/app/sales/orders/view?order_id={order.order_id}" aria-details="get order button">View</a>
                 
-                , Cancel
-
-            </td>
         </tr>
         {/each}
       <!-- Add more rows as needed -->

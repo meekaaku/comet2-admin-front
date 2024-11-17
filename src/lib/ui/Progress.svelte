@@ -1,14 +1,13 @@
 <script lang="ts">
-    import { run } from 'svelte/legacy';
 
 import { navigating } from '$app/stores';
 import { progress, loading } from '$lib/stores'
 
 
-function check(n: any)
+function check()
 {
-    const x = n;
-    if($navigating || $loading ){
+    if($navigating || $loading){
+        /*
         if($progress < 50){
             $progress += 2;
         }
@@ -29,17 +28,19 @@ function check(n: any)
         else {
             setTimeout(() => check(true), 100);
         }
+            */
         
     }
     else {
-        $progress = 0;
+        //$progress = 0;
     }
 }
 
 
-run(() => {
-        check($navigating || $loading)
-    });
+check()
+
+
+
 </script>
 
 
