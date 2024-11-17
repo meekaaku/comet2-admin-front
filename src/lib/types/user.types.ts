@@ -1,4 +1,3 @@
-export interface RUserProfile
-{
-    name: string;
+export interface RUserProfile {
+	name: string;
 }

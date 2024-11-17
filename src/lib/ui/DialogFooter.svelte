@@ -6,7 +6,6 @@
 	let { children }: Props = $props();
 </script>
 
-
 <div class="modal-footer">
-{@render children?.()}
+	{@render children?.()}
 </div>

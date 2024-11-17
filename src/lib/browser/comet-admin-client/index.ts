@@ -4,25 +4,20 @@ import { Sales } from './sales';
 import { Finance } from './finance';
 import { Catalog } from './catalog';
 
-
-export class CometAdminClient 
-{
-	readonly axios: AxiosInstance ;
+export class CometAdminClient {
+	readonly axios: AxiosInstance;
 	readonly auth: Auth;
 	readonly sales: Sales;
 	readonly finance: Finance;
 	readonly catalog: Catalog;
 
-	constructor(
-		private readonly base_url: string,
-	) {
-		
+	constructor(private readonly base_url: string) {
 		// Remove trailing slash if any
 		const base = base_url ? base_url.replace(/\/$/, '') : '';
 
 		console.log(`Initialising with ${base}`);
 		const _axios = axios.create({
-			baseURL: `${base}/`,
+			baseURL: `${base}/`
 		});
 		//_axios.defaults.withCredentials = true;
 		this.auth = new Auth(_axios);

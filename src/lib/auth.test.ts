@@ -1,17 +1,17 @@
-import { describe, it,  expect, test } from 'vitest';
+import { describe, it, expect, test } from 'vitest';
 import { acl } from './stores';
 import { hasPermission, assertPermission, getPermission } from '$lib/auth';
 
 const sampleAcl = {
-	"catalog.product": ["read", "create", "update", "delete", "list"],
-	"catalog.product.cost": ["read"],
-	"catalog.product.price":["read", "update", "create"],
-	"catalog.collection": ["read"],
-	"menu.admin": true
-}
+	'catalog.product': ['read', 'create', 'update', 'delete', 'list'],
+	'catalog.product.cost': ['read'],
+	'catalog.product.price': ['read', 'update', 'create'],
+	'catalog.collection': ['read'],
+	'menu.admin': true
+};
 
 describe('Testing ACL', () => {
-	acl.set(sampleAcl)
+	acl.set(sampleAcl);
 	it('Must have catalog.product:read', () => {
 		expect(hasPermission('catalog.product:read')).toBe(true);
 	});
@@ -31,4 +31,3 @@ describe('Testing ACL', () => {
 		expect(hasPermission('menu.admin')).toBe(true);
 	});
 });
-

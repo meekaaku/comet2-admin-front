@@ -1,46 +1,34 @@
-import { acl, profile } from "$lib/stores";
-import type { QLogin, RLogin, QRefresh } from "$lib/types";
-
+import { acl, profile } from '$lib/stores';
+import type { QLogin, RLogin, QRefresh } from '$lib/types';
 
 export class Auth {
-
 	constructor(private readonly client: any) {}
 
-	async login(credentials: QLogin) 
-	{
+	async login(credentials: QLogin) {
 		const response = await this.client.post('auth/login', credentials);
 		const data = response.data as RLogin;
 		this.setHeader('Authorization', `Bearer ${data.access}`);
 		return data;
 	}
 
-	async logout()
-	{
+	async logout() {
 		this.deleteHeader('Authorization');
 	}
 
-
-	async refresh(tokens: QRefresh)
-	{
+	async refresh(tokens: QRefresh) {
 		const response = await this.client.post('auth/refresh', tokens);
 		const data = response.data as RLogin;
 		this.setHeader('Authorization', `Bearer ${data.access}`);
 		return data;
-
 	}
 
-
-	setHeader(header: string, value: string)
-	{
-		this.client.defaults.headers.common[header] = value; // This 
+	setHeader(header: string, value: string) {
+		this.client.defaults.headers.common[header] = value; // This
 	}
 
-	deleteHeader(header: string)
-	{
-		if(this.client.defaults.headers.common[header]){
+	deleteHeader(header: string) {
+		if (this.client.defaults.headers.common[header]) {
 			delete this.client.defaults.headers.common[header];
 		}
 	}
-
-
 }

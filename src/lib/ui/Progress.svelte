@@ -1,13 +1,10 @@
 <script lang="ts">
+	import { navigating } from '$app/stores';
+	import { progress, loading } from '$lib/stores';
 
-import { navigating } from '$app/stores';
-import { progress, loading } from '$lib/stores'
-
-
-function check()
-{
-    if($navigating || $loading){
-        /*
+	function check() {
+		if ($navigating || $loading) {
+			/*
         if($progress < 50){
             $progress += 2;
         }
@@ -29,38 +26,26 @@ function check()
             setTimeout(() => check(true), 100);
         }
             */
-        
-    }
-    else {
-        //$progress = 0;
-    }
-}
+		} else {
+			//$progress = 0;
+		}
+	}
 
-
-check()
-
-
-
+	check();
 </script>
 
-
 {#if $progress != 0}
-<progress value={$progress} max="100"></progress>
+	<progress value={$progress} max="100"></progress>
 {/if}
 
-
-
-
 <style>
-progress {
-    position: fixed;
-    top: 0px;
-    height: 3px;
-    padding: 0;
-    margin: 0;
-    width: 100%;
-    z-index: 3000;
-}
-
-
+	progress {
+		position: fixed;
+		top: 0px;
+		height: 3px;
+		padding: 0;
+		margin: 0;
+		width: 100%;
+		z-index: 3000;
+	}
 </style>

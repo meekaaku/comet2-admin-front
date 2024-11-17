@@ -1,43 +1,32 @@
 <script lang="ts">
-import { onMount, } from 'svelte';
-import { error } from '@sveltejs/kit';
-import { afterNavigate, goto } from '$app/navigation';
-import { page as svpage } from '$app/stores';
-import { Title, Toolbar, Button, Paginator, Loading, AuthGuard, Toaster } from '$lib/ui';
-import { comet, logger } from '$lib';
-import { loading } from '$lib/stores';
-import { formatNumber, formatAddress, formatDate, formatTime, notify } from '$lib/utils';
-import type { ROrderListRow, RPaginated } from '$lib/types';
+	import { page as svpage } from '$app/stores';
+	import { Title, Toolbar, Button, Paginator, Loading, AuthGuard, Toaster } from '$lib/ui';
+	import { comet, logger } from '$lib';
+	import { loading } from '$lib/stores';
+	import { formatNumber, formatAddress, formatDate, formatTime, notify } from '$lib/utils';
+	import type { ROrderListRow, RPaginated } from '$lib/types';
 
+	async function loadOrder(): Promise<any> {
+		let query = $svpage.url.searchParams;
+		const order_id = query.get('order_id');
+		if (!order_id) {
+			$loading = false;
+			//notify({heading: 'Error', message: 'No order id', type: 'error'});
+			return;
+		}
+		//$loading = true;
+		try {
+			const order = await comet.sales.orders.get(order_id);
+			console.log(order);
+			//$loading = false;
+			return order;
+		} catch (error: any) {
+			$loading = false;
+			notify({ heading: 'Error', message: error.message, type: 'error' });
+		}
+	}
 
-async function loadOrder()
-{
-    let query = $svpage.url.searchParams;
-    const order_id = query.get('order_id');
-    if(!order_id)  {
-      alert('no order id');
-      return;
-    }
-    $loading = true;
-    try {
-      const order = await comet.sales.orders.get(order_id);    
-      console.log(order);
-      $loading = false;
-      return order
-    }
-    catch(error: any) {
-        console.log('Notifying error')
-        notify({
-            heading: 'Error',
-            message: error.message,
-            type: 'error'
-        });
-    }
-}
-
-
-
-/*
+	/*
 afterNavigate(() => {
     if(justMounted) return;
     loadOrder();
@@ -48,42 +37,41 @@ onMount(() => {
     loadOrder();
 });
 */
-
-
-
 </script>
 
-<style>
-
-
-</style>
-
+something here
 <AuthGuard permissions="sales.order:create,update,read">
+	Loading is {$loading}
+	{#await loadOrder()}
+		{#if $loading}
+			<Loading></Loading>
+		{/if}
+	{:then order}
+		<Title>Sales Orders</Title>
+		<Toolbar>
+			<Button
+				width="5em"
+				icon="bi-plus-lg"
+				size="sm"
+				color="primary"
+				on:click={() => goto(`/app/finance/rules/edt`)}
+				disabled>Add</Button
+			>
 
-{#await loadOrder()}
-  {#if $loading}
-    <Loading></Loading>
-  {/if}
-{:then order}
+			<Button
+				onclick={() => {
+					notify({
+						heading: 'Info',
+						message: 'This is a test toast',
+						type: 'info'
+					});
+				}}
+			>
+				Notify
+			</Button>
+		</Toolbar>
 
-<Title>Sales Orders</Title>
-<Toolbar>
-  
-  <Button width="5em" icon="bi-plus-lg" size="sm" color="primary" on:click={()=> goto(`/app/finance/rules/edt`)} disabled>Add</Button>
-
-  <Button onclick={() => {notify({
-    heading: 'Info',
-    message: 'This is a test toast',
-    type: 'info'
-  }); $loading = true;}}>
-  Notify
-</Button>
-
-</Toolbar>
-
-  
-
-  <!--
+		<!--
   <table class="ct-table table table-sm table-striped">
     <thead>
       <tr>
@@ -134,14 +122,11 @@ onMount(() => {
   </table>
   -->
 
-
-<div class="d-flex justify-content-center mt-2">
-  <!-- <Paginator page={list.page} page_count={list.page_count} page_size={list.page_size} on:pagechange={onPageChange} /> -->
-</div>
-
-
-{/await}
-
-
-
+		<div class="d-flex justify-content-center mt-2">
+			<!-- <Paginator page={list.page} page_count={list.page_count} page_size={list.page_size} on:pagechange={onPageChange} /> -->
+		</div>
+	{/await}
 </AuthGuard>
+
+<style>
+</style>

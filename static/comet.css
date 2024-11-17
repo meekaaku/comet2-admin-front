@@ -1,47 +1,47 @@
 /* Normal table styles */
 .ct-table {
-  width: 100%;
-  border-collapse: collapse;
-  border-spacing: 0;
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
 }
 
 .ct-table th,
 .ct-table td {
-  border: 1px solid #ccc;
-  padding: 8px;
-  text-align: left;
+	border: 1px solid #ccc;
+	padding: 8px;
+	text-align: left;
 }
 
 /* Stacked table for small screens */
 @media (max-width: 720px) {
-  .ct-table thead {
-    display: none;
-  }
+	.ct-table thead {
+		display: none;
+	}
 
-  .ct-table tbody,
-  .ct-table tr,
-  .ct-table td {
-    display: block;
-    width: 100%;
-  }
+	.ct-table tbody,
+	.ct-table tr,
+	.ct-table td {
+		display: block;
+		width: 100%;
+	}
 
-  .ct-table tr {
-    margin-bottom: 15px;
-    border: solid 1px grey
-  }
-  .ct-table td {
-    text-align: right; /* Adjust alignment for stacked layout */
-    /* Add more styles as needed */
-  }
+	.ct-table tr {
+		margin-bottom: 15px;
+		border: solid 1px grey;
+	}
+	.ct-table td {
+		text-align: right; /* Adjust alignment for stacked layout */
+		/* Add more styles as needed */
+	}
 
-  .ct-table td::before {
-    content: attr(data-label);
-    float: left;
-    font-weight: bold;
-  }
+	.ct-table td::before {
+		content: attr(data-label);
+		float: left;
+		font-weight: bold;
+	}
 
-  .ct-table tbody td[data-label]:before {
-    display: block;
-    font-weight: bold;
-  }
+	.ct-table tbody td[data-label]:before {
+		display: block;
+		font-weight: bold;
+	}
 }
