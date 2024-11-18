@@ -100,7 +100,7 @@ export interface QOrderHeaderUpdate
 {
   order_id: string;
   field: string;
-  value: string;
+  value: any;
 }
 
 export interface ROrderUpdate extends R

@@ -4,7 +4,7 @@
 	import { comet, logger } from '$lib';
 	import { loading } from '$lib/stores';
 	import { formatNumber, formatAddress, formatDate, formatTime, notify } from '$lib/utils';
-	import type { ROrderListRow, RPaginated, ROrder, QOrderHeaderUpdate, QBulk } from '$lib/types';
+	import type { ROrderListRow, RPaginated, ROrder, QOrderHeaderUpdate, QBulk, ROrderHeader } from '$lib/types';
 
 
 	type TState = {
@@ -12,14 +12,18 @@
 		editShippingStatus: boolean,
 		qPaymentStatus: string | null,
 		qShippingStatus: string | null,
-		busy: boolean
+		savingField: string | null,
+		editingField: string | null,
+		editingValue: string | null
 	}
 	let state = $state<TState>({
 		editPaymentStatus: false,
 		editShippingStatus: false,
 		qPaymentStatus: null,
 		qShippingStatus: null,
-		busy: false
+		savingField: null,
+		editingField: null,
+		editingValue: null
 	});
 
 	let order: ROrder;
@@ -45,6 +49,7 @@
 		}
 	}
 
+	/*
 	async function onSavePaymentStatus() {
 		if(!state.qPaymentStatus) return;
 		state.busy = true;
@@ -56,16 +61,39 @@
 			const message = res.message;
 			order.header.payment_status_name = state.qPaymentStatus;
 			notify({ heading: 'Success', message: message, type: 'info' });
+			state.editPaymentStatus = false;
 		} catch (error: any) {
 			state.busy = false;
+			notify({ heading: 'Error', message: error.response.data.message, type: 'error' });
+		}
+	}
+	*/
+
+	async function onSaveStatus() {
+		if(!state.editingField) return;
+		if(!state.editingValue) return;
+		state.savingField = state.editingField;
+
+
+		const spec: QBulk<QOrderHeaderUpdate> = { payload: [{order_id: order.header.id, field: state.editingField, value: state.editingValue}] };
+		try {	
+			const res = await comet.sales.orders.updateHeader(spec);
+			state.savingField = null;
+			const message = res.message;
+			order.header[state.editingField as keyof ROrderHeader] = state.editingValue;
+			notify({ heading: 'Success', message: message, type: 'info' });
+			state.editingField = null;
+		} catch (error: any) {
+			state.savingField = null;
 			notify({ heading: 'Error', message: error.response.data.message, type: 'error' });
 		}
 	}
 
 
 
+
+
 </script>
-Busy is {state.busy}
 <AuthGuard permissions="sales.order:create,update,read">
 	{#await loadOrder()}
 		{#if $loading}
@@ -113,8 +141,8 @@ Busy is {state.busy}
 							{@render orderProperty('Channel', order.header.channel_name)}
 							{@render orderProperty('Amount', `${order.header.currency_code} ${formatNumber(order.header.total_wtax)}`)}
 							{@render orderProperty('Customer Name', `${order.header.customer_name}`)}
-							{@render orderProperty('Customer Email', `${order.header.customer_email}`)}
-							{@render orderProperty('Customer Phone', `${order.header.customer_phone}`)}
+							{@render orderProperty('Customer Email', `${order.header.customer_email || '(not provided)'}`)}
+							{@render orderProperty('Customer Phone', `${order.header.customer_phone || '(not provided)'}`)}
 							<tr>
 								<td data-label="" class="text-left fw-bold">Bill To</td>
 								<td data-label="" class="text-left">{@html formatAddress(order.header.billto_address)}</td>
@@ -130,26 +158,26 @@ Busy is {state.busy}
 								<td data-label="" class="text-left fw-bold">Payment Status</td>
 								<td data-label="" class="text-left">
 									
-									{#if !state.editPaymentStatus}
+									{#if state.editingField !== 'payment_status_name'}
 										<span class="me-2"
 										class:text-success={order.header.payment_status_name === 'complete'}
 										class:text-danger={order.header.payment_status_name !== 'complete'}
 										>
 										{order.header.payment_status_name}
-										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={() => {state.editPaymentStatus = true}}>Update</Button>
+										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={() => {state.editingField = 'payment_status_name'; state.editingValue = order.header.payment_status_name}}>Edit</Button>
 									</span>
 									{:else}
 									 	<div class="input-group" style="width: 20rem;">
 
-										<select class="form-select form-select-sm" bind:value={state.qPaymentStatus} disabled={!state.editPaymentStatus}>
+										<select class="form-select form-select-sm" bind:value={state.editingValue}>
 											<option value="pending">Pending</option>
 											<option value="complete">Complete</option>
 											<option value="invalid">Invalid</option>
 										</select>
 										&nbsp;
-										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={onSavePaymentStatus} busy={state.busy} busytext="Saving">Save</Button>
+										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={onSaveStatus} busy={state.savingField === 'payment_status_name'} busytext="Saving">Save</Button>
 										&nbsp;
-										<Button icon="bi-pencil-square" size="sm" color="danger" outline onclick={() => {state.editPaymentStatus = false}}>Cancel</Button>
+										<Button icon="bi-pencil-square" size="sm" color="danger" outline onclick={() => {state.editingField = null}}>Cancel</Button>
 										</div>
 									{/if}
 
@@ -157,7 +185,35 @@ Busy is {state.busy}
 							</tr>						
 							<tr>
 								<td data-label="" class="text-left fw-bold">Shipping Status</td>
-								<td data-label="" class="text-left">{order.header.shipping_status_name}</td>
+								<td data-label="" class="text-left">
+									{#if state.editingField !== 'shipping_status_name'}
+										<span class="me-2"
+										class:text-success={order.header.shipping_status_name === 'complete'}
+										class:text-danger={order.header.shipping_status_name !== 'complete'}
+										>
+										{order.header.shipping_status_name}
+										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={() => {state.editingField = 'shipping_status_name'; state.editingValue = order.header.shipping_status_name}}>Edit</Button>
+									</span>
+									{:else}
+									 	<div class="input-group" style="width: 20rem;">
+
+										<select class="form-select form-select-sm" bind:value={state.editingValue}>
+											<option value="pending">Pending</option>
+											<option value="ready">Ready</option>
+											<option value="shipped">Shipped</option>
+											<option value="cancelled">Cancelled</option>
+											<option value="complete">Complete</option>
+											<option value="invalid">Invalid</option>
+										</select>
+										&nbsp;
+										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={onSaveStatus} busy={state.savingField === 'shipping_status_name'} busytext="Saving">Save</Button>
+										&nbsp;
+										<Button icon="bi-pencil-square" size="sm" color="danger" outline onclick={() => {state.editingField = null}}>Cancel</Button>
+										</div>
+									{/if}
+
+
+								</td>
 							</tr>						
 
 
