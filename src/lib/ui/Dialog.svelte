@@ -12,7 +12,7 @@
 
 	let { title = 'Title', open = $bindable(false), size = '', children }: Props = $props();
 
-	let dialog: HTMLDivElement = $state();
+	let dialog: HTMLDivElement|undefined = $state();
 	let modal: any = $state();
 
 	onMount(() => {

@@ -1,4 +1,4 @@
-import type { ROrderListRow, RPaginated } from '$lib/types';
+import type { ROrderListRow, RPaginated, ROrder } from '$lib/types';
 
 type TListSpec = {
 	page: number;
@@ -19,8 +19,8 @@ export class Orders {
 		return response.data as RPaginated<ROrderListRow>;
 	}
 
-	async get(order_id: string): Promise<any> {
+	async get(order_id: string): Promise<ROrder> {
 		const response = await this.client.get(`sales/orders/${order_id}`);
-		return response.data;
+		return response.data as ROrder;
 	}
 }
