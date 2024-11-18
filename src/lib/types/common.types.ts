@@ -33,3 +33,13 @@ export interface IToast {
 	message: string;
 	heading: string;
 }
+
+
+export interface R {
+    data: any;
+    message: string;
+}
+
+export interface QBulk<T> {
+  payload: T[];
+}

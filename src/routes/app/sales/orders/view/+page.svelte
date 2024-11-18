@@ -4,22 +4,25 @@
 	import { comet, logger } from '$lib';
 	import { loading } from '$lib/stores';
 	import { formatNumber, formatAddress, formatDate, formatTime, notify } from '$lib/utils';
-	import type { ROrderListRow, RPaginated, ROrder } from '$lib/types';
+	import type { ROrderListRow, RPaginated, ROrder, QOrderHeaderUpdate, QBulk } from '$lib/types';
 
 
 	type TState = {
 		editPaymentStatus: boolean,
 		editShippingStatus: boolean,
 		qPaymentStatus: string | null,
-		qShippingStatus: string | null
+		qShippingStatus: string | null,
+		busy: boolean
 	}
 	let state = $state<TState>({
 		editPaymentStatus: false,
 		editShippingStatus: false,
 		qPaymentStatus: null,
-		qShippingStatus: null
+		qShippingStatus: null,
+		busy: false
 	});
 
+	let order: ROrder;
 
 	async function loadOrder(): Promise<any> {
 		let query = $svpage.url.searchParams;
@@ -31,7 +34,7 @@
 		}
 		//$loading = true;
 		try {
-			const order = await comet.sales.orders.get(order_id);
+			order = await comet.sales.orders.get(order_id);
 			state.qPaymentStatus = order.header.payment_status_name;
 			state.qShippingStatus = order.header.shipping_status_name;
 			//$loading = false;
@@ -42,8 +45,27 @@
 		}
 	}
 
-</script>
+	async function onSavePaymentStatus() {
+		if(!state.qPaymentStatus) return;
+		state.busy = true;
 
+		const spec: QBulk<QOrderHeaderUpdate> = { payload: [{order_id: order.header.id, field: 'payment_status_name', value: state.qPaymentStatus}] };
+		try {	
+			const res = await comet.sales.orders.updateHeader(spec);
+			state.busy = false;
+			const message = res.message;
+			order.header.payment_status_name = state.qPaymentStatus;
+			notify({ heading: 'Success', message: message, type: 'info' });
+		} catch (error: any) {
+			state.busy = false;
+			notify({ heading: 'Error', message: error.response.data.message, type: 'error' });
+		}
+	}
+
+
+
+</script>
+Busy is {state.busy}
 <AuthGuard permissions="sales.order:create,update,read">
 	{#await loadOrder()}
 		{#if $loading}
@@ -122,9 +144,10 @@
 										<select class="form-select form-select-sm" bind:value={state.qPaymentStatus} disabled={!state.editPaymentStatus}>
 											<option value="pending">Pending</option>
 											<option value="complete">Complete</option>
+											<option value="invalid">Invalid</option>
 										</select>
 										&nbsp;
-										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={() => {state.editPaymentStatus = false}}>Save</Button>
+										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={onSavePaymentStatus} busy={state.busy} busytext="Saving">Save</Button>
 										&nbsp;
 										<Button icon="bi-pencil-square" size="sm" color="danger" outline onclick={() => {state.editPaymentStatus = false}}>Cancel</Button>
 										</div>
@@ -220,7 +243,7 @@
 
 		
 
-
+		<FileUpload></FileUpload>
 
 		<div class="d-flex justify-content-center mt-2">
 			<!-- <Paginator page={list.page} page_count={list.page_count} page_size={list.page_size} on:pagechange={onPageChange} /> -->

@@ -1,4 +1,4 @@
-import type { Q } from '$lib/types';
+import type { Q, R } from '$lib/types';
 
 export interface QOrderListSpec extends Q {
   tenant_id: string;
@@ -96,16 +96,16 @@ export interface ROrderLine
   options: any
 }
 
-
-export interface QOrderUpdateSpec extends Q
+export interface QOrderHeaderUpdate
 {
   order_id: string;
-  payment_status_name?: string;
-  shipping_status_name?: string;
+  field: string;
+  value: string;
 }
 
-export interface ROrderUpdate
+export interface ROrderUpdate extends R
 {
-  message: string;
-  order_id: string;
+  data: {
+    report: string[];
+  }
 }

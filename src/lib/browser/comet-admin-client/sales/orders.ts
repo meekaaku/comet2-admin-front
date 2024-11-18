@@ -1,4 +1,4 @@
-import type { ROrderListRow, RPaginated, ROrder } from '$lib/types';
+import type { ROrderListRow, RPaginated, ROrder, QOrderHeaderUpdate, QBulk, ROrderUpdate } from '$lib/types';
 
 type TListSpec = {
 	page: number;
@@ -22,5 +22,10 @@ export class Orders {
 	async get(order_id: string): Promise<ROrder> {
 		const response = await this.client.get(`sales/orders/${order_id}`);
 		return response.data as ROrder;
+	}
+
+	async updateHeader(spec: QBulk<QOrderHeaderUpdate>): Promise<ROrderUpdate> {
+		const response = await this.client.patch(`sales/orders/header`, spec);
+		return response.data as ROrderUpdate;
 	}
 }

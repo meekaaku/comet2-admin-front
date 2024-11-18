@@ -2,6 +2,74 @@
 	let dragOver = $state(false);
 	let files = $state<File[]>([]);
 	let filePreviews = $state<string[]>([]);
+	let isDownloading = $state(false);
+
+	async function fetchImageFromUrl(url: string) {
+		try {
+			isDownloading = true;
+			const response = await fetch(url);
+			
+			// Check if the response is OK and is an image
+			if (!response.ok) {
+				throw new Error('Failed to fetch image');
+			}
+
+			const contentType = response.headers.get('content-type');
+			if (!contentType?.startsWith('image/')) {
+				throw new Error('Not an image URL');
+			}
+
+			const blob = await response.blob();
+			
+			// Create a File object from the blob
+			const filename = url.split('/').pop() || 'downloaded-image';
+			const file = new File([blob], filename, { type: contentType || 'image/jpeg' });
+			
+			processFiles([file]);
+		} catch (error) {
+			console.error('Error downloading image:', error);
+			alert('Could not download image from URL');
+		} finally {
+			isDownloading = false;
+		}
+	}
+
+	function handlePaste(event: ClipboardEvent) {
+		const pastedText = event.clipboardData?.getData('text');
+		
+		// Check if pasted content looks like a URL
+		if (pastedText && (pastedText.startsWith('http://') || pastedText.startsWith('https://'))) {
+			try {
+				const url = new URL(pastedText);
+				
+				// Check if it's likely an image URL based on common extensions
+				const isImageUrl = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp']
+					.some(ext => url.pathname.toLowerCase().endsWith(ext));
+				
+				if (isImageUrl) {
+					event.preventDefault();
+					fetchImageFromUrl(pastedText);
+				}
+			} catch (error) {
+				// Invalid URL, ignore
+			}
+		} else {
+			// Handle file paste as before
+			const items = event.clipboardData?.items;
+			if (items) {
+				const pastedFiles: File[] = [];
+				for (let i = 0; i < items.length; i++) {
+					if (items[i].kind === 'file') {
+						const pastedFile = items[i].getAsFile();
+						if (pastedFile) {
+							pastedFiles.push(pastedFile);
+						}
+					}
+				}
+				processFiles(pastedFiles);
+			}
+		}
+	}
 
 	function handleFileSelect(event: Event) {
 		const input = event.target as HTMLInputElement;
@@ -25,22 +93,6 @@
 		
 		if (event.dataTransfer?.files) {
 			processFiles(Array.from(event.dataTransfer.files));
-		}
-	}
-
-	function handlePaste(event: ClipboardEvent) {
-		const items = event.clipboardData?.items;
-		if (items) {
-			const pastedFiles: File[] = [];
-			for (let i = 0; i < items.length; i++) {
-				if (items[i].kind === 'file') {
-					const pastedFile = items[i].getAsFile();
-					if (pastedFile) {
-						pastedFiles.push(pastedFile);
-					}
-				}
-			}
-			processFiles(pastedFiles);
 		}
 	}
 
@@ -81,6 +133,10 @@
 	on:drop={handleDrop}
 	class:drag-over={dragOver}
 >
+	{#if isDownloading}
+		<div class="loading">Downloading image...</div>
+	{/if}
+
 	{#if files.length > 0}
 		<div class="file-previews">
 			{#each files as file, index (file.name)}
@@ -112,7 +168,7 @@
 				multiple
 			/>
 			<label for="file-upload" class="upload-label">
-				Click to upload, drag & drop, or paste files
+				Click to upload, drag & drop, or paste files/image URLs
 			</label>
 			<p class="sub-text">
 				{10 - files.length} file slots remaining
@@ -128,6 +184,20 @@
 		padding: 20px;
 		text-align: center;
 		transition: all 0.3s ease;
+		position: relative;
+	}
+
+	.loading {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(255,255,255,0.8);
+		z-index: 10;
 	}
 
 	.file-upload-container.drag-over {
