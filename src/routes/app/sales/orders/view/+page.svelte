@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page as svpage } from '$app/stores';
-	import { Icon, Title, Toolbar, Button, Paginator, Loading, AuthGuard, TabHead, Tab, TabBody, TabHeader, TabPane } from '$lib/ui';
+	import { Icon, Title, Toolbar, Button, Paginator, Loading, AuthGuard, TabHead, Tab, TabBody, TabHeader, TabPane, FileUpload } from '$lib/ui';
 	import { comet, logger } from '$lib';
 	import { loading } from '$lib/stores';
 	import { formatNumber, formatAddress, formatDate, formatTime, notify } from '$lib/utils';
@@ -216,7 +216,6 @@
 
 			</TabBody>
 		</Tab>
-
 
 
 		
