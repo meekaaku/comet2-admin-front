@@ -56,7 +56,7 @@ export interface ROrderListRow
 
 export interface ROrderHeader
 {
-  order_id: string;
+  id: string;
   order_no: string;
   currency_code: string;
   date_created: string;
@@ -66,14 +66,19 @@ export interface ROrderHeader
   payment_method_name: string;
   shipping_status_name: string;
   payment_status_name: string;
+
   customer_id: string;
-  channel_id: string;
   customer_name: string;
+  customer_phone: string;
+  customer_email: string;
+  channel_id: string;
   channel_name: string;
+  comment: string;
   username: string;
   total_wtax: string;
-  data: any;
 }
+
+
 export interface ROrderLine
 {
   sort: number;

@@ -3,7 +3,7 @@
 		icon?: string;
 	}
 
-	let { icon = 'bi-arrow-right' }: Props = $props();
+	let { icon = 'bi-arrow-right', ...others }: Props = $props();
 
 	const prefix = icon.slice(0, 2); // bi - bootstrap icons, fi - feather icons, sh - streamlinehq
 	const rest = icon.slice(3);
