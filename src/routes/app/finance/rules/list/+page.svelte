@@ -3,8 +3,8 @@ import { onMount, } from 'svelte';
 import { afterNavigate, goto } from '$app/navigation';
 import { page as svpage } from '$app/stores';
 import { comet, logger } from '$lib';
-import { $loading } from '$lib/stores';
-import { Title, Toolbar, Button, $loading, Paginator, Dialog, DialogBody, DialogFooter } from '$lib/ui';
+import { loading } from '$lib/stores';
+import { Title, Toolbar, Button, Loading, Paginator, Dialog, DialogBody, DialogFooter } from '$lib/ui';
 import { deepClone } from '$lib/utils';
 import type { RPaginated, RRule, Editable } from '$lib/types';
 
@@ -117,7 +117,7 @@ onMount(() => {
 </Toolbar>
 
 {#if !list}
-  <$loading></$loading>
+  <Loading></Loading>
 {:else}
 
 <Dialog title="Edit Rule" bind:open={editorOpen}>
