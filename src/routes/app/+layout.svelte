@@ -37,6 +37,50 @@
 		}
 	}
 
+
+	function generateAvatarUrl(fullName: string, options: any = {}) {
+    // Default options
+		const {
+			backgroundColor = '#6366F1', // Indigo
+			textColor = '#FFFFFF',
+			size = 100,
+			fontSize = size / 2
+		} = options;
+
+		// Extract initials from name
+		const names = fullName.trim().split(/\s+/);
+		let initials = '';
+		
+		if (names.length === 1) {
+			// If only one name, use first two letters
+			initials = names[0].substring(0, 2).toUpperCase();
+		} else {
+			// Use first letter of first name and first letter of last name
+			initials = (names[0][0] + names[names.length - 1][0]).toUpperCase();
+		}
+
+		// Create canvas
+		const canvas = document.createElement('canvas');
+		canvas.width = size;
+		canvas.height = size;
+		const context = canvas.getContext('2d');
+		if(!context) return '';
+
+		// Draw background
+		context.fillStyle = backgroundColor;
+		context.fillRect(0, 0, size, size);
+
+		// Draw text
+		context.fillStyle = textColor;
+		context.font = `${fontSize}px Arial`;
+		context.textAlign = 'center';
+		context.textBaseline = 'middle';
+		context.fillText(initials, size / 2, size / 2);
+
+		// Convert to data URL
+		return canvas.toDataURL('image/png');
+	}
+
 	onMount(init);
 </script>
 
@@ -126,17 +170,49 @@
 					>
 				</div>
 
+
 				<div class="dropdown" style="margin-left: auto; margin-right: 1em;">
-					{$profile?.name}
+
+
+
+
+					<button
+						class="btn"
+						type="button"
+						data-bs-toggle="dropdown"
+						aria-expanded="false"
+					>
+
+					<Icon icon="bi-bell" /><span class="badge bg-danger" style="margin-left: -0.4rem; top: -0.6rem; font-size: 0.6rem;padding: 0.2rem">1</span>
+					</button>
+					<ul class="dropdown-menu" style="z-index: 100; width: 25em;">
+						<li><a class="dropdown-item" href="#">Notification 1</a></li>
+						<li><a class="dropdown-item" href="#">Notification 2</a></li>
+						<li><a class="dropdown-item" href="#">Notification 3</a></li>
+						<li><a class="dropdown-item" href="#">Notification 4</a></li>
+						<li><a class="dropdown-item" href="#">Notification 5</a></li>
+						<li><a class="dropdown-item" href="#">Notification 6</a></li>
+						
+					</ul>
+
+
+
+
+
+
 					<button
 						class="btn dropdown-toggle"
 						type="button"
 						data-bs-toggle="dropdown"
 						aria-expanded="false"
 					>
-						<Icon icon="bi-person" />
+					<img src={generateAvatarUrl($profile?.name)} alt="Avatar" style="width: 2em; height: 2em; border-radius: 50%;" />
 					</button>
-					<ul class="dropdown-menu" style="z-index: 100">
+					<ul class="dropdown-menu" style="z-index: 100; width: 15em;">
+						<li>
+							<span class="dropdown-item-text">{$profile?.name}</span>
+						</li>
+						<li><hr class="dropdown-divider" /></li>
 						<li>
 							<a class="dropdown-item" href="#"
 								><Icon icon="bi-person-lines-fill"></Icon>&nbsp; Profile</a
@@ -149,7 +225,9 @@
 							>
 						</li>
 					</ul>
+
 				</div>
+
 			</div>
 			<div class="c-content">
 				{@render children?.()}
