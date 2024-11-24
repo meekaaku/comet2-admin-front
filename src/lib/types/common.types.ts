@@ -32,6 +32,7 @@ export interface IToast {
 	type: 'info' | 'error';
 	message: string;
 	heading: string;
+	data?: any;
 }
 
 

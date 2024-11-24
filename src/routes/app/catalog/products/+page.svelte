@@ -47,7 +47,8 @@
 			notify({
 				type: 'error',
 				heading: 'Error',
-				message: error.response?.data?.message || 'An error occurred. Please try again later'
+				message: error.response?.data?.message || 'An error occurred. Please try again later',
+                data: error.response?.data.data
 			});
 		}
 	}
@@ -105,7 +106,7 @@
 							on:click={onUploadClick}
 							disabled={!uploadReady || $loading}
 							busy={$loading}
-							busytext="Up$loading...">Upload</Button
+							busytext="Uploading...">Upload</Button
 						>
 					</div>
 				</div>
@@ -115,3 +116,4 @@
 
 	<div style="height: 500px;">Product list goes here</div>
 {/if}
+99
