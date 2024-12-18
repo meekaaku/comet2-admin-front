@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { run } from 'svelte/legacy';
 
 	import { onMount } from 'svelte';
@@ -17,7 +18,8 @@
 
 	onMount(() => {
 		/* @ts-ignore */
-		modal = new bootstrap.Modal(dialog);
+		if(!window) return;
+		//modal = new bootstrap.Modal(dialog);
 	});
 
 	const handleEscape = (e: KeyboardEvent) => {
@@ -29,11 +31,12 @@
 	};
 
 	run(() => {
+		if(!browser) return;
 		if (open) {
-			window.addEventListener('keydown', handleEscape);
+			window?.addEventListener('keydown', handleEscape);
 			modal?.show();
 		} else {
-			window.removeEventListener('keydown', handleEscape);
+			window?.removeEventListener('keydown', handleEscape);
 			modal?.hide();
 		}
 	});
