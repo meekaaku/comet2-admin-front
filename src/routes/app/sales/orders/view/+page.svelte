@@ -49,25 +49,7 @@
 		}
 	}
 
-	/*
-	async function onSavePaymentStatus() {
-		if(!state.qPaymentStatus) return;
-		state.busy = true;
 
-		const spec: QBulk<QOrderHeaderUpdate> = { payload: [{order_id: order.header.id, field: 'payment_status_name', value: state.qPaymentStatus}] };
-		try {	
-			const res = await comet.sales.orders.updateHeader(spec);
-			state.busy = false;
-			const message = res.message;
-			order.header.payment_status_name = state.qPaymentStatus;
-			notify({ heading: 'Success', message: message, type: 'info' });
-			state.editPaymentStatus = false;
-		} catch (error: any) {
-			state.busy = false;
-			notify({ heading: 'Error', message: error.response.data.message, type: 'error' });
-		}
-	}
-	*/
 
 	async function onSaveStatus() {
 		if(!state.editingField) return;
