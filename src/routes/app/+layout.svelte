@@ -145,7 +145,7 @@
 							name="Roles"
 							icon="bi-person"
 							{toggle}
-							url="{base}/app/sales/orders/list"
+							url="{base}/app/admin/roles/list"
 						/>
 						<SidebarLink name="Users" icon="bi-person" {toggle} url="{base}/app/sales/customers" />
 						<SidebarLink
