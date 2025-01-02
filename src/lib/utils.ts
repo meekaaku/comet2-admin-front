@@ -86,6 +86,11 @@ export function notify(toast: IToast) {
 	setTimeout(() => toasts.update((t) => t.filter((x) => x !== toast)), 8000);
 }
 
+export function log(message: string, typ: 'info' | 'error' | 'warn' = 'info') {
+	const fn = typ === 'info' ? console.log : typ === 'error' ? console.error : console.warn;
+	fn(`[${typ}] ${message}`);
+}
+
 export function clickoutside(node: HTMLElement) {
 	// the node has been mounted in the DOM
 
