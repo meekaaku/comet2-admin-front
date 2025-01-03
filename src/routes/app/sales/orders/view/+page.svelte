@@ -78,9 +78,7 @@
 </script>
 <AuthGuard permissions="sales.order:create,update,read">
 	{#await loadOrder()}
-		{#if $loading}
-			<Loading></Loading>
-		{/if}
+			<Loading message="Retrieving order details..."></Loading>
 	{:then order: ROrder}
 		<Title>Sales Order - {order.header.order_no}</Title>
 		<Toolbar>
