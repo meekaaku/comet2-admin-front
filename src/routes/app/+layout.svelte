@@ -2,8 +2,9 @@
 	import { onMount } from 'svelte';
 	import { base } from '$app/paths';
 	import { goto } from '$app/navigation';
-	import { SidebarDrop, SidebarLink, Icon, Progress, About, Toaster } from '$lib/ui';
+	import { SidebarDrop, SidebarLink, Icon, Progress, Progress2, About, Toaster } from '$lib/ui';
 	import { profile } from '$lib/stores';
+	import { loading } from '$lib/stores.svelte';
 	import { logout, login, refresh, hasPermission } from '$lib/auth';
 	import { version } from '$lib/constants';
 	import { comet } from '$lib';
@@ -83,9 +84,8 @@
 
 	onMount(init);
 </script>
-
+Loading {loading.loading} <Progress2></Progress2>
 {#if $profile}
-	<Progress></Progress>
 	<Toaster></Toaster>
 	<div class="master">
 		<div bind:this={sidebarElement} class="c-sidebar">

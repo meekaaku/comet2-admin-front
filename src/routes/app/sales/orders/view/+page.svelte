@@ -6,6 +6,7 @@
 	import { loading } from '$lib/stores';
 	import { formatNumber, formatAddress, formatDate, formatTime, notify } from '$lib/utils';
 	import type { ROrderListRow, RPaginated, ROrder, QOrderHeaderUpdate, QBulk, ROrderHeader } from '$lib/types';
+	import { startLoading, stopLoading } from '$lib/stores.svelte';
 
 
 	type TPageState = {
@@ -28,6 +29,7 @@
 		editingValue: null
 	});
 
+	/* @ts-ignore */
 	let order: ROrder;
 
 	async function loadOrder(): Promise<any> {
@@ -37,13 +39,14 @@
 			if (!order_id) {
 				throw new Error('No order id');
 			}
+			startLoading();
 			order = await comet.sales.orders.get(order_id);
 			pageState.qPaymentStatus = order.header.payment_status_name;
 			pageState.qShippingStatus = order.header.shipping_status_name;
-			//$loading = false;
+			stopLoading();
 			return order;
 		} catch (error: any) {
-			$loading = false;
+			stopLoading();
 			notify({ heading: 'Error', message: error.message, type: 'error' });
 		}
 	}
@@ -58,18 +61,19 @@
 
 		const spec: QBulk<QOrderHeaderUpdate> = { payload: [{order_id: order.header.id, field: pageState.editingField, value: pageState.editingValue}] };
 		try {	
+			startLoading();
 			const res = await comet.sales.orders.updateHeader(spec);
 			pageState.savingField = null;
-			$loading = true;
 			const message = res.message;
 			order.header[pageState.editingField as keyof ROrderHeader] = pageState.editingValue;
+
 			notify({ heading: 'Success', message: message, type: 'info' });
 			pageState.editingField = null;
-			$loading = false;
+			stopLoading();
 		} catch (error: any) {
 			pageState.savingField = null;
 			notify({ heading: 'Error', message: error.response.data.message, type: 'error' });
-			$loading = false;
+			stopLoading();
 		}
 	}
 

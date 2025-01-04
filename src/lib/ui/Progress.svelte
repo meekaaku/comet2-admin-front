@@ -3,6 +3,7 @@
 	import { progress, loading } from '$lib/stores';
 
 	function check() {
+        console.log('check', $progress)
 		if ($navigating || $loading) {
             if($progress < 50){
                 $progress += 2;
@@ -32,9 +33,10 @@
 
 	check();
 </script>
-
+L: {$loading}
+P: {$progress}
 {#if $progress != 0}
-	Progress: <progress value={50} max="100"></progress>
+	<progress value={$progress} max="100"></progress>
 {/if}
 
 <style>
