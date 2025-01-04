@@ -1,4 +1,3 @@
-import * as currency from 'currency.js';
 import { toasts } from './stores';
 import type { IToast } from './types';
 

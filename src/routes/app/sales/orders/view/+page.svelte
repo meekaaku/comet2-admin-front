@@ -35,9 +35,7 @@
 			let query = $svpage.url.searchParams;
 			const order_id = query.get('order_id');
 			if (!order_id) {
-				$loading = false;
-				throw {message: 'No order id'};
-				//notify({heading: 'Error', message: 'No order id', type: 'error'});
+				throw new Error('No order id');
 			}
 			order = await comet.sales.orders.get(order_id);
 			pageState.qPaymentStatus = order.header.payment_status_name;
@@ -62,20 +60,20 @@
 		try {	
 			const res = await comet.sales.orders.updateHeader(spec);
 			pageState.savingField = null;
+			$loading = true;
 			const message = res.message;
 			order.header[pageState.editingField as keyof ROrderHeader] = pageState.editingValue;
 			notify({ heading: 'Success', message: message, type: 'info' });
 			pageState.editingField = null;
+			$loading = false;
 		} catch (error: any) {
 			pageState.savingField = null;
 			notify({ heading: 'Error', message: error.response.data.message, type: 'error' });
+			$loading = false;
 		}
 	}
 
-	const urltab = $svpage.url.searchParams.get('tab') || 'detail';
-	$svpage.url.searchParams.set('tab', urltab);
-
-	let tab = $state({id: urltab || 'detail'});
+	let tab = $state({id: 'detail'});
 
 	setContext<any>('tab', tab);
 
@@ -85,7 +83,8 @@ Page Tab: {tab.id}
 <AuthGuard permissions="sales.order:create,update,read">
 	{#await loadOrder()}
 			<Loading message="Retrieving order details..."></Loading>
-	{:then order: ROrder}
+	{:then}
+	 	{#if order}
 		<Title>Sales Order - {order.header.order_no}</Title>
 		<Toolbar>
 			<Button width="5em" icon="bi-plus-lg" size="sm" color="primary" disabled>Add</Button>
@@ -99,7 +98,7 @@ Page Tab: {tab.id}
 			</tr>
 		{/snippet}
 
-		<Tab defaultTab="detail">
+		<Tab defaultTab={tab.id}>
 			<TabHeader>
 				<TabHead id="detail" name="Details" icon="bi-card-list"></TabHead>
 				<TabHead id="product" name="Products" icon="bi-cart"></TabHead>
@@ -264,6 +263,7 @@ Page Tab: {tab.id}
 		<div class="d-flex justify-content-center mt-2">
 			<!-- <Paginator page={list.page} page_count={list.page_count} page_size={list.page_size} on:pagechange={onPageChange} /> -->
 		</div>
+		{/if}
 	{/await}
 </AuthGuard>
 

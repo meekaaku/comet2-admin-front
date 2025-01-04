@@ -19,7 +19,6 @@
     function changeTab() {
         currentTab.tab = id;
         tab.id = 'id ' + id;
-        goto($page.url.pathname);
     }
 
 </script>
