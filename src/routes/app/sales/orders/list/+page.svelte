@@ -37,11 +37,9 @@
 		try {
 			const _list = await comet.sales.orders.list({ page, page_size, sort, filters });
 			list = processList(_list);
-			//stopLoading();
 			loader.stop();
 		} catch (error) {
 			logger.error(`Error $loading orders: `, error);
-			//stopLoading();
 			loader.stop();
 		}
 		return list;

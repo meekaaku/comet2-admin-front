@@ -18,6 +18,41 @@ export class CometAdminClient {
 		const _axios = axios.create({
 			baseURL: `${base}/`
 		});
+
+
+		_axios.interceptors.response.use(
+			async (response) => {
+				// If the response is successful, just return the response
+				return response.data;
+			},
+			async (error) => {
+				// Handle response errors (e.g., 4xx, 5xx HTTP status codes)
+				if (error.response) {
+				// If the error has a response (e.g., 400 or 500 status)
+				return {
+					type: 'response.error',  // Custom error type
+					message: error.response.data?.message || 'Response error', // Custom message
+					status: error.response.status, // Error status code
+					error: error.response,  // Pass the full response error
+				};
+				} else if (error.request) {
+					// If no response was received (network issue, no internet, etc.)
+					return {
+						type: 'network.error',  // Custom error type for network issues
+						message: 'Network error. No response received.',
+						error: error.request,  // Pass the request error
+					};
+				} else {
+				// Generic error if something else goes wrong
+					return {
+						type: 'unknown.error',  // Custom error type for unknown issues
+						message: error.message || 'Unknown error occurred.',
+						error,
+					};
+				}
+			}
+		);
+
 		//_axios.defaults.withCredentials = true;
 		this.auth = new Auth(_axios);
 		this.sales = new Sales(_axios);

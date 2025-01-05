@@ -6,6 +6,7 @@ export class Auth {
 
 	async login(credentials: QLogin) {
 		const response = await this.client.post('auth/login', credentials);
+		console.log({response});
 		const data = response.data as RLogin;
 		this.setHeader('Authorization', `Bearer ${data.access}`);
 		return data;

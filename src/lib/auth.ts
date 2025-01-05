@@ -16,12 +16,18 @@ export async function login(
 	password: string,
 	redirect: string | undefined = undefined
 ): Promise<void> {
-	const data = await comet.auth.login({ tenant, username, password });
-	localStorage.setItem('access', data.access);
-	localStorage.setItem('refresh', data.refresh);
-	profile.set(data.profile);
-	acl.set(data.acl);
-	if (redirect) goto(`${redirect}`);
+	try {
+		const data = await comet.auth.login({ tenant, username, password });
+		console.log({data});
+		localStorage.setItem('access', data.access);
+		localStorage.setItem('refresh', data.refresh);
+		profile.set(data.profile);
+		acl.set(data.acl);
+		if (redirect) goto(`${redirect}`);
+	} catch (e: any) {
+		console.log(e);
+		throw e;
+	}
 }
 
 export async function refresh(): Promise<void> {
