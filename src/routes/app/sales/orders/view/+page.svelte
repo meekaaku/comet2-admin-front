@@ -3,7 +3,6 @@
 	import { page as svpage } from '$app/stores';
 	import { Icon, Title, Toolbar, Button, Paginator, Loading, AuthGuard, TabHead, Tab, TabBody, TabHeader, TabPane, FileUpload } from '$lib/ui';
 	import { comet, logger } from '$lib';
-	import { loading } from '$lib/stores';
 	import { formatNumber, formatAddress, formatDate, formatTime, notify } from '$lib/utils';
 	import type { ROrderListRow, RPaginated, ROrder, QOrderHeaderUpdate, QBulk, ROrderHeader } from '$lib/types';
 	import { startLoading, stopLoading } from '$lib/stores.svelte';
@@ -34,12 +33,16 @@
 
 	async function loadOrder(): Promise<any> {
 		try {
+
+			//TODO
+			// Uncommenting the line below gives an error
+			// Updating state inside a derived or a template expression is forbidden. If the value should not be reactive, declare it without `$state`
+			//startLoading();
 			let query = $svpage.url.searchParams;
 			const order_id = query.get('order_id');
 			if (!order_id) {
 				throw new Error('No order id');
 			}
-			startLoading();
 			order = await comet.sales.orders.get(order_id);
 			pageState.qPaymentStatus = order.header.payment_status_name;
 			pageState.qShippingStatus = order.header.shipping_status_name;
