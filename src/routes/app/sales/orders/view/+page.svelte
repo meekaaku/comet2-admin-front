@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { setContext, getContext } from 'svelte';
+	import { setContext, getContext, onMount } from 'svelte';
 	import { page as svpage } from '$app/stores';
 	import { Icon, Title, Toolbar, Button, Paginator, Loading, AuthGuard, TabHead, Tab, TabBody, TabHeader, TabPane, FileUpload } from '$lib/ui';
 	import { comet, logger } from '$lib';
 	import { formatNumber, formatAddress, formatDate, formatTime, notify } from '$lib/utils';
 	import type { ROrderListRow, RPaginated, ROrder, QOrderHeaderUpdate, QBulk, ROrderHeader } from '$lib/types';
-	import { startLoading, stopLoading } from '$lib/stores.svelte';
-
+	import { loader } from '$lib/stores.svelte';
 
 	type TPageState = {
 		editPaymentStatus: boolean,
@@ -34,10 +33,7 @@
 	async function loadOrder(): Promise<any> {
 		try {
 
-			//TODO
-			// Uncommenting the line below gives an error
-			// Updating state inside a derived or a template expression is forbidden. If the value should not be reactive, declare it without `$state`
-			//startLoading();
+			loader.start();
 			let query = $svpage.url.searchParams;
 			const order_id = query.get('order_id');
 			if (!order_id) {
@@ -46,10 +42,9 @@
 			order = await comet.sales.orders.get(order_id);
 			pageState.qPaymentStatus = order.header.payment_status_name;
 			pageState.qShippingStatus = order.header.shipping_status_name;
-			stopLoading();
-			return order;
+			loader.stop();
 		} catch (error: any) {
-			stopLoading();
+			loader.stop();
 			notify({ heading: 'Error', message: error.message, type: 'error' });
 		}
 	}
@@ -64,7 +59,7 @@
 
 		const spec: QBulk<QOrderHeaderUpdate> = { payload: [{order_id: order.header.id, field: pageState.editingField, value: pageState.editingValue}] };
 		try {	
-			startLoading();
+			loader.start();
 			const res = await comet.sales.orders.updateHeader(spec);
 			pageState.savingField = null;
 			const message = res.message;
@@ -72,11 +67,11 @@
 
 			notify({ heading: 'Success', message: message, type: 'info' });
 			pageState.editingField = null;
-			stopLoading();
+			loader.stop();
 		} catch (error: any) {
 			pageState.savingField = null;
 			notify({ heading: 'Error', message: error.response.data.message, type: 'error' });
-			stopLoading();
+			loader.stop();
 		}
 	}
 
@@ -84,13 +79,14 @@
 
 	setContext<any>('tab', tab);
 
+	onMount(loadOrder);
 
 </script>
 Page Tab: {tab.id}
 <AuthGuard permissions="sales.order:create,update,read">
-	{#await loadOrder()}
+	{#if !order && loader.loading}
 			<Loading message="Retrieving order details..."></Loading>
-	{:then}
+	{:else}
 	 	{#if order}
 		<Title>Sales Order - {order.header.order_no}</Title>
 		<Toolbar>
@@ -271,7 +267,7 @@ Page Tab: {tab.id}
 			<!-- <Paginator page={list.page} page_count={list.page_count} page_size={list.page_size} on:pagechange={onPageChange} /> -->
 		</div>
 		{/if}
-	{/await}
+	{/if}
 </AuthGuard>
 
 <style>

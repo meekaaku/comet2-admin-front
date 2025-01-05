@@ -6,8 +6,8 @@
 	import { Title, Toolbar, Button, Paginator, Loading } from '$lib/ui';
 	import { comet, logger } from '$lib';
 	import { formatNumber, formatAddress, formatDate, formatTime } from '$lib/utils';
-	import { startLoading, stopLoading } from '$lib/stores.svelte';
 	import type { ROrderListRow, RPaginated } from '$lib/types';
+	import { loader } from '$lib/stores.svelte';
 
 	let list: RPaginated<ROrderListRow> | undefined = $state(undefined);
 	let justMounted = false;
@@ -32,14 +32,17 @@
 		const page_size = parseInt(query.get('page_size') || '100');
 		const sort = query.get('sort') || '';
 		const filters = query.get('filters') || '';
-		startLoading();
+		//startLoading();
+		loader.start();
 		try {
 			const _list = await comet.sales.orders.list({ page, page_size, sort, filters });
 			list = processList(_list);
-			stopLoading();
+			//stopLoading();
+			loader.stop();
 		} catch (error) {
 			logger.error(`Error $loading orders: `, error);
-			stopLoading();
+			//stopLoading();
+			loader.stop();
 		}
 		return list;
 	}

@@ -8,7 +8,6 @@ export { default as FileUpload } from './FileUpload.svelte';
 export { default as Icon } from './Icon.svelte';
 export { default as Loading } from './Loading.svelte';
 export { default as Progress } from './Progress.svelte';
-export { default as Progress2 } from './Progress2.svelte';
 export { default as Paginator } from './Paginator.svelte';
 export { default as SidebarDrop } from './SidebarDrop.svelte';
 export { default as SidebarItem } from './__SidebarItem_.svelte';
