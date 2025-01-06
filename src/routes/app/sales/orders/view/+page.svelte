@@ -30,6 +30,7 @@
 	/* @ts-ignore */
 	let order =  $state<ROrder|null>(null);
 	let files = $state<ROrderFile[]|null>(null);
+	let activeTab = $state<string>('detail');
 
 	async function loadOrder(): Promise<any> {
 		try {
@@ -81,7 +82,7 @@
 
 	async function onTabChange(id: string) {
 		if(!order) return;
-		console.log('new tab is ', id);
+		activeTab = id;
 		if(id === 'document') {
 			if(files) return;
 			try {
@@ -95,21 +96,30 @@
 		}
 	}
 
-	let tab = $state({id: 'detail'});
-	setContext<any>('tab', tab);
 
 	onMount(loadOrder);
 
 </script>
-Page Tab: {tab.id}
 <AuthGuard permissions="sales.order:create,update,read">
 	{#if !order && loader.loading}
 			<Loading message="Retrieving order details..."></Loading>
 	{:else}
 	 	{#if order}
-		<Title>Sales Order - {order.header.order_no}</Title>
+		<Title>Sales Order - {order.header.order_no} {activeTab}</Title>
 		<Toolbar>
-			<Button width="5em" icon="bi-plus-lg" size="sm" color="primary" disabled>Add</Button>
+			{#if activeTab === 'detail'}
+				<Button width="5em" icon="bi-plus-lg" size="sm" color="primary" disabled>Add</Button>
+			{:else if activeTab === 'product'}
+				Product related buttons
+			{:else if activeTab === 'invoice'}	
+				Invoice related buttons
+			{:else if activeTab === 'payment'}	
+				Payment related buttons
+			{:else if activeTab === 'shipment'}	
+				Shipment related buttons
+			{:else if activeTab === 'document'}	
+				Document related buttons
+			{/if}
 
 		</Toolbar>
 
@@ -120,7 +130,7 @@ Page Tab: {tab.id}
 			</tr>
 		{/snippet}
 
-		<Tab defaultTab={tab.id} {onTabChange}>
+		<Tab {activeTab} {onTabChange}>
 			<TabHeader>
 				<TabHead id="detail" name="Details" icon="bi-card-list"></TabHead>
 				<TabHead id="product" name="Products" icon="bi-cart"></TabHead>
@@ -169,7 +179,7 @@ Page Tab: {tab.id}
 										class:text-danger={order.header.payment_status_name !== 'complete'}
 										>
 										{order.header.payment_status_name}
-										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={() => {pageState.editingField = 'payment_status_name'; pageState.editingValue = order.header.payment_status_name}}>Edit</Button>
+										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={() => {pageState.editingField = 'payment_status_name'; pageState.editingValue = order?.header.payment_status_name}}>Edit</Button>
 									</span>
 									{:else}
 									 	<div class="input-group" style="width: 20rem;">
@@ -293,7 +303,7 @@ Page Tab: {tab.id}
 								{#each files as file, i}
 								<tr>
 									<td data-label="#" class="text-center">{i + 1}</td>
-									<td data-label="Name" class="text-left">{file.name}</td>
+									<td data-label="Name" class="text-left"><a href={file.cdn_url} target="_blank">{file.name}</a></td>
 									<td data-label="Type" class="text-left">{file.type}</td>
 									<td data-label="Size" class="text-end">{formatBytes(file.size)}</td>
 									<td data-label="Date" class="text-end">{formatDate(file.date_created)}</td>

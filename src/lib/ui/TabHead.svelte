@@ -5,29 +5,26 @@
     import { getContext, setContext } from 'svelte';
     interface Props {
 		children?: import('svelte').Snippet;
-        id: number|string;
+        id: string;
         name: string;
         icon?: string;
     }
 
 	let { children, name, icon, id }: Props = $props();
 
-    let currentTab = getContext('currentTab') as {tab: number|string};
-    let tab = getContext('tab') as {id: string};
-
-    let onTabChange = getContext('onTabChange') as (tab: number|string) => void;
+    let currentTab = getContext('currentTab') as {id: string};
+    const onTabChange = getContext('onTabChange') as any;
 
 
     function changeTab() {
-        currentTab.tab = id;
-        tab.id = 'id ' + id;
+        currentTab.id = id;
         onTabChange?.(id);
     }
 
 </script>
 
 <li class="nav-item">
-    <a class:active={currentTab.tab == id} class="nav-link" aria-current="page" href="" onclick={changeTab}>
+    <a class:active={currentTab.id == id} class="nav-link" aria-current="page" href="" onclick={changeTab}>
         {#if icon}
             <Icon icon={icon}></Icon>&nbsp;
         {/if}
@@ -35,3 +32,4 @@
 
     </a>
 </li>
+
