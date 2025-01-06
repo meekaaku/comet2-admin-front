@@ -6,10 +6,8 @@ export class Auth {
 
 	async login(credentials: QLogin) {
 		const response = await this.client.post('auth/login', credentials);
-		console.log({response});
-		const data = response.data as RLogin;
-		this.setHeader('Authorization', `Bearer ${data.access}`);
-		return data;
+		this.setHeader('Authorization', `Bearer ${response.access}`);
+		return response as RLogin;
 	}
 
 	async logout() {
@@ -18,9 +16,8 @@ export class Auth {
 
 	async refresh(tokens: QRefresh) {
 		const response = await this.client.post('auth/refresh', tokens);
-		const data = response.data as RLogin;
-		this.setHeader('Authorization', `Bearer ${data.access}`);
-		return data;
+		this.setHeader('Authorization', `Bearer ${response.access}`);
+		return response as RLogin;
 	}
 
 	setHeader(header: string, value: string) {

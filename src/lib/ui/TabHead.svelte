@@ -8,17 +8,20 @@
         id: number|string;
         name: string;
         icon?: string;
-	}
+    }
 
 	let { children, name, icon, id }: Props = $props();
 
     let currentTab = getContext('currentTab') as {tab: number|string};
     let tab = getContext('tab') as {id: string};
 
+    let onTabChange = getContext('onTabChange') as (tab: number|string) => void;
+
 
     function changeTab() {
         currentTab.tab = id;
         tab.id = 'id ' + id;
+        onTabChange?.(id);
     }
 
 </script>

@@ -18,7 +18,7 @@ export async function login(
 ): Promise<void> {
 	try {
 		const data = await comet.auth.login({ tenant, username, password });
-		console.log({data});
+		console.log('login service', {data});
 		localStorage.setItem('access', data.access);
 		localStorage.setItem('refresh', data.refresh);
 		profile.set(data.profile);

@@ -3,8 +3,8 @@
 	import { page as svpage } from '$app/stores';
 	import { Icon, Title, Toolbar, Button, Paginator, Loading, AuthGuard, TabHead, Tab, TabBody, TabHeader, TabPane, FileUpload } from '$lib/ui';
 	import { comet, logger } from '$lib';
-	import { formatNumber, formatAddress, formatDate, formatTime, notify } from '$lib/utils';
-	import type { ROrderListRow, RPaginated, ROrder, QOrderHeaderUpdate, QBulk, ROrderHeader } from '$lib/types';
+	import { formatBytes, formatNumber, formatAddress, formatDate, formatTime, notify } from '$lib/utils';
+	import type { ROrderListRow, RPaginated, ROrder, QOrderHeaderUpdate, QBulk, ROrderHeader, ROrderFile } from '$lib/types';
 	import { loader } from '$lib/stores.svelte';
 
 	type TPageState = {
@@ -28,7 +28,8 @@
 	});
 
 	/* @ts-ignore */
-	let order: ROrder;
+	let order =  $state<ROrder|null>(null);
+	let files = $state<ROrderFile[]|null>(null);
 
 	async function loadOrder(): Promise<any> {
 		try {
@@ -42,6 +43,7 @@
 			order = await comet.sales.orders.get(order_id);
 			pageState.qPaymentStatus = order.header.payment_status_name;
 			pageState.qShippingStatus = order.header.shipping_status_name;
+
 			loader.stop();
 		} catch (error: any) {
 			loader.stop();
@@ -52,6 +54,7 @@
 
 
 	async function onSaveStatus() {
+		if(!order) return;
 		if(!pageState.editingField) return;
 		if(!pageState.editingValue) return;
 		pageState.savingField = pageState.editingField;
@@ -70,13 +73,29 @@
 			loader.stop();
 		} catch (error: any) {
 			pageState.savingField = null;
-			notify({ heading: 'Error', message: error.response.data.message, type: 'error' });
+			notify({ heading: 'Error', message: error.message, type: 'error' });
 			loader.stop();
 		}
 	}
 
-	let tab = $state({id: 'detail'});
 
+	async function onTabChange(id: string) {
+		if(!order) return;
+		console.log('new tab is ', id);
+		if(id === 'document') {
+			if(files) return;
+			try {
+				loader.start();
+				files = await comet.sales.orders.files.list(order.header.id);
+				loader.stop();
+			} catch (error: any) {
+				loader.stop();
+				notify({ heading: 'Error', message: error.message, type: 'error' });
+			}
+		}
+	}
+
+	let tab = $state({id: 'detail'});
 	setContext<any>('tab', tab);
 
 	onMount(loadOrder);
@@ -101,7 +120,7 @@ Page Tab: {tab.id}
 			</tr>
 		{/snippet}
 
-		<Tab defaultTab={tab.id}>
+		<Tab defaultTab={tab.id} {onTabChange}>
 			<TabHeader>
 				<TabHead id="detail" name="Details" icon="bi-card-list"></TabHead>
 				<TabHead id="product" name="Products" icon="bi-cart"></TabHead>
@@ -256,6 +275,38 @@ Page Tab: {tab.id}
 				<TabPane id="invoice">Invoices</TabPane>
 				<TabPane id="payment">Payments</TabPane>
 				<TabPane id="shipment">Shipments</TabPane>
+				<TabPane id="document">
+					{#if files}
+						<table class="ct-table table table-sm table-striped">
+							<thead>
+								<tr>
+								<th style="width: 5%" class="text-center">#</th>
+									<th style="width: 55%" class="text-center">Name</th>
+									<th style="width: 10%" class="text-center">Type</th>
+									<th style="width: 10%" class="text-center">Size</th>
+									<th style="width: 10%" class="text-center">Date</th>
+									<th style="width: 10%" class="text-center">Action</th>
+								</tr>
+							</thead>				 
+
+							<tbody>
+								{#each files as file, i}
+								<tr>
+									<td data-label="#" class="text-center">{i + 1}</td>
+									<td data-label="Name" class="text-left">{file.name}</td>
+									<td data-label="Type" class="text-left">{file.type}</td>
+									<td data-label="Size" class="text-end">{formatBytes(file.size)}</td>
+									<td data-label="Date" class="text-end">{formatDate(file.date_created)}</td>
+									<td data-label="Action" class="text-left">View</td>
+								</tr>
+								{/each}
+							</tbody>
+						</table>
+
+					{:else}
+						<Loading message="Retrieving documents..."></Loading>
+					{/if}
+				</TabPane>
 			</TabBody>
 		</Tab>
 

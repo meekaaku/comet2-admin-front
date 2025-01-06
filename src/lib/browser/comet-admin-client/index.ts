@@ -27,30 +27,34 @@ export class CometAdminClient {
 			},
 			async (error) => {
 				// Handle response errors (e.g., 4xx, 5xx HTTP status codes)
+				let rejection: any;
 				if (error.response) {
 				// If the error has a response (e.g., 400 or 500 status)
-				return {
-					type: 'response.error',  // Custom error type
-					message: error.response.data?.message || 'Response error', // Custom message
-					status: error.response.status, // Error status code
-					error: error.response,  // Pass the full response error
-				};
+					rejection = {
+						type: 'response.error',  // Custom error type
+						message: error.response.data?.message || 'Response error', // Custom message
+						status: error.response.status, // Error status code
+						error: error.response,  // Pass the full response error
+					};
 				} else if (error.request) {
 					// If no response was received (network issue, no internet, etc.)
-					return {
+					rejection = {
 						type: 'network.error',  // Custom error type for network issues
 						message: 'Network error. No response received.',
 						error: error.request,  // Pass the request error
 					};
 				} else {
 				// Generic error if something else goes wrong
-					return {
+					rejection = {
 						type: 'unknown.error',  // Custom error type for unknown issues
 						message: error.message || 'Unknown error occurred.',
 						error,
 					};
 				}
+
+				return Promise.reject(rejection);
 			}
+
 		);
 
 		//_axios.defaults.withCredentials = true;
