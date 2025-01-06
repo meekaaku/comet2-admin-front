@@ -118,7 +118,7 @@
 			{:else if activeTab === 'shipment'}	
 				Shipment related buttons
 			{:else if activeTab === 'document'}	
-				Document related buttons
+				<Button width="5em" icon="bi-plus-lg" size="sm" color="primary">Add</Button>
 			{/if}
 
 		</Toolbar>
