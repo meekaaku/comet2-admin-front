@@ -108,8 +108,8 @@
 		<Title>Sales Order - {order.header.order_no}</Title>
 		<Toolbar>
 			{#if activeTab === 'detail'}
-				<Button width="5em" icon="bi-plus-lg" size="sm" color="primary" disabled>Cancel</Button>
-				<Button width="5em" icon="bi-plus-lg" size="sm" color="primary" disabled>Edit</Button>
+				<Button width="6em" icon="bi-plus-lg" size="sm" color="primary" tooltip="Cancel Order">Cancel</Button>
+				<Button width="6em" icon="bi-plus-lg" size="sm" color="primary">Edit</Button>
 			{:else if activeTab === 'product'}
 				Product related buttons
 			{:else if activeTab === 'invoice'}	
