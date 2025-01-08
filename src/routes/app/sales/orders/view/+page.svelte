@@ -105,10 +105,11 @@
 			<Loading message="Retrieving order details..."></Loading>
 	{:else}
 	 	{#if order}
-		<Title>Sales Order - {order.header.order_no} {activeTab}</Title>
+		<Title>Sales Order - {order.header.order_no}</Title>
 		<Toolbar>
 			{#if activeTab === 'detail'}
-				<Button width="5em" icon="bi-plus-lg" size="sm" color="primary" disabled>Add</Button>
+				<Button width="5em" icon="bi-plus-lg" size="sm" color="primary" disabled>Cancel</Button>
+				<Button width="5em" icon="bi-plus-lg" size="sm" color="primary" disabled>Edit</Button>
 			{:else if activeTab === 'product'}
 				Product related buttons
 			{:else if activeTab === 'invoice'}	
