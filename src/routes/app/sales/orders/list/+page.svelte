@@ -29,7 +29,7 @@
 	async function loadList() {
 		let query = $svpage.url.searchParams;
 		const page = parseInt(query.get('page') || '1');
-		const page_size = parseInt(query.get('page_size') || '100');
+		const page_size = parseInt(query.get('page_size') || '2');
 		const sort = query.get('sort') || '';
 		const filters = query.get('filters') || '';
 		//startLoading();

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { navigating } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { base } from '$app/paths';
 	import { goto } from '$app/navigation';
@@ -7,7 +8,8 @@
 	import { logout, login, refresh, hasPermission } from '$lib/auth';
 	import { version } from '$lib/constants';
 	import { comet } from '$lib';
-
+	import { loader } from '$lib/stores.svelte';
+	
 	interface Props {
 		children?: import('svelte').Snippet;
 	}
@@ -18,6 +20,14 @@
 	let sidebarElement: HTMLElement;
 	let mainElement: HTMLElement;
 	let navElement: HTMLElement;
+
+	$effect(() => {
+		if($navigating) {
+			loader.start(true);
+		} else {
+			loader.stop(true);
+		}
+	});
 
 	function toggle() {
 		const w = screen.width < 768 ? '-400px' : '-240px';

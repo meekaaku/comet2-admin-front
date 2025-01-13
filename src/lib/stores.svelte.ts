@@ -1,11 +1,15 @@
-
 class Loader {
     loading: boolean = $state(false);
+    startedByNavigating: boolean = $state(false);
     progress: number = $state(0);
     progressTimer: any = null;
 
 
-    start() {
+    start(startedByNavigating: boolean = false) {
+        console.log('started with navigating:', startedByNavigating);
+        this.startedByNavigating = startedByNavigating;
+        if(this.loading) return;
+
         this.loading = true;
         this.progress = 0;
         this.progressTimer = setInterval(() => {
@@ -18,7 +22,13 @@ class Loader {
         }, 100);
     }
 
-    stop() {
+    stop(startedByNavigating: boolean = false) {
+        console.log('called stop with navigating:', startedByNavigating);
+        if(this.startedByNavigating != startedByNavigating) {
+            console.log('not stopping because startedByNavigating is different');
+            return;
+        }
+
         this.progress = 100;
         if(this.progressTimer){
             clearInterval(this.progressTimer);

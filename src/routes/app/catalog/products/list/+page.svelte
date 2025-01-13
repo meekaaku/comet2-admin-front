@@ -1,30 +1,19 @@
 <script lang="ts">
-	import { onNavigate, beforeNavigate } from '$app/navigation';
+	import { navigating } from '$app/stores';
 	import { loading } from '$lib/stores';
-	import { assertPermission, hasPermission, getPermission } from '$lib/auth';
-	import { Unauthorized, Title, Toolbar, Button, Toaster } from '$lib/ui';
+	import { Unauthorized, Title, Toolbar, Button, Toaster, AuthGuard } from '$lib/ui';
 	import { comet } from '$lib';
 	import { notify } from '$lib/utils';
+	import type { PageData } from './$types';
 
-	let authError: string | null = $state(null);
-	let access: string = '';
 	let importDropdownOpen: boolean = $state(false);
 	let file: File | null = null;
 	let uploadReady: boolean = $state(false);
+	let { data }: { data: PageData } = $props();
 
-	onNavigate(() => {
-		console.log('onNavigate at products');
+	$effect(() => {
+		console.log('data', data);
 	});
-
-	beforeNavigate(() => {
-		console.log('beforeNavigate at products');
-	});
-
-	try {
-		assertPermission('catalog.product:list');
-	} catch (e: any) {
-		authError = e.message || 'Some unknown error';
-	}
 
 	async function onUploadClick() {
 		if (!file) return;
@@ -54,7 +43,6 @@
 	}
 
 	function onFileSelect(e: Event) {
-		console.log('onFileSelect', e);
 
 		const input = e.target as HTMLInputElement;
 		if (input.files) {
@@ -62,13 +50,11 @@
 			file = input.files[0];
 		}
 	}
+
 </script>
 
-{#if authError}
-	<Unauthorized>
-		{authError}
-	</Unauthorized>
-{:else}
+
+<AuthGuard permissions="sales.order:create,update,read">
 	<Title>Products</Title>
 
 	<Toolbar>
@@ -115,5 +101,4 @@
 	</Toolbar>
 
 	<div style="height: 500px;">Product list goes here</div>
-{/if}
-99
+</AuthGuard>
