@@ -96,13 +96,13 @@
 						name="Products"
 						icon="bi-person"
 						{toggle}
-						url="{base}/app/catalog/products"
+						url="{base}/app/catalog/products/list"
 					/>
 					<SidebarLink
 						name="Collections"
 						icon="bi-activity"
 						{toggle}
-						url="{base}/app/catalog/collections"
+						url="{base}/app/catalog/collections/list"
 					/>
 				</SidebarDrop>
 
