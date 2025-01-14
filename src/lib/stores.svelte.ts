@@ -6,7 +6,6 @@ class Loader {
 
 
     start(startedByNavigating: boolean = false) {
-        console.log('started with navigating:', startedByNavigating);
         this.startedByNavigating = startedByNavigating;
         if(this.loading) return;
 
@@ -23,9 +22,7 @@ class Loader {
     }
 
     stop(startedByNavigating: boolean = false) {
-        console.log('called stop with navigating:', startedByNavigating);
         if(this.startedByNavigating != startedByNavigating) {
-            console.log('not stopping because startedByNavigating is different');
             return;
         }
 

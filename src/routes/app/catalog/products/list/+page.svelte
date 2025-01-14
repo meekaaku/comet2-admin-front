@@ -1,15 +1,18 @@
 <script lang="ts">
 	import { navigating } from '$app/stores';
+	import { base } from '$app/paths';
 	import { loading } from '$lib/stores';
-	import { Unauthorized, Title, Toolbar, Button, Toaster, AuthGuard } from '$lib/ui';
+	import { Title, Toolbar, Button, AuthGuard, Paginator } from '$lib/ui';
 	import { comet } from '$lib';
-	import { notify } from '$lib/utils';
+	import { notify, formatDate, formatTime, formatNumber } from '$lib/utils';
 	import type { PageData } from './$types';
 
 	let importDropdownOpen: boolean = $state(false);
 	let file: File | null = null;
 	let uploadReady: boolean = $state(false);
 	let { data }: { data: PageData } = $props();
+	//let list: any = { items: [], page: 1, page_count: 1, page_size: 100 };
+	let list = data.list;
 
 	$effect(() => {
 		console.log('data', data);
@@ -49,6 +52,11 @@
 			uploadReady = true;
 			file = input.files[0];
 		}
+	}
+
+	async function onPageChange()
+	{
+
 	}
 
 </script>
@@ -100,5 +108,38 @@
 		</div>
 	</Toolbar>
 
-	<div style="height: 500px;">Product list goes here</div>
+	<table class="ct-table table table-sm table-striped">
+		<thead>
+			<tr>
+				<th style="width: 5%" class="text-center">SKU</th>
+				<th style="width: 10%" class="text-center">Barcode</th>
+				<th style="width: 10%" class="text-center">Name</th>
+				<th style="width: 10%" class="text-center">Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			{#each list.items as product}
+				<tr>
+					<td data-label="SKU" class="text-center">{product.sku}</td>
+					<td data-label="Barcode" class="text-center">{product.barcode}</td>
+					<td data-label="Name" class="text-center">{product.name}</td>
+					<td data-label="Action" class="text-center">
+						something
+					</td>
+				</tr>
+			{/each}
+		</tbody>
+	</table>
+
+	<!-- 
+	<div class="d-flex justify-content-center mt-2">
+		<Paginator
+			page={list.page}
+			page_count={list.page_count}
+			page_size={list.page_size}
+			on:pagechange={onPageChange}
+		/>
+	</div>
+-->
+
 </AuthGuard>

@@ -44,6 +44,14 @@ export async function refresh(): Promise<void> {
 	const data = await comet.auth.refresh({ access, refresh });
 	localStorage.setItem('access', data.access);
 	localStorage.setItem('refresh', data.refresh);
+
+	await fetch(`${base}/token`, {
+		method: 'POST',
+		body: JSON.stringify({ access: data.access }),
+	});
+
+
+
 	profile.set(data.profile);
 	acl.set(data.acl);
 }

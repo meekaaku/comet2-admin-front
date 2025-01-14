@@ -1,3 +1,4 @@
+import type { RPaginated, RProductListRow } from '$lib/types';
 export class Catalog {
 	products: Products;
 
@@ -6,6 +7,8 @@ export class Catalog {
 	}
 
 	_products(id?: string) {
+		return new _Products(this.client);
+		/*
 		return  {
 			retrieve: async () => this.client.get(`catalog/products/${id}`),
 			create: async (data: any) => this.client.post(`catalog/products`, data),
@@ -14,10 +17,20 @@ export class Catalog {
 			list: async (params?: any) => this.client.get(`catalog/products/list`, params),
 			importCSV: async (formData: FormData) => this.client.post(`catalog/products/import-csv`, formData),
 		}		
+			*/
 
 	}
 
 
+}
+
+
+class _Products{
+	constructor(private readonly client: any) {}
+
+	async list(params?: any): Promise<RPaginated<RProductListRow>> {
+		return this.client.get(`catalog/products/list`, params);
+	}
 }
 
 class Products {
