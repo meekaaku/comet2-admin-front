@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { navigating } from '$app/stores';
-	import { base } from '$app/paths';
+	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 	import { loading } from '$lib/stores';
 	import { Title, Toolbar, Button, AuthGuard, Paginator } from '$lib/ui';
 	import { comet } from '$lib';
@@ -12,10 +12,11 @@
 	let uploadReady: boolean = $state(false);
 	let { data }: { data: PageData } = $props();
 	//let list: any = { items: [], page: 1, page_count: 1, page_size: 100 };
-	let list = data.list;
+	let list = $state(data.list);
 
 	$effect(() => {
-		console.log('data', data);
+		console.log(data.list.items[0].sku)
+		list = data.list;
 	});
 
 	async function onUploadClick() {
@@ -54,10 +55,15 @@
 		}
 	}
 
-	async function onPageChange()
-	{
-
+	function onPageChange(detail: any) {
+		const _page = detail.page;
+		const _page_size = detail.page_size || 100;
+		$page.url.searchParams.set('page', _page.toString());
+		$page.url.searchParams.set('page_size', _page_size.toString());
+		goto(`${$page.url.toString()}`, { invalidateAll: true, replaceState: false });
 	}
+
+
 
 </script>
 
@@ -136,7 +142,7 @@
 			page={list.page}
 			page_count={list.page_count}
 			page_size={list.page_size}
-			on:pagechange={onPageChange}
+			{onPageChange}
 		/>
 	</div>
 

@@ -3,8 +3,10 @@ import { browser } from '$app/environment';
 import type { PageServerLoad } from './$types';
 import { comet } from '$lib';
 
-export async function load()
+export async function load({url})
 {
-    const list = await comet.catalog._products().list();
+    const page = url.searchParams.get('page') || 1;
+    const page_size = url.searchParams.get('page_size') || 10;
+    const list = await comet.catalog._products().list({page, page_size});
     return { list };
 };

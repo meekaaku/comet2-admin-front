@@ -143,7 +143,7 @@
 			page={list.page}
 			page_count={list.page_count}
 			page_size={list.page_size}
-			on:pagechange={onPageChange}
+			{onPageChange}
 		/>
 	</div>
 {/if}

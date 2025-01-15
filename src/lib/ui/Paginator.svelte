@@ -3,13 +3,18 @@
 
 	interface Props {
 		page_count?: number;
-		page?: number;
-		page_size?: number;
+		page: number;
+		page_size: number;
+		onPageChange:(data: any) => void;
 	}
 
-	let { page_count = 1, page = $bindable(1), page_size = $bindable(10) }: Props = $props();
+	let { 
+		page_count = 1, 
+		page = $bindable(1), 
+		page_size = $bindable(10), 
+		onPageChange = () => {} 
+	}: Props = $props();
 
-	const dispatch = createEventDispatcher();
 </script>
 
 <nav class="d-none d-sm-block" aria-label="Paginator big screen">
@@ -20,7 +25,7 @@
 				href="#"
 				aria-label="Previous"
 				class:disabled={page === 1}
-				onclick={() => dispatch('pagechange', { page: page - 1, page_size })}
+				onclick={() => onPageChange({ page: page - 1, page_size })}
 			>
 				<span aria-hidden="true">&laquo;</span>
 			</a>
@@ -29,7 +34,7 @@
 			<select
 				class="form-select form-select-sm"
 				bind:value={page}
-				onchange={() => dispatch('pagechange', { page, page_size })}
+				onchange={() => onPageChange({ page, page_size })}
 			>
 				{#each Array(page_count) as _, page0}
 					<option value={page0 + 1}>{page0 + 1}</option>
@@ -42,7 +47,7 @@
 					<a
 						class="page-link"
 						href="#"
-						onclick={() => dispatch('pagechange', { page: page0 + 1, page_size })}>{page0 + 1}</a
+						onclick={() => onPageChange({ page: page0 + 1, page_size })}>{page0 + 1}</a
 					>
 				</li>
 			{/each}
@@ -53,7 +58,7 @@
 				href="#"
 				aria-label="Next"
 				class:disabled={page === page_count}
-				onclick={() => dispatch('pagechange', { page: page + 1, page_size })}
+				onclick={() => onPageChange({ page: page + 1, page_size })}
 			>
 				<span aria-hidden="true">&raquo;</span>
 			</a>
@@ -62,7 +67,7 @@
 		<select
 			class="form-select form-select-sm"
 			bind:value={page_size}
-			onchange={() => dispatch('pagechange', { page, page_size })}
+			onchange={() => onPageChange({ page, page_size })}
 		>
 			<option value={10}>10 per page</option>
 			<option value={50}>50 per page</option>
@@ -77,14 +82,14 @@
 			class="btn btn-outline-primary"
 			aria-label="Previous"
 			class:disabled={page === 1}
-			onclick={() => dispatch('pagechange', { page: page - 1, page_size })}
+			onclick={() => onPageChange({ page: page - 1, page_size })}
 		>
 			<span aria-hidden="true">&laquo;</span>
 		</button>
 		<select
 			class="form-select form-select-sm"
 			bind:value={page}
-			onchange={() => dispatch('pagechange', { page, page_size })}
+			onchange={() => onPageChange({ page, page_size })}
 		>
 			{#each Array(page_count) as _, page0}
 				<option value={page0 + 1}>{page0 + 1}</option>
@@ -94,7 +99,7 @@
 			class="btn btn-outline-primary"
 			aria-label="Next"
 			class:disabled={page === page_count}
-			onclick={() => dispatch('pagechange', { page: page + 1, page_size })}
+			onclick={() => onPageChange({ page: page + 1, page_size })}
 		>
 			<span aria-hidden="true">&raquo;</span>
 		</button>
@@ -102,7 +107,7 @@
 		<select
 			class="form-select form-select-sm"
 			bind:value={page_size}
-			onchange={() => dispatch('pagechange', { page, page_size })}
+			onchange={() => onPageChange({ page, page_size })}
 		>
 			<option value={10}>10 per page</option>
 			<option value={50}>50 per page</option>

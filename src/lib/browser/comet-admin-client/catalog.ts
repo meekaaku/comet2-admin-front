@@ -29,7 +29,7 @@ class _Products{
 	constructor(private readonly client: any) {}
 
 	async list(params?: any): Promise<RPaginated<RProductListRow>> {
-		return this.client.get(`catalog/products/list`, params);
+		return this.client.get(`catalog/products/list`, {params});
 	}
 }
 
