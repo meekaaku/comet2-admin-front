@@ -131,7 +131,6 @@
 		</tbody>
 	</table>
 
-	<!-- 
 	<div class="d-flex justify-content-center mt-2">
 		<Paginator
 			page={list.page}
@@ -140,6 +139,5 @@
 			on:pagechange={onPageChange}
 		/>
 	</div>
--->
 
 </AuthGuard>
