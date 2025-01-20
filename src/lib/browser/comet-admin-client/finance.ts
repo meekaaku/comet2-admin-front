@@ -49,7 +49,7 @@ class Reports {
 	async balanceSheet(spec: any): Promise<any> {
 		const { date_at } = spec;
 		const response = await this.client.get(`finance/reports/balancesheet?date_at=${date_at}`);
-		return response.data;
+		return response;
 	}
 }
 class Transactions {

@@ -16,11 +16,10 @@
 		console.log('load');
 	}
 
-	function onPageChange({ detail }: { detail: { page: number; page_size?: number } }) {
+	function onPageChange( detail: any) {
 		justMounted = false;
 		const _page = detail.page;
 		const _page_size = detail.page_size || 100;
-		console.log(detail);
 		$svpage.url.searchParams.set('page', _page.toString());
 		$svpage.url.searchParams.set('page_size', _page_size.toString());
 		goto(`?${$svpage.url.searchParams.toString()}`);
