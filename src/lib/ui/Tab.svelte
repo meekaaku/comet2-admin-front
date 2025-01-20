@@ -1,19 +1,19 @@
 <script lang="ts">
-	import { setContext } from 'svelte';
+	import { setContext, getContext } from 'svelte';
     interface Props {
 		children?: import('svelte').Snippet;
-		defaultTab: number|string;
+		activeTab: string;
+		onTabChange: Function;
 	}
 
-	let { children, defaultTab = 0 }: Props = $props();
+	let { children, activeTab, onTabChange }: Props = $props();
 
-	let currentTab: {tab: number|string} = $state({tab: defaultTab});
+	let currentTab = $state({id: activeTab});
 
 	setContext('currentTab', currentTab);
-
+	setContext('onTabChange', onTabChange);
 
 
 </script>
-
 {@render children?.()}
 

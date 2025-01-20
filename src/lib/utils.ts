@@ -1,4 +1,3 @@
-import * as currency from 'currency.js';
 import { toasts } from './stores';
 import type { IToast } from './types';
 
@@ -10,6 +9,22 @@ export function formatNumber(n: number | string, decimals: number = 2) {
 	});
 	n = Number(n);
 	return formatter.format(n);
+}
+
+export function formatBytes(bytes: number|string) {
+	bytes = Number(bytes)
+    if (bytes === 0) return '0 B';
+    
+    const units = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    const k = 1024;
+    
+    // Get the appropriate unit level by finding how many times we can divide by 1024
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    
+    // Convert to the unit and round to 1 decimal place
+    const value = (bytes / Math.pow(k, i)).toFixed(1);
+    
+    return `${parseFloat(value)} ${units[i]}`;
 }
 
 export function formatDate(str: string) {
@@ -86,6 +101,11 @@ export function notify(toast: IToast) {
 	setTimeout(() => toasts.update((t) => t.filter((x) => x !== toast)), 8000);
 }
 
+export function log(message: string, typ: 'info' | 'error' | 'warn' = 'info') {
+	const fn = typ === 'info' ? console.log : typ === 'error' ? console.error : console.warn;
+	fn(`[${typ}] ${message}`);
+}
+
 export function clickoutside(node: HTMLElement) {
 	// the node has been mounted in the DOM
 
@@ -109,3 +129,6 @@ export function clickoutside(node: HTMLElement) {
 		}
 	};
 }
+
+
+

@@ -1,30 +1,23 @@
 <script lang="ts">
-	import { onNavigate, beforeNavigate } from '$app/navigation';
+	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 	import { loading } from '$lib/stores';
-	import { assertPermission, hasPermission, getPermission } from '$lib/auth';
-	import { Unauthorized, Title, Toolbar, Button, Toaster } from '$lib/ui';
+	import { Title, Toolbar, Button, AuthGuard, Paginator } from '$lib/ui';
 	import { comet } from '$lib';
-	import { notify } from '$lib/utils';
+	import { notify, formatDate, formatTime, formatNumber } from '$lib/utils';
+	import type { PageData } from './$types';
 
-	let authError: string | null = $state(null);
-	let access: string = '';
 	let importDropdownOpen: boolean = $state(false);
 	let file: File | null = null;
 	let uploadReady: boolean = $state(false);
+	let { data }: { data: PageData } = $props();
+	//let list: any = { items: [], page: 1, page_count: 1, page_size: 100 };
+	let list = $state(data.list);
 
-	onNavigate(() => {
-		console.log('onNavigate at products');
+	$effect(() => {
+		console.log(data.list.items[0].sku)
+		list = data.list;
 	});
-
-	beforeNavigate(() => {
-		console.log('beforeNavigate at products');
-	});
-
-	try {
-		assertPermission('catalog.product:list');
-	} catch (e: any) {
-		authError = e.message || 'Some unknown error';
-	}
 
 	async function onUploadClick() {
 		if (!file) return;
@@ -54,7 +47,6 @@
 	}
 
 	function onFileSelect(e: Event) {
-		console.log('onFileSelect', e);
 
 		const input = e.target as HTMLInputElement;
 		if (input.files) {
@@ -62,13 +54,21 @@
 			file = input.files[0];
 		}
 	}
+
+	function onPageChange(detail: any) {
+		const _page = detail.page;
+		const _page_size = detail.page_size || 100;
+		$page.url.searchParams.set('page', _page.toString());
+		$page.url.searchParams.set('page_size', _page_size.toString());
+		goto(`${$page.url.toString()}`, { invalidateAll: true, replaceState: false });
+	}
+
+
+
 </script>
 
-{#if authError}
-	<Unauthorized>
-		{authError}
-	</Unauthorized>
-{:else}
+
+<AuthGuard permissions="sales.order:create,update,read">
 	<Title>Products</Title>
 
 	<Toolbar>
@@ -114,6 +114,36 @@
 		</div>
 	</Toolbar>
 
-	<div style="height: 500px;">Product list goes here</div>
-{/if}
-99
+	<table class="ct-table table table-sm table-striped">
+		<thead>
+			<tr>
+				<th style="width: 5%" class="text-center">SKU</th>
+				<th style="width: 10%" class="text-center">Barcode</th>
+				<th style="width: 10%" class="text-center">Name</th>
+				<th style="width: 10%" class="text-center">Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			{#each list.items as product}
+				<tr>
+					<td data-label="SKU" class="text-center">{product.sku}</td>
+					<td data-label="Barcode" class="text-center">{product.barcode}</td>
+					<td data-label="Name" class="text-center">{product.name}</td>
+					<td data-label="Action" class="text-center">
+						something
+					</td>
+				</tr>
+			{/each}
+		</tbody>
+	</table>
+
+	<div class="d-flex justify-content-center mt-2">
+		<Paginator
+			page={list.page}
+			page_count={list.page_count}
+			page_size={list.page_size}
+			{onPageChange}
+		/>
+	</div>
+
+</AuthGuard>

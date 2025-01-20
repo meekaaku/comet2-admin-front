@@ -1,13 +1,13 @@
 <script lang="ts">
+	import { setContext, getContext, onMount } from 'svelte';
 	import { page as svpage } from '$app/stores';
 	import { Icon, Title, Toolbar, Button, Paginator, Loading, AuthGuard, TabHead, Tab, TabBody, TabHeader, TabPane, FileUpload } from '$lib/ui';
 	import { comet, logger } from '$lib';
-	import { loading } from '$lib/stores';
-	import { formatNumber, formatAddress, formatDate, formatTime, notify } from '$lib/utils';
-	import type { ROrderListRow, RPaginated, ROrder, QOrderHeaderUpdate, QBulk, ROrderHeader } from '$lib/types';
+	import { formatBytes, formatNumber, formatAddress, formatDate, formatTime, notify } from '$lib/utils';
+	import type { ROrderListRow, RPaginated, ROrder, QOrderHeaderUpdate, QBulk, ROrderHeader, ROrderFile } from '$lib/types';
+	import { loader } from '$lib/stores.svelte';
 
-
-	type TState = {
+	type TPageState = {
 		editPaymentStatus: boolean,
 		editShippingStatus: boolean,
 		qPaymentStatus: string | null,
@@ -16,7 +16,8 @@
 		editingField: string | null,
 		editingValue: string | null
 	}
-	let state = $state<TState>({
+
+	let pageState:TPageState = $state<TPageState>({
 		editPaymentStatus: false,
 		editShippingStatus: false,
 		qPaymentStatus: null,
@@ -26,89 +27,100 @@
 		editingValue: null
 	});
 
-	let order: ROrder;
+	/* @ts-ignore */
+	let order =  $state<ROrder|null>(null);
+	let files = $state<ROrderFile[]|null>(null);
+	let activeTab = $state<string>('detail');
 
 	async function loadOrder(): Promise<any> {
-		let query = $svpage.url.searchParams;
-		const order_id = query.get('order_id');
-		if (!order_id) {
-			$loading = false;
-			//notify({heading: 'Error', message: 'No order id', type: 'error'});
-			return;
-		}
-		//$loading = true;
 		try {
+
+			loader.start();
+			let query = $svpage.url.searchParams;
+			const order_id = query.get('order_id');
+			if (!order_id) {
+				throw new Error('No order id');
+			}
 			order = await comet.sales.orders.get(order_id);
-			state.qPaymentStatus = order.header.payment_status_name;
-			state.qShippingStatus = order.header.shipping_status_name;
-			//$loading = false;
-			return order;
+			pageState.qPaymentStatus = order.header.payment_status_name;
+			pageState.qShippingStatus = order.header.shipping_status_name;
+
+			loader.stop();
 		} catch (error: any) {
-			$loading = false;
+			loader.stop();
 			notify({ heading: 'Error', message: error.message, type: 'error' });
 		}
 	}
 
-	/*
-	async function onSavePaymentStatus() {
-		if(!state.qPaymentStatus) return;
-		state.busy = true;
 
-		const spec: QBulk<QOrderHeaderUpdate> = { payload: [{order_id: order.header.id, field: 'payment_status_name', value: state.qPaymentStatus}] };
-		try {	
-			const res = await comet.sales.orders.updateHeader(spec);
-			state.busy = false;
-			const message = res.message;
-			order.header.payment_status_name = state.qPaymentStatus;
-			notify({ heading: 'Success', message: message, type: 'info' });
-			state.editPaymentStatus = false;
-		} catch (error: any) {
-			state.busy = false;
-			notify({ heading: 'Error', message: error.response.data.message, type: 'error' });
-		}
-	}
-	*/
 
 	async function onSaveStatus() {
-		if(!state.editingField) return;
-		if(!state.editingValue) return;
-		state.savingField = state.editingField;
+		if(!order) return;
+		if(!pageState.editingField) return;
+		if(!pageState.editingValue) return;
+		pageState.savingField = pageState.editingField;
 
 
-		const spec: QBulk<QOrderHeaderUpdate> = { payload: [{order_id: order.header.id, field: state.editingField, value: state.editingValue}] };
+		const spec: QBulk<QOrderHeaderUpdate> = { payload: [{order_id: order.header.id, field: pageState.editingField, value: pageState.editingValue}] };
 		try {	
+			loader.start();
 			const res = await comet.sales.orders.updateHeader(spec);
-			state.savingField = null;
+			pageState.savingField = null;
 			const message = res.message;
-			order.header[state.editingField as keyof ROrderHeader] = state.editingValue;
+			order.header[pageState.editingField as keyof ROrderHeader] = pageState.editingValue;
+
 			notify({ heading: 'Success', message: message, type: 'info' });
-			state.editingField = null;
+			pageState.editingField = null;
+			loader.stop();
 		} catch (error: any) {
-			state.savingField = null;
-			notify({ heading: 'Error', message: error.response.data.message, type: 'error' });
+			pageState.savingField = null;
+			notify({ heading: 'Error', message: error.message, type: 'error' });
+			loader.stop();
 		}
 	}
 
 
+	async function onTabChange(id: string) {
+		if(!order) return;
+		activeTab = id;
+		if(id === 'document') {
+			if(files) return;
+			try {
+				loader.start();
+				files = await comet.sales.orders.files.list(order.header.id);
+				loader.stop();
+			} catch (error: any) {
+				loader.stop();
+				notify({ heading: 'Error', message: error.message, type: 'error' });
+			}
+		}
+	}
 
 
+	onMount(loadOrder);
 
 </script>
 <AuthGuard permissions="sales.order:create,update,read">
-	{#await loadOrder()}
-		{#if $loading}
-			<Loading></Loading>
-		{/if}
-	{:then order: ROrder}
+	{#if !order && loader.loading}
+			<Loading message="Retrieving order details..."></Loading>
+	{:else}
+	 	{#if order}
 		<Title>Sales Order - {order.header.order_no}</Title>
 		<Toolbar>
-			<Button
-				width="5em"
-				icon="bi-plus-lg"
-				size="sm"
-				color="primary"
-				disabled>Add</Button
-			>
+			{#if activeTab === 'detail'}
+				<Button width="6em" icon="bi-plus-lg" size="sm" color="primary" tooltip="Cancel Order">Cancel</Button>
+				<Button width="6em" icon="bi-plus-lg" size="sm" color="primary">Edit</Button>
+			{:else if activeTab === 'product'}
+				Product related buttons
+			{:else if activeTab === 'invoice'}	
+				Invoice related buttons
+			{:else if activeTab === 'payment'}	
+				Payment related buttons
+			{:else if activeTab === 'shipment'}	
+				Shipment related buttons
+			{:else if activeTab === 'document'}	
+				<Button width="5em" icon="bi-plus-lg" size="sm" color="primary">Add</Button>
+			{/if}
 
 		</Toolbar>
 
@@ -119,15 +131,19 @@
 			</tr>
 		{/snippet}
 
-		<Tab defaultTab="details">
+		<Tab {activeTab} {onTabChange}>
 			<TabHeader>
-				<TabHead id="details" name="Details" icon="bi-card-list"></TabHead>
-				<TabHead id="products" name="Products" icon="bi-cart"></TabHead>
+				<TabHead id="detail" name="Details" icon="bi-card-list"></TabHead>
+				<TabHead id="product" name="Products" icon="bi-cart"></TabHead>
+				<TabHead id="invoice" name="Invoices" icon="bi-receipt"></TabHead>
+				<TabHead id="payment" name="Payments" icon="bi-cash"></TabHead>
+				<TabHead id="shipment" name="Shipments" icon="bi-truck"></TabHead>
+				<TabHead id="document" name="Documents" icon="bi-file-text"></TabHead>
 	
 			</TabHeader>
 
 			<TabBody>
-				<TabPane id="details">
+				<TabPane id="detail">
 					<table class="ct-table table table-sm table-striped">
 						<thead>
 						<tr>
@@ -158,26 +174,26 @@
 								<td data-label="" class="text-left fw-bold">Payment Status</td>
 								<td data-label="" class="text-left">
 									
-									{#if state.editingField !== 'payment_status_name'}
+									{#if pageState.editingField !== 'payment_status_name'}
 										<span class="me-2"
 										class:text-success={order.header.payment_status_name === 'complete'}
 										class:text-danger={order.header.payment_status_name !== 'complete'}
 										>
 										{order.header.payment_status_name}
-										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={() => {state.editingField = 'payment_status_name'; state.editingValue = order.header.payment_status_name}}>Edit</Button>
+										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={() => {pageState.editingField = 'payment_status_name'; pageState.editingValue = order?.header.payment_status_name}}>Edit</Button>
 									</span>
 									{:else}
 									 	<div class="input-group" style="width: 20rem;">
 
-										<select class="form-select form-select-sm" bind:value={state.editingValue}>
+										<select class="form-select form-select-sm" bind:value={pageState.editingValue}>
 											<option value="pending">Pending</option>
 											<option value="complete">Complete</option>
 											<option value="invalid">Invalid</option>
 										</select>
 										&nbsp;
-										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={onSaveStatus} busy={state.savingField === 'payment_status_name'} busytext="Saving">Save</Button>
+										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={onSaveStatus} busy={pageState.savingField === 'payment_status_name'} busytext="Saving">Save</Button>
 										&nbsp;
-										<Button icon="bi-pencil-square" size="sm" color="danger" outline onclick={() => {state.editingField = null}}>Cancel</Button>
+										<Button icon="bi-pencil-square" size="sm" color="danger" outline onclick={() => {pageState.editingField = null}}>Cancel</Button>
 										</div>
 									{/if}
 
@@ -186,18 +202,18 @@
 							<tr>
 								<td data-label="" class="text-left fw-bold">Shipping Status</td>
 								<td data-label="" class="text-left">
-									{#if state.editingField !== 'shipping_status_name'}
+									{#if pageState.editingField !== 'shipping_status_name'}
 										<span class="me-2"
 										class:text-success={order.header.shipping_status_name === 'complete'}
 										class:text-danger={order.header.shipping_status_name !== 'complete'}
 										>
 										{order.header.shipping_status_name}
-										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={() => {state.editingField = 'shipping_status_name'; state.editingValue = order.header.shipping_status_name}}>Edit</Button>
+										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={() => {pageState.editingField = 'shipping_status_name'; pageState.editingValue = order.header.shipping_status_name}}>Edit</Button>
 									</span>
 									{:else}
 									 	<div class="input-group" style="width: 20rem;">
 
-										<select class="form-select form-select-sm" bind:value={state.editingValue}>
+										<select class="form-select form-select-sm" bind:value={pageState.editingValue}>
 											<option value="pending">Pending</option>
 											<option value="ready">Ready</option>
 											<option value="shipped">Shipped</option>
@@ -206,9 +222,9 @@
 											<option value="invalid">Invalid</option>
 										</select>
 										&nbsp;
-										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={onSaveStatus} busy={state.savingField === 'shipping_status_name'} busytext="Saving">Save</Button>
+										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={onSaveStatus} busy={pageState.savingField === 'shipping_status_name'} busytext="Saving">Save</Button>
 										&nbsp;
-										<Button icon="bi-pencil-square" size="sm" color="danger" outline onclick={() => {state.editingField = null}}>Cancel</Button>
+										<Button icon="bi-pencil-square" size="sm" color="danger" outline onclick={() => {pageState.editingField = null}}>Cancel</Button>
 										</div>
 									{/if}
 
@@ -216,38 +232,12 @@
 								</td>
 							</tr>						
 
-
-
-
-
-<!-- 
-  id: string;
-  order_no: string;
-  currency_code: string;
-  date_created: string;
-  billto_address: string;
-  shipto_address: string;
-  shipping_method_name: string;
-  payment_method_name: string;
-  shipping_status_name: string;
-  payment_status_name: string;
-
-  customer_id: string;
-  customer_name: string;
-  customer_phone: string;
-  channel_id: string;
-  channel_name: string;
-  comment: string;
-  username: string;
-  total_wtax: string;
--->
-
 						</tbody>
 					</table>
 
 
 				</TabPane>
-				<TabPane id="products">
+				<TabPane id="product">
 					<table class="ct-table table table-sm table-striped">
 						<thead>
 						<tr>
@@ -293,18 +283,53 @@
 
 				</TabPane>
 
+				<TabPane id="invoice">Invoices</TabPane>
+				<TabPane id="payment">Payments</TabPane>
+				<TabPane id="shipment">Shipments</TabPane>
+				<TabPane id="document">
+					{#if files}
+						<table class="ct-table table table-sm table-striped">
+							<thead>
+								<tr>
+								<th style="width: 5%" class="text-center">#</th>
+									<th style="width: 55%" class="text-center">Name</th>
+									<th style="width: 10%" class="text-center">Type</th>
+									<th style="width: 10%" class="text-center">Size</th>
+									<th style="width: 10%" class="text-center">Date</th>
+									<th style="width: 10%" class="text-center">Action</th>
+								</tr>
+							</thead>				 
+
+							<tbody>
+								{#each files as file, i}
+								<tr>
+									<td data-label="#" class="text-center">{i + 1}</td>
+									<td data-label="Name" class="text-left"><a href={file.cdn_url} target="_blank">{file.name}</a></td>
+									<td data-label="Type" class="text-left">{file.type}</td>
+									<td data-label="Size" class="text-end">{formatBytes(file.size)}</td>
+									<td data-label="Date" class="text-end">{formatDate(file.date_created)}</td>
+									<td data-label="Action" class="text-left">View</td>
+								</tr>
+								{/each}
+							</tbody>
+						</table>
+
+					{:else}
+						<Loading message="Retrieving documents..."></Loading>
+					{/if}
+				</TabPane>
 			</TabBody>
 		</Tab>
 
 
 		
 
-		<FileUpload></FileUpload>
 
 		<div class="d-flex justify-content-center mt-2">
 			<!-- <Paginator page={list.page} page_count={list.page_count} page_size={list.page_size} on:pagechange={onPageChange} /> -->
 		</div>
-	{/await}
+		{/if}
+	{/if}
 </AuthGuard>
 
 <style>

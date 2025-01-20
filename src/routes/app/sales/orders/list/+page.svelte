@@ -5,9 +5,9 @@
 	import { page as svpage } from '$app/stores';
 	import { Title, Toolbar, Button, Paginator, Loading } from '$lib/ui';
 	import { comet, logger } from '$lib';
-	import { loading } from '$lib/stores';
 	import { formatNumber, formatAddress, formatDate, formatTime } from '$lib/utils';
 	import type { ROrderListRow, RPaginated } from '$lib/types';
+	import { loader } from '$lib/stores.svelte';
 
 	let list: RPaginated<ROrderListRow> | undefined = $state(undefined);
 	let justMounted = false;
@@ -16,11 +16,10 @@
 		console.log('load');
 	}
 
-	function onPageChange({ detail }: { detail: { page: number; page_size?: number } }) {
+	function onPageChange( detail: any) {
 		justMounted = false;
 		const _page = detail.page;
 		const _page_size = detail.page_size || 100;
-		console.log(detail);
 		$svpage.url.searchParams.set('page', _page.toString());
 		$svpage.url.searchParams.set('page_size', _page_size.toString());
 		goto(`?${$svpage.url.searchParams.toString()}`);
@@ -29,17 +28,18 @@
 	async function loadList() {
 		let query = $svpage.url.searchParams;
 		const page = parseInt(query.get('page') || '1');
-		const page_size = parseInt(query.get('page_size') || '100');
+		const page_size = parseInt(query.get('page_size') || '2');
 		const sort = query.get('sort') || '';
 		const filters = query.get('filters') || '';
-		$loading = true;
+		//startLoading();
+		loader.start();
 		try {
 			const _list = await comet.sales.orders.list({ page, page_size, sort, filters });
 			list = processList(_list);
-			$loading = false;
+			loader.stop();
 		} catch (error) {
 			logger.error(`Error $loading orders: `, error);
-			$loading = false;
+			loader.stop();
 		}
 		return list;
 	}
@@ -142,7 +142,7 @@
 			page={list.page}
 			page_count={list.page_count}
 			page_size={list.page_size}
-			on:pagechange={onPageChange}
+			{onPageChange}
 		/>
 	</div>
 {/if}

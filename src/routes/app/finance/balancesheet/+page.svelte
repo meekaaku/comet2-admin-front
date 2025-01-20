@@ -64,6 +64,7 @@ function onUpdateClick()
 
 function processReport(rep: any)
 {
+    console.log(rep);
     return rep;
 }
 

@@ -10,12 +10,12 @@
 	export let close = false;
 	export let color = 'primary';
 	export let outline = false;
-	export let size = '';
+	export let size: 'lg'|'sm' = 'sm';
 	export let busy = false;
 	export let busytext = '';
 	export let icon: string | undefined = undefined;
-
 	export let width: string | undefined = undefined;
+	export let tooltip: string | undefined = undefined;
 
 	$: ariaLabel = $$props['aria-label'];
 	$: defaultAriaLabel = close ? 'Close' : null;
@@ -39,6 +39,7 @@
 	type="button"
 	style:width
 	aria-label={ariaLabel || defaultAriaLabel}
+	data-bs-toggle="tooltip" data-bs-placement="top" title={tooltip}
 >
 	{#if busy}
 		<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>&nbsp;

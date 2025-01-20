@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { navigating } from '$app/stores';
 	import { onMount } from 'svelte';
 	import { base } from '$app/paths';
 	import { goto } from '$app/navigation';
@@ -7,7 +8,8 @@
 	import { logout, login, refresh, hasPermission } from '$lib/auth';
 	import { version } from '$lib/constants';
 	import { comet } from '$lib';
-
+	import { loader } from '$lib/stores.svelte';
+	
 	interface Props {
 		children?: import('svelte').Snippet;
 	}
@@ -18,6 +20,14 @@
 	let sidebarElement: HTMLElement;
 	let mainElement: HTMLElement;
 	let navElement: HTMLElement;
+
+	$effect(() => {
+		if($navigating) {
+			loader.start(true);
+		} else {
+			loader.stop(true);
+		}
+	});
 
 	function toggle() {
 		const w = screen.width < 768 ? '-400px' : '-240px';
@@ -83,9 +93,8 @@
 
 	onMount(init);
 </script>
-
+<Progress></Progress>
 {#if $profile}
-	<Progress></Progress>
 	<Toaster></Toaster>
 	<div class="master">
 		<div bind:this={sidebarElement} class="c-sidebar">
@@ -97,13 +106,13 @@
 						name="Products"
 						icon="bi-person"
 						{toggle}
-						url="{base}/app/catalog/products"
+						url="{base}/app/catalog/products/list"
 					/>
 					<SidebarLink
 						name="Collections"
 						icon="bi-activity"
 						{toggle}
-						url="{base}/app/catalog/collections"
+						url="{base}/app/catalog/collections/list"
 					/>
 				</SidebarDrop>
 
@@ -145,7 +154,7 @@
 							name="Roles"
 							icon="bi-person"
 							{toggle}
-							url="{base}/app/sales/orders/list"
+							url="{base}/app/admin/roles/list"
 						/>
 						<SidebarLink name="Users" icon="bi-person" {toggle} url="{base}/app/sales/customers" />
 						<SidebarLink

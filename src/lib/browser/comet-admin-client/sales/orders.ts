@@ -1,4 +1,4 @@
-import type { ROrderListRow, RPaginated, ROrder, QOrderHeaderUpdate, QBulk, ROrderUpdate } from '$lib/types';
+import type { ROrderListRow, RPaginated, ROrder, QOrderHeaderUpdate, QBulk, ROrderUpdate, ROrderFile } from '$lib/types';
 
 type TListSpec = {
 	page: number;
@@ -8,24 +8,37 @@ type TListSpec = {
 };
 
 export class Orders {
-	constructor(private readonly client: any) {}
+	public files: Files;
+
+	constructor(private readonly client: any) {
+		this.files = new Files(this.client);
+	}
 
 	async list(spec: TListSpec): Promise<RPaginated<ROrderListRow>> {
 		const { page = 2, page_size = 5, sort = 'date-desc', filters = {} } = spec;
 		const jfilters = JSON.stringify(filters);
-		const response = await this.client.get(
-			`sales/orders/list?page=${page}&page_size=${page_size}&sort=${sort}&filters=${jfilters}`
-		);
-		return response.data as RPaginated<ROrderListRow>;
+		return await this.client.get(`sales/orders/list?page=${page}&page_size=${page_size}&sort=${sort}&filters=${jfilters}`) as RPaginated<ROrderListRow>;
 	}
 
 	async get(order_id: string): Promise<ROrder> {
-		const response = await this.client.get(`sales/orders/${order_id}`);
-		return response.data as ROrder;
+		return await this.client.get(`sales/orders/${order_id}`) as ROrder;
 	}
 
 	async updateHeader(spec: QBulk<QOrderHeaderUpdate>): Promise<ROrderUpdate> {
-		const response = await this.client.patch(`sales/orders/header`, spec);
-		return response.data as ROrderUpdate;
+		return await this.client.patch(`sales/orders/header`, spec) as ROrderUpdate;
+	}
+
+
+
+
+}
+
+
+class Files {
+	constructor(private readonly client: any) {}
+
+	async list(order_id: string): Promise<ROrderFile[]> {
+		return await this.client.get(`sales/orders/${order_id}/files`) as ROrderFile[];
 	}
 }
+
