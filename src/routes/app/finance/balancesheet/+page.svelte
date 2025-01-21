@@ -115,7 +115,7 @@ onMount(() => {
     <tbody>
 
         {#if 0}
-        {#each report.rows as row}
+        {#each report.children as row}
         <tr>
             <td data-label={row.account_name} class="text-right">{row.account_name}</td>
             <td data-label={row.job_name} class="text-right">{row.job_name || ''}</td>
