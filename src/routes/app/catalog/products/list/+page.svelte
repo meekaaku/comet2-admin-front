@@ -75,9 +75,17 @@
 		console.log(list.items.filter(item => item.selected));
 	}
 
+	let somethingSelected: boolean = $state(false);
 	function onSelectChange(e: Event)
 	{
-		
+		somethingSelected = false;
+		list.items.forEach(item => {
+			if(item.selected)
+			{
+				somethingSelected = true;
+				return;
+			}
+		});
 	}
 </script>
 
@@ -126,7 +134,7 @@
 				</div>
 			{/if}
 
-			<Button width="8em" size="sm" color="danger" icon="bi-trash" disabled={$loading} onclick={onDeleteClick}>Delete</Button>
+			<Button width="8em" size="sm" color="danger" icon="bi-trash" disabled={$loading || !somethingSelected} onclick={onDeleteClick} >Delete</Button>
 		</div>
 	</Toolbar>
 
