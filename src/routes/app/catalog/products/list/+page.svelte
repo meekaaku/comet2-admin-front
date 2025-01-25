@@ -6,17 +6,24 @@
 	import { comet } from '$lib';
 	import { notify, formatDate, formatTime, formatNumber } from '$lib/utils';
 	import type { PageData } from './$types';
+	import type { RProductListRow, RPaginated } from '$lib/types';
+
+
+	interface RProductListRowExtends extends RProductListRow
+	{
+		selected: boolean;
+	}
 
 	let importDropdownOpen: boolean = $state(false);
 	let file: File | null = null;
 	let uploadReady: boolean = $state(false);
 	let { data }: { data: PageData } = $props();
 	//let list: any = { items: [], page: 1, page_count: 1, page_size: 100 };
-	let list = $state(data.list);
+	let list = $state<RPaginated<RProductListRowExtends>>(data.list as RPaginated<RProductListRowExtends>);
 
 	$effect(() => {
 		console.log(data.list.items[0].sku)
-		list = data.list;
+		list = data.list as RPaginated<RProductListRowExtends>;
 	});
 
 	async function onUploadClick() {
@@ -63,8 +70,15 @@
 		goto(`${$page.url.toString()}`, { invalidateAll: true, replaceState: false });
 	}
 
+	async function onDeleteClick()
+	{
+		console.log(list.items.filter(item => item.selected));
+	}
 
-
+	function onSelectChange(e: Event)
+	{
+		
+	}
 </script>
 
 
@@ -111,12 +125,15 @@
 					</div>
 				</div>
 			{/if}
+
+			<Button width="8em" size="sm" color="danger" icon="bi-trash" disabled={$loading} onclick={onDeleteClick}>Delete</Button>
 		</div>
 	</Toolbar>
 
 	<table class="ct-table table table-sm table-striped">
 		<thead>
 			<tr>
+				<th style="width: 5%" class="text-center">Select</th>
 				<th style="width: 5%" class="text-center">SKU</th>
 				<th style="width: 10%" class="text-center">Barcode</th>
 				<th style="width: 10%" class="text-center">Name</th>
@@ -126,6 +143,7 @@
 		<tbody>
 			{#each list.items as product}
 				<tr>
+					<td data-label="Select" class="text-center"><input type="checkbox" bind:checked={product.selected}  onchange={onSelectChange}/></td>
 					<td data-label="SKU" class="text-center">{product.sku}</td>
 					<td data-label="Barcode" class="text-center">{product.barcode}</td>
 					<td data-label="Name" class="text-center">{product.name}</td>
