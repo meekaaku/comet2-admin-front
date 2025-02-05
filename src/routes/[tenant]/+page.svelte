@@ -93,6 +93,7 @@
 									<div class="d-grid gap-2 mt-3">
 										<Button
 											busytext="Logging in"
+											size="lg"
 											color="primary"
 											on:click={onLoginClick}
 											icon="bi-box-arrow-in-right"
