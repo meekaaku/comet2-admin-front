@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { loading } from '$lib/stores';
-	import { Title, Toolbar, Button, AuthGuard, Paginator } from '$lib/ui';
+	import { Title, Toolbar, Button, AuthGuard, Paginator, Icon, Dialog, DialogBody, DialogFooter } from '$lib/ui';
 	import { comet } from '$lib';
 	import { notify, formatDate, formatTime, formatNumber } from '$lib/utils';
 	import type { PageData } from './$types';
@@ -99,10 +99,22 @@
 			}
 		});
 	}
+
+	let showDialogImportVariants = $state(false);
 </script>
+	<Dialog bind:open={showDialogImportVariants} size="lg" title="Import Product Variants">
+		<DialogBody>
+			<p>Hello</p>
+		</DialogBody>
+		<DialogFooter>footer </DialogFooter>
+	</Dialog>
+
 
 
 <AuthGuard permissions="sales.order:create,update,read">
+
+
+
 	<Title>Products</Title>
 
 	<Toolbar>
@@ -112,7 +124,20 @@
 
 
 		<div class="dropdown d-inline-block ms-2">
+			<button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 8em;">
+				<Icon icon="bi-plus" /> Import  
+			</button>
+			<ul class="dropdown-menu">
+				<li><a class="dropdown-item" href="#" onclick={() => showDialogImportVariants = true}>Product Variants</a></li>
+				<li><a class="dropdown-item" href="#">Product Media</a></li>
+			</ul>
+		</div>
+
+
+
+		<div class="dropdown d-inline-block ms-2">
 			<Button
+				class="dropdown-toggle"
 				width="8em"
 				icon="bi-caret-down"
 				size="sm"
@@ -128,6 +153,7 @@
 					class="dropdown-menu dropdown-menu-end p-3 show"
 					style="min-width: 300px; right: 1em; z-index: 1000;"
 				>
+
 					<div class="mb-3">
 						<label for="fileUpload" class="form-label">Choose file to upload</label>
 						<input
@@ -151,8 +177,8 @@
 				</div>
 			{/if}
 
-			<Button width="8em" size="sm" color="danger" icon="bi-trash" disabled={$loading || !somethingSelected} onclick={onDeleteClick} >Delete</Button>
 		</div>
+			<Button width="8em" size="sm" color="danger" icon="bi-trash" disabled={$loading || !somethingSelected} onclick={onDeleteClick} >Delete</Button>
 
 	
 	</Toolbar>
@@ -160,7 +186,7 @@
 	<table class="ct-table table table-sm table-striped">
 		<thead>
 			<tr>
-				<th style="width: 2%" class="text-center">Image</th>
+				<th style="width: 8%" class="text-center">Image</th>
 				<th style="width: 2%" class="text-center pointer" onclick={() => orderBy('sku')}>SKU</th>
 				<th style="width: 5%" class="text-center pointer" onclick={() => orderBy('barcode')}>Barcode</th>
 				<th class="text-center pointer" onclick={() => orderBy('name')}>Name</th>
@@ -198,7 +224,6 @@
 	</div>
 
 </AuthGuard>
-
 
 <style>
 	.pointer {

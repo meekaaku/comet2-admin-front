@@ -48,7 +48,7 @@
 	class:modal-lg={size === 'lg'}
 	class:modal-sm={size === 'sm'}
 	class:modal-xl={size === 'xl'}
-	class="modal fade"
+	class="modal fade show"
 	tabindex="-1"
 	data-bs-backdrop="static"
 >
@@ -63,3 +63,10 @@
 		</div>
 	</div>
 </div>
+
+
+<style>
+	.visible {
+		display: block;
+	}
+</style>
