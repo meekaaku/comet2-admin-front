@@ -18,11 +18,9 @@
 	let file: File | null = null;
 	let uploadReady: boolean = $state(false);
 	let { data }: { data: PageData } = $props();
-	//let list: any = { items: [], page: 1, page_count: 1, page_size: 100 };
 	let list = $state<RPaginated<RProductListRowExtends>>(data.list as RPaginated<RProductListRowExtends>);
-
+	let search: string = $state('');
 	$effect(() => {
-		console.log(data.list.items[0].sku)
 		list = data.list as RPaginated<RProductListRowExtends>;
 	});
 
@@ -70,6 +68,20 @@
 		goto(`${$page.url.toString()}`, { invalidateAll: true, replaceState: false });
 	}
 
+	function orderBy(column: string) {
+		const current_order_by = $page.url.searchParams.get('order_by') || 'name';
+		const current_order_dir = $page.url.searchParams.get('order_dir') || 'asc';
+
+		let order_dir = 'asc';
+		if(current_order_by === column) {
+			order_dir = current_order_dir === 'asc' ? 'desc' : 'asc';
+		}
+
+		$page.url.searchParams.set('order_by', column);
+		$page.url.searchParams.set('order_dir', order_dir);
+		goto(`${$page.url.toString()}`, { invalidateAll: true, replaceState: false });
+	}
+
 	async function onDeleteClick()
 	{
 		console.log(list.items.filter(item => item.selected));
@@ -94,6 +106,11 @@
 	<Title>Products</Title>
 
 	<Toolbar>
+		<div>
+			<input type="text" class="form-control form-control-sm" style="width: 1000px;" placeholder="Search" bind:value={search} />
+		</div>	
+
+
 		<div class="dropdown d-inline-block ms-2">
 			<Button
 				width="8em"
@@ -136,27 +153,35 @@
 
 			<Button width="8em" size="sm" color="danger" icon="bi-trash" disabled={$loading || !somethingSelected} onclick={onDeleteClick} >Delete</Button>
 		</div>
+
+	
 	</Toolbar>
 
 	<table class="ct-table table table-sm table-striped">
 		<thead>
 			<tr>
-				<th style="width: 5%" class="text-center">Select</th>
-				<th style="width: 5%" class="text-center">SKU</th>
-				<th style="width: 10%" class="text-center">Barcode</th>
-				<th style="width: 10%" class="text-center">Name</th>
-				<th style="width: 10%" class="text-center">Action</th>
+				<th style="width: 2%" class="text-center">Image</th>
+				<th style="width: 2%" class="text-center pointer" onclick={() => orderBy('sku')}>SKU</th>
+				<th style="width: 5%" class="text-center pointer" onclick={() => orderBy('barcode')}>Barcode</th>
+				<th class="text-center pointer" onclick={() => orderBy('name')}>Name</th>
+				<th style="width: 3%" class="text-center pointer" onclick={() => orderBy('status')}>Status</th>
+				<th style="width: 3%" class="text-center">Action</th>
 			</tr>
 		</thead>
 		<tbody>
 			{#each list.items as product}
 				<tr>
-					<td data-label="Select" class="text-center"><input type="checkbox" bind:checked={product.selected}  onchange={onSelectChange}/></td>
-					<td data-label="SKU" class="text-center">{product.sku}</td>
-					<td data-label="Barcode" class="text-center">{product.barcode}</td>
-					<td data-label="Name" class="text-center">{product.name}</td>
-					<td data-label="Action" class="text-center">
-						something
+					<td data-label="Image" class="text-center align-middle">
+						<input type="checkbox" bind:checked={product.selected}  onchange={onSelectChange}/>
+						&nbsp;
+						<img src={product.image_url} alt={product.name} style="width: 50px; height: 50px;"/>
+					</td>
+					<td data-label="SKU" class="text-center align-middle">{product.sku}</td>
+					<td data-label="Barcode" class="text-center align-middle">{product.barcode}</td>
+					<td data-label="Name" class="text-left align-middle">{product.name.slice(0, 40)}</td>
+					<td data-label="Name" class="text-center align-middle">{product.status}</td>
+					<td data-label="Action" class="text-center align-middle">
+						<a href={`view?id=${product.id}`}>View</a>
 					</td>
 				</tr>
 			{/each}
@@ -173,3 +198,10 @@
 	</div>
 
 </AuthGuard>
+
+
+<style>
+	.pointer {
+		cursor: pointer;
+	}
+</style>

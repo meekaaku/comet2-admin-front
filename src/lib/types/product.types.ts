@@ -12,4 +12,17 @@ export interface RProductListRow {
     barcode: string;
     name: string;
     status: string;
+
+    brand_name: string;
+    type_name: string;
+    variant_id: string;
+    rating_score: number;
+    rating_count: number;
+    age: number;
+    length_mm: number;
+    width_mm: number;
+    height_mm: number;
+    weight_g: number;
+    image_url: string;
+
 }
