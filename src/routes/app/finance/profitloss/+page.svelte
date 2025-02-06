@@ -31,6 +31,7 @@
 		try {
 			const _report = await comet.finance.reports.profitLoss(spec);
 			report = processReport(_report);
+			console.log({report});
 			$loading = false;
 		} catch (error: any) {
 			notify({ type: 'error', heading: 'Error', message: error.response.data.message });
@@ -86,7 +87,7 @@
 		load();
 	});
 </script>
-
+<DialogTransactions open={true}  data={report}></DialogTransactions>
 <Title>Profit & Loss</Title>
 
 <Toolbar>

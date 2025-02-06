@@ -87,7 +87,6 @@
 		console.log(list.items.filter(item => item.selected));
 	}
 
-	let somethingSelected: boolean = $state(false);
 	function onSelectChange(e: Event)
 	{
 		somethingSelected = false;
@@ -100,20 +99,41 @@
 		});
 	}
 
+	let somethingSelected: boolean = $state(false);
 	let showDialogImportVariants = $state(false);
 </script>
-	<Dialog bind:open={showDialogImportVariants} size="lg" title="Import Product Variants">
-		<DialogBody>
-			<p>Hello</p>
-		</DialogBody>
-		<DialogFooter>footer </DialogFooter>
-	</Dialog>
 
 
 
 <AuthGuard permissions="sales.order:create,update,read">
 
+	<Dialog bind:open={showDialogImportVariants} size="lg" title="Import Product Variants">
 
+		<DialogBody>
+			<div class="mb-3">
+				<label for="fileUpload" class="form-label">Choose file to upload</label>
+				<input
+					class="form-control form-control-sm"
+					type="file"
+					id="fileUpload"
+					onchange={onFileSelect}
+					accept=".csv"
+				/>
+			</div>
+			<div class="d-grid">
+				<Button
+					size="sm"
+					color="primary"
+					on:click={onUploadClick}
+					disabled={!uploadReady || $loading}
+					busy={$loading}
+					busytext="Uploading...">Upload</Button
+				>
+			</div>
+
+		</DialogBody>
+		<DialogFooter>footer </DialogFooter>
+	</Dialog>
 
 	<Title>Products</Title>
 
@@ -182,6 +202,8 @@
 
 	
 	</Toolbar>
+
+
 
 	<table class="ct-table table table-sm table-striped">
 		<thead>

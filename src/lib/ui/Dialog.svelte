@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
 	import { run } from 'svelte/legacy';
-
 	import { onMount } from 'svelte';
 
 	interface Props {
@@ -19,7 +18,7 @@
 	onMount(() => {
 		/* @ts-ignore */
 		if(!window) return;
-		//modal = new bootstrap.Modal(dialog);
+		if (open) modal.show();
 	});
 
 	const handleEscape = (e: KeyboardEvent) => {
@@ -48,9 +47,10 @@
 	class:modal-lg={size === 'lg'}
 	class:modal-sm={size === 'sm'}
 	class:modal-xl={size === 'xl'}
-	class="modal fade show"
+	class="modal fade show modal-backdrop"
+	class:visible={open}
 	tabindex="-1"
-	data-bs-backdrop="static"
+
 >
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 		<div class="modal-content">

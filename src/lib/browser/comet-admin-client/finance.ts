@@ -43,7 +43,7 @@ class Reports {
 		const response = await this.client.get(
 			`finance/reports/profitloss?date_from=${date_from}&date_to=${date_to}&group_by=${group_by}`
 		);
-		return response.data;
+		return response;
 	}
 
 	async balanceSheet(spec: any): Promise<any> {
