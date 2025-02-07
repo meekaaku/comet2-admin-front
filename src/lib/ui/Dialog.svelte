@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { fade } from 'svelte/transition';
 	import { browser } from '$app/environment';
 	import { run } from 'svelte/legacy';
 	import { onMount } from 'svelte';
@@ -47,13 +48,14 @@
 	class:modal-lg={size === 'lg'}
 	class:modal-sm={size === 'sm'}
 	class:modal-xl={size === 'xl'}
-	class="modal fade show modal-backdrop"
+	class="modal show"
 	class:visible={open}
 	tabindex="-1"
+	fade:in
 
 >
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-		<div class="modal-content">
+		<div class="modal-content shadow">
 			<div class="modal-header">
 				<h1 class="modal-title fs-5" id="dialog">{title}</h1>
 				<button type="button" class="btn-close" aria-label="Close" onclick={() => (open = false)}
