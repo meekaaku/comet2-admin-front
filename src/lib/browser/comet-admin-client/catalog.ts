@@ -37,7 +37,10 @@ class Products {
 	constructor(private readonly client: any) {}
 
 	async uploadCSV(formData: FormData): Promise<any> {
-		const response = await this.client.post(`catalog/products/import-csv`, formData);
-		return response.data;
+		return await this.client.post(`catalog/products/import-csv`, formData);
+	}
+
+	async uploadMedia(formData: FormData): Promise<any> {
+		return await this.client.post(`catalog/products/import-media`, formData);
 	}
 }

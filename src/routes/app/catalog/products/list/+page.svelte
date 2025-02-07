@@ -14,12 +14,16 @@
 		selected: boolean;
 	}
 
+	let { data }: { data: PageData } = $props();
+	let somethingSelected: boolean = $state(false);
+	let showDialogImportVariants = $state(false);
+	let showDialogImportMedia = $state(false);
 	let importDropdownOpen: boolean = $state(false);
 	let file: File | null = null;
 	let uploadReady: boolean = $state(false);
-	let { data }: { data: PageData } = $props();
 	let list = $state<RPaginated<RProductListRowExtends>>(data.list as RPaginated<RProductListRowExtends>);
 	let search: string = $state('');
+
 	$effect(() => {
 		list = data.list as RPaginated<RProductListRowExtends>;
 	});
@@ -50,6 +54,33 @@
 			});
 		}
 	}
+
+	async function onUploadMediaClick() {
+		if (!file) return;
+
+		const formData = new FormData();
+
+		formData.append('file', file);
+
+		$loading = true;
+		try {
+			$loading = true;
+			const upload_response = await comet.catalog.products.uploadMedia(formData);
+			$loading = false;
+			importDropdownOpen = false;
+
+			notify({ type: 'info', heading: 'Success', message: 'File uploaded successfully' });
+		} catch (error: any) {
+			$loading = false;
+			notify({
+				type: 'error',
+				heading: 'Error',
+				message: error.response?.data?.message || 'An error occurred. Please try again later',
+                data: error.response?.data.data
+			});
+		}
+	}
+
 
 	function onFileSelect(e: Event) {
 
@@ -99,8 +130,7 @@
 		});
 	}
 
-	let somethingSelected: boolean = $state(false);
-	let showDialogImportVariants = $state(false);
+
 </script>
 
 
@@ -132,6 +162,34 @@
 		</DialogFooter>
 	</Dialog>
 
+	<Dialog bind:open={showDialogImportMedia} size="lg" title="Import Product Media">
+		<DialogBody>
+			<p>You can import a zip file containing images/video of producs. Name the files as sku-0.png, sku-1.png etc. </p>
+			<div class="mb-3">
+				<input
+					class="form-control form-control-sm"
+					type="file"
+					id="fileUpload"
+					onchange={onFileSelect}
+					accept=".zip"
+				/>
+			</div>
+
+			
+
+		</DialogBody>
+		<DialogFooter>
+			<div class="d-flex">
+				<Button	size="sm" width="10em" color="primary" icon="bi-upload" onclick={onUploadMediaClick} disabled={!uploadReady || $loading} busy={$loading} busytext="Uploading...">Upload</Button>
+				&nbsp;&nbsp;
+				<Button	size="sm" width="10em" color="danger" icon="bi-x-lg" onclick={() => {showDialogImportMedia = false}}>Close</Button>
+			</div>
+		</DialogFooter>
+	</Dialog>
+
+
+
+
 	<Title>Products</Title>
 
 	<Toolbar>
@@ -146,7 +204,7 @@
 			</button>
 			<ul class="dropdown-menu">
 				<li><a class="dropdown-item" href="#" onclick={() => showDialogImportVariants = true}>Product Variants</a></li>
-				<li><a class="dropdown-item" href="#">Product Media</a></li>
+				<li><a class="dropdown-item" href="#" onclick={() => showDialogImportMedia = true}>Product Media</a></li>
 			</ul>
 		</div>
 
