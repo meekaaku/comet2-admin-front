@@ -51,7 +51,9 @@
 	class="modal show"
 	class:visible={open}
 	tabindex="-1"
-	fade:in
+	transition:fade
+	role="dialog"
+	aria-modal="true"
 
 >
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -70,5 +72,12 @@
 <style>
 	.visible {
 		display: block;
+	}
+
+	h1 {
+		text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+		-webkit-text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+		-moz-text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+		-ms-text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
 	}
 </style>

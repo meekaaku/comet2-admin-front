@@ -108,10 +108,9 @@
 <AuthGuard permissions="sales.order:create,update,read">
 
 	<Dialog bind:open={showDialogImportVariants} size="lg" title="Import Product Variants">
-
 		<DialogBody>
+			<p>Import product variants from CSV file. Download template <a href="/downloads/catalog-import-variant-1.0.csv">here</a></p>
 			<div class="mb-3">
-				<label for="fileUpload" class="form-label">Choose file to upload</label>
 				<input
 					class="form-control form-control-sm"
 					type="file"
@@ -120,19 +119,17 @@
 					accept=".csv"
 				/>
 			</div>
-			<div class="d-grid">
-				<Button
-					size="sm"
-					color="primary"
-					on:click={onUploadClick}
-					disabled={!uploadReady || $loading}
-					busy={$loading}
-					busytext="Uploading...">Upload</Button
-				>
-			</div>
+
+			
 
 		</DialogBody>
-		<DialogFooter>footer </DialogFooter>
+		<DialogFooter>
+			<div class="d-flex">
+				<Button	size="sm" width="8em" color="primary" onclick={onUploadClick} disabled={!uploadReady || $loading} busy={$loading} busytext="Uploading...">Upload</Button>
+				&nbsp;&nbsp;
+				<Button	size="sm" width="8em" color="danger" onclick={() => {showDialogImportVariants = false}}>Cancel</Button>
+			</div>
+		</DialogFooter>
 	</Dialog>
 
 	<Title>Products</Title>
