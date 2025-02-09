@@ -5,11 +5,13 @@
 
 	//let list = $derived($toasts);
   let open = $state(false);
-  let details = $state(null);
+  let data = $state(null);
+  let message = $state('');
 
 
-  function onShowDetails(data: any) {
-    details = data;
+  function onShowDetails(m: string, d: any) {
+    data = d;
+	message = m;
     open = true;
   }
 </script>
@@ -34,8 +36,8 @@
 			<div class="toast-body">
 				{message}
 				{#if data}
-          <br />
-          <a href="#" onclick={() => onShowDetails(data) }>See detail</a>
+					<br />
+					<a href="#" onclick={() => onShowDetails(message, data) }>See detail</a>
 				{/if}
 			</div>
 		</div>
@@ -43,9 +45,9 @@
 	{/each}
 </div>
 
-<Dialog size="lg" title="Details " bind:open>
+<Dialog size="lg" title={message} bind:open>
     <DialogBody>
-      <pre>{JSON.stringify(details ? details : {}, null, 2)}</pre>
+      <pre>{JSON.stringify(data ? data : {}, null, 2)}</pre>
     </DialogBody>
 </Dialog>
 

@@ -65,11 +65,11 @@
 		$loading = true;
 		try {
 			$loading = true;
-			const upload_response = await comet.catalog.products.uploadMedia(formData);
+			const response = await comet.catalog.products.uploadMedia(formData);
 			$loading = false;
-			importDropdownOpen = false;
+			showDialogImportMedia = false;
 
-			notify({ type: 'info', heading: 'Success', message: 'File uploaded successfully' });
+			notify({ type: 'info', heading: 'Success', message: response.message, data: response.data });
 		} catch (error: any) {
 			$loading = false;
 			notify({
@@ -207,53 +207,8 @@
 				<li><a class="dropdown-item" href="#" onclick={() => showDialogImportMedia = true}>Product Media</a></li>
 			</ul>
 		</div>
-
-
-
-		<div class="dropdown d-inline-block ms-2">
-			<Button
-				class="dropdown-toggle"
-				width="8em"
-				icon="bi-caret-down"
-				size="sm"
-				color="primary"
-				disabled={$loading}
-				on:click={() => (importDropdownOpen = !importDropdownOpen)}
-			>
-				Import
-			</Button>
-
-			{#if importDropdownOpen}
-				<div
-					class="dropdown-menu dropdown-menu-end p-3 show"
-					style="min-width: 300px; right: 1em; z-index: 1000;"
-				>
-
-					<div class="mb-3">
-						<label for="fileUpload" class="form-label">Choose file to upload</label>
-						<input
-							class="form-control form-control-sm"
-							type="file"
-							id="fileUpload"
-							onchange={onFileSelect}
-							accept=".csv"
-						/>
-					</div>
-					<div class="d-grid">
-						<Button
-							size="sm"
-							color="primary"
-							on:click={onUploadClick}
-							disabled={!uploadReady || $loading}
-							busy={$loading}
-							busytext="Uploading...">Upload</Button
-						>
-					</div>
-				</div>
-			{/if}
-
-		</div>
-			<Button width="8em" size="sm" color="danger" icon="bi-trash" disabled={$loading || !somethingSelected} onclick={onDeleteClick} >Delete</Button>
+	
+		<Button width="8em" size="sm" color="danger" icon="bi-trash" disabled={$loading || !somethingSelected} onclick={onDeleteClick} >Delete</Button>
 
 	
 	</Toolbar>
