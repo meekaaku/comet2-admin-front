@@ -2,7 +2,7 @@
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import { loading } from '$lib/stores';
-	import { Title, Toolbar, Button, AuthGuard, Paginator, Icon, Dialog, DialogBody, DialogFooter } from '$lib/ui';
+	import { Title, Toolbar, Button, AuthGuard, Paginator, Icon, Dialog, DialogBody, DialogFooter, FileUpload } from '$lib/ui';
 	import { comet } from '$lib';
 	import { notify, formatDate, formatTime, formatNumber } from '$lib/utils';
 	import type { PageData } from './$types';
@@ -175,7 +175,7 @@
 				/>
 			</div>
 
-			
+			<FileUpload />
 
 		</DialogBody>
 		<DialogFooter>
