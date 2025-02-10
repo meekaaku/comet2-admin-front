@@ -115,7 +115,7 @@
 
 	async function onDeleteClick()
 	{
-		console.log(list.items.filter(item => item.selected));
+		alert('Not implemented yet')
 	}
 
 	function onSelectChange(e: Event)
@@ -175,7 +175,6 @@
 				/>
 			</div>
 
-			<FileUpload />
 
 		</DialogBody>
 		<DialogFooter>
