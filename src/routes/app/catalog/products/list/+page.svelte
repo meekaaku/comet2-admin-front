@@ -130,6 +130,11 @@
 		});
 	}
 
+	async function onSearch(e: Event)
+	{
+		e.preventDefault();
+		goto(`?search=${search}`, { invalidateAll: true, replaceState: false });
+	}
 
 </script>
 
@@ -192,9 +197,12 @@
 	<Title>Products</Title>
 
 	<Toolbar>
-		<div>
-			<input type="text" class="form-control form-control-sm" style="width: 1000px;" placeholder="Search" bind:value={search} />
-		</div>	
+		
+		<div style="width: 50rem;">
+			<form onsubmit={onSearch}>
+				<input type="search" class="form-control form-control-sm" placeholder="Search" bind:value={search} />
+			</form>
+		</div>
 
 
 		<div class="dropdown d-inline-block ms-2">
@@ -208,8 +216,6 @@
 		</div>
 	
 		<Button width="8em" size="sm" color="danger" icon="bi-trash" disabled={$loading || !somethingSelected} onclick={onDeleteClick} >Delete</Button>
-
-	
 	</Toolbar>
 
 
