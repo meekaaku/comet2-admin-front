@@ -200,8 +200,11 @@
 		
 			<form style="width: 20rem;" onsubmit={onSearch}>
 			<div  class="d-flex input-group">
-					<input type="text" class="form-control form-control-sm" placeholder="Search" bind:value={search}  />
-					<button type="submit" class="btn btn-sm btn-outline-primary"><Icon icon="bi-search" /></button>
+				<input type="text" class="form-control form-control-sm" placeholder="Search" bind:value={search}  />
+				{#if search && 1}
+					<button type="button" class="btn btn-sm btn-outline-primary" onclick={(e) => {e.preventDefault(); search = ''; onSearch(e)}}><Icon icon="bi-x"  /></button>
+				{/if}
+				<button type="submit" class="btn btn-sm btn-outline-primary" onclick={onSearch}><Icon icon="bi-search" /></button>
 			</div>
 			</form>
 
