@@ -198,11 +198,12 @@
 
 	<Toolbar>
 		
-		<div style="width: 50rem;">
-			<form onsubmit={onSearch}>
-				<input type="search" class="form-control form-control-sm" placeholder="Search" bind:value={search} />
+			<form style="width: 20rem;" onsubmit={onSearch}>
+			<div  class="d-flex input-group">
+					<input type="text" class="form-control form-control-sm" placeholder="Search" bind:value={search}  />
+					<button type="submit" class="btn btn-sm btn-outline-primary"><Icon icon="bi-search" /></button>
+			</div>
 			</form>
-		</div>
 
 
 		<div class="dropdown d-inline-block ms-2">
