@@ -1,4 +1,5 @@
 import axios, { type AxiosInstance } from 'axios';
+import { Admin } from './admin';
 import { Auth } from './auth';
 import { Sales } from './sales';
 import { Finance } from './finance';
@@ -6,6 +7,7 @@ import { Catalog } from './catalog';
 
 export class CometAdminClient {
 	readonly axios: AxiosInstance;
+	readonly admin: Admin;
 	readonly auth: Auth;
 	readonly sales: Sales;
 	readonly finance: Finance;
@@ -58,11 +60,11 @@ export class CometAdminClient {
 		);
 
 		//_axios.defaults.withCredentials = true;
+		this.admin = new Admin(_axios);
 		this.auth = new Auth(_axios);
 		this.sales = new Sales(_axios);
 		this.finance = new Finance(_axios);
 		this.catalog = new Catalog(_axios);
-
 		this.axios = _axios;
 	}
 }
