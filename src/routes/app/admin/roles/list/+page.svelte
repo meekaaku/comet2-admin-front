@@ -19,50 +19,52 @@
 	let selectedRole = $state<{id: string, name: string}>(roles[0] as {id: string, name: string});
 
 	$effect(() => {
-
-		//const unique_resource_names = Array.from(new Set(data.list.map((item: any) => item.resource_name)));
-
-		const _acl = data.list.filter((item: any) => item.role_id === selectedRole.id);
-		selectedAcl = _acl;
-		//acl = _acl.map((item: any) => ({resource_name: item.resource_name, access: item.access}));
-
-			/*
-		unique_role_ids.forEach((id: any) => {
-			roles.push({id: id, name: data.list.find((item: any) => item.role_id === id)?.role_name || ''});
-		});
-		*/
-		
-	
-
+		selectedAcl = data.list.filter((item: any) => item.role_id === selectedRole.id);
 	});
 
+
+	function onAccessClick(acl: any, opt: any) {
+		console.log({acl, opt});
+		if(acl.resource_data.type === 'boolean') {
+			acl.access = opt;
+		} 
+		else if(acl.resource_data.type === 'select' && Array.isArray(acl.resource_data.options)) {
+			if(Array.isArray(acl.access)) {
+				if(acl.access.includes(opt)) {
+					acl.access = acl.access.filter((a: any) => a !== opt);
+				} else {
+					acl.access.push(opt);
+				}
+			} else {
+				acl.access = [opt];
+			}
+		}
+		
+
+	}
 </script>
 
-{#snippet renderAccess(access: any)}
-	{#if isBoolean(access)}
-		<span class="badge" class:bg-success={access} class:bg-danger={!access}>{access ? 'true' : 'false'}</span>
-	{:else if Array.isArray(access)}
-		{#each access as a}
-		<span class="badge bg-success">{a}</span>&nbsp;
-		{/each}
-	{:else}
-		none
-	{/if}	
-{/snippet}
+
 
 {#snippet aclSnippet(acl: any)}
 	<span>{acl.resource_name}</span>
 
 	<span>
 		{#if acl.resource_data?.type === 'boolean'}		
-			<span class="badge bg-success">{acl.access ? 'true' : 'false'}</span>
-		{:else if acl.resource_data.type === 'select'}
-		 	{JSON.stringify(acl.resource_data.options)}
+			<span class="badge" class:bg-success={acl.access} class:bg-secondary={!acl.access} onclick={() => onAccessClick(acl, true)}>true</span>
+			<span class="badge" class:bg-success={!acl.access} class:bg-secondary={acl.access} onclick={() => onAccessClick(acl, false)}>false</span>
+		{:else if acl.resource_data.type === 'select' && Array.isArray(acl.resource_data.options)}
+			{#if Array.isArray(acl.access)}
 			{#each acl.resource_data.options as opt}
-				<span class="badge">{opt}</span>
+				<span class="badge mx-1" class:bg-success={acl.access?.includes(opt)} class:bg-secondary={!acl.access?.includes(opt)} onclick={() => onAccessClick(acl, opt)}>{opt}</span>
 			{/each}
+			{:else}
+			{#each acl.resource_data.options as opt}
+				<span class="badge mx-1 bg-secondary" onclick={() => onAccessClick(acl, opt)}>{opt}</span>
+			{/each}
+			{/if}
 		{:else}
-			<span class="badge bg-danger">none</span>
+			<span class="badge bg-danger">Missing data</span>
 		{/if}		
 	</span>
 {/snippet}
@@ -93,7 +95,7 @@
 					{/each}
 				</ul>
 			</div>
-			<div class="col-md-4">
+			<div class="col-md-6">
 				<ul class="list-group">
 					<li class="list-group-item fw-bold">Resource</li>
 					{#each selectedAcl as acl}
