@@ -1,15 +1,12 @@
 <script lang="ts">
 	import { AuthGuard, Title, Toolbar, Button } from '$lib/ui';
 	import type { PageData } from './$types';
-	import type { RPaginated } from '$lib/types';
-	import { isBoolean } from '$lib/utils';
-
+	import type { RAccessControl } from '$lib/types';
+	import { loader } from '$lib/stores.svelte';
 
 	let { data }: { data: PageData } = $props();
-
-	let roles: Record<string,string>[] = [];
-
-	let selectedAcl = $state<any>([]);
+	let selectedAcl = $state<RAccessControl[]>([]);
+	let roles: {id: string, name: string}[] = [];
 
 	const uniqueRoleIds = Array.from(new Set(data.list.map((item: any) => item.role_id)));
 	uniqueRoleIds.forEach((id: any) => {
@@ -18,12 +15,25 @@
 
 	let selectedRole = $state<{id: string, name: string}>(roles[0] as {id: string, name: string});
 
+
+	type TPageState = {
+		isDirty: boolean;
+		isSaving: boolean;
+	}
+
+	let pageState: TPageState = $state<TPageState>({
+		isDirty: false,
+		isSaving: false
+	});
+
+
+
 	$effect(() => {
 		selectedAcl = data.list.filter((item: any) => item.role_id === selectedRole.id);
 	});
 
 
-	function onAccessClick(acl: any, opt: any) {
+	function onAccessClick(acl: RAccessControl, opt: string|boolean) {
 		console.log({acl, opt});
 		if(acl.resource_data.type === 'boolean') {
 			acl.access = opt;
@@ -39,14 +49,25 @@
 				acl.access = [opt];
 			}
 		}
-		
-
 	}
+
+
+	async function onSaveClick() {
+		pageState.isSaving = true;
+		console.log('Saving acl', selectedAcl);
+		loader.start();
+		setTimeout(() => {
+			loader.stop();
+			console.log('stop');
+			pageState.isSaving = false;
+		}, 1000);
+	}
+
 </script>
 
 
 
-{#snippet aclSnippet(acl: any)}
+{#snippet aclSnippet(acl: RAccessControl)}
 	<span>{acl.resource_name}</span>
 
 	<span>
@@ -73,14 +94,11 @@
 <AuthGuard permissions="admin.role:list">
 	<Title>Roles</Title>
 	<Toolbar>
-		<Button
-			width="5em"
-			icon="bi-plus-lg"
-			size="sm"
-			color="primary"
-			disabled>Add</Button
-		>
-
+		<form method="POST" action="?/save">
+			<input type="hidden" name="role_id" value={selectedRole?.id} />
+			<input type="hidden" name="acl" value={JSON.stringify(selectedAcl)} />
+			<Button width="8em" icon="bi-floppy"  color="primary" busytext="Saving..." busy={pageState.isSaving} onclick={onSaveClick} disabled={pageState.isSaving}>Save</Button>
+		</form>
 	</Toolbar>
 
 	

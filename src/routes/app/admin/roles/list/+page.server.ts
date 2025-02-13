@@ -8,8 +8,8 @@ export async function load({url})
     const order_by = url.searchParams.get('order_by') || 'name';
     const order_dir = url.searchParams.get('order_dir') || 'asc';
     const search = url.searchParams.get('search') || '';
-    const list = await comet.admin.roles().list({page, page_size, order_by, order_dir, search});
-    console.log({l: list})
+    const list = await comet.admin.accessControl().list({page, page_size, order_by, order_dir, search});
     return { list };
 };
+
 

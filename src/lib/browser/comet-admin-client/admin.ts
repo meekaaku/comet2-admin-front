@@ -1,25 +1,30 @@
-import type { RPaginated, RProductListRow } from '$lib/types';
+import type { RAccessControl } from '$lib/types';
+
 export class Admin{
 
 	constructor(private readonly client: any) {
 	}
 
-	roles(id?: string) {
-		return new RolesClass(this.client, id);
+	accessControl(id?: string) {
+		return new AccessControlClass(this.client, id);
 	}
 	
 
 }
 
 
-class RolesClass {
+class AccessControlClass {
 	constructor(private readonly client: any, private readonly id?:string) {
 		this.id = id;
 		this.client = client;
 	}
 
-	async list(params?: any): Promise<any> {
-		return this.client.get(`admin/roles/list`, {params});
+	async list(params?: any): Promise<RAccessControl[]> {
+		return this.client.get(`admin/access-control/list`, {params});
+	}
+
+	async upsert(data: any): Promise<any> {
+		return this.client.post(`admin/access-control`, {data});
 	}
 }
 
