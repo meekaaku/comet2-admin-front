@@ -101,6 +101,10 @@ export function notify(toast: IToast) {
 	setTimeout(() => toasts.update((t) => t.filter((x) => x !== toast)), 8000);
 }
 
+export function isBoolean(value: any) {
+    return typeof value === 'boolean' || value instanceof Boolean;
+}
+
 export function log(message: string, typ: 'info' | 'error' | 'warn' = 'info') {
 	const fn = typ === 'info' ? console.log : typ === 'error' ? console.error : console.warn;
 	fn(`[${typ}] ${message}`);
