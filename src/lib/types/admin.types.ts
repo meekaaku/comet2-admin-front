@@ -7,3 +7,11 @@ export interface RAccessControl {
     resource_data: any;
     access: any;
 }
+
+
+export interface QAccessControl {
+    id: string|null;
+    role_id: string;
+    resource_name: string;
+    access: any;
+}

@@ -23,8 +23,8 @@ class AccessControlClass {
 		return this.client.get(`admin/access-control/list`, {params});
 	}
 
-	async upsert(data: any): Promise<any> {
-		return this.client.post(`admin/access-control`, {data});
+	async upsert(payload: any): Promise<any> {
+		return this.client.post(`admin/access-control`, payload);
 	}
 }
 

@@ -3,6 +3,7 @@
 	import type { PageData } from './$types';
 	import type { RAccessControl } from '$lib/types';
 	import { loader } from '$lib/stores.svelte';
+	import { comet } from '$lib';
 
 	let { data }: { data: PageData } = $props();
 	let selectedAcl = $state<RAccessControl[]>([]);
@@ -53,14 +54,20 @@
 
 
 	async function onSaveClick() {
-		pageState.isSaving = true;
-		console.log('Saving acl', selectedAcl);
 		loader.start();
-		setTimeout(() => {
-			loader.stop();
-			console.log('stop');
-			pageState.isSaving = false;
-		}, 1000);
+		try { 
+			pageState.isSaving = true;
+			const payload =  selectedAcl.map((acl: RAccessControl) => {
+				return {id: acl.acl_id, role_id: acl.role_id, resource_name: acl.resource_name, access: JSON.stringify(acl.access)};
+			});
+			const response = await comet.admin.accessControl().upsert(payload);
+		} catch (error: any) {
+			console.error(error);
+		}
+
+		loader.stop();
+		pageState.isSaving = false;
+		pageState.isDirty = false;
 	}
 
 </script>
@@ -115,7 +122,7 @@
 			</div>
 			<div class="col-md-6">
 				<ul class="list-group">
-					<li class="list-group-item fw-bold">Resource</li>
+					<li class="list-group-item fw-bold d-flex justify-content-between"><span>Resource</span><span>Access</span></li>
 					{#each selectedAcl as acl}
 						<li class="list-group-item d-flex justify-content-between">{@render aclSnippet(acl)}</li>
 					{/each}
