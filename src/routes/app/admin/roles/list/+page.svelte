@@ -4,6 +4,7 @@
 	import type { RAccessControl } from '$lib/types';
 	import { loader } from '$lib/stores.svelte';
 	import { comet } from '$lib';
+	import { goto } from '$app/navigation';
 
 	let { data }: { data: PageData } = $props();
 	let selectedAcl = $state<RAccessControl[]>([]);
@@ -61,6 +62,7 @@
 				return {id: acl.acl_id, role_id: acl.role_id, resource_name: acl.resource_name, access: JSON.stringify(acl.access)};
 			});
 			const response = await comet.admin.accessControl().upsert(payload);
+			goto(``, { invalidateAll: true });
 		} catch (error: any) {
 			console.error(error);
 		}
@@ -98,7 +100,6 @@
 {/snippet}
 
 
-<AuthGuard permissions="admin.role:list">
 	<Title>Roles</Title>
 	<Toolbar>
 		<form method="POST" action="?/save">
@@ -156,7 +157,6 @@
 -->
 
 
-</AuthGuard>
 
 <style>
 
