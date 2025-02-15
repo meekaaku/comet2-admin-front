@@ -31,6 +31,8 @@
 
 
 	$effect(() => {
+		console.log('Running effect');
+		selectedAcl = [];
 		selectedAcl = data.list.filter((item: any) => item.role_id === selectedRole.id);
 	});
 
