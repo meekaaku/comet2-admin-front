@@ -3,6 +3,7 @@
 	import type { PageData } from './$types';
 	import type { RAccessControl } from '$lib/types';
 	import { loader } from '$lib/stores.svelte';
+	import { notify } from '$lib/utils';
 	import { comet } from '$lib';
 	import { goto } from '$app/navigation';
 
@@ -64,9 +65,11 @@
 				return {id: acl.acl_id, role_id: acl.role_id, resource_name: acl.resource_name, access: JSON.stringify(acl.access)};
 			});
 			const response = await comet.admin.accessControl().upsert(payload);
-			goto(``, { invalidateAll: true });
+			notify({ heading: 'Success', message: response.message, type: 'info' });
+			await goto(``, { invalidateAll: true });
 		} catch (error: any) {
-			console.error(error);
+			notify({ heading: 'Fail', message: error.message, type: 'error' });
+			await goto(``, { invalidateAll: true });
 		}
 
 		loader.stop();

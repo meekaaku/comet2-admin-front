@@ -11,11 +11,9 @@ export async function load({url})
     const search = url.searchParams.get('search') || '';
     try {
         const list = await comet.admin.accessControl().list({page, page_size, order_by, order_dir, search});
-        console.log('got list');
         return { list };
     } catch (err: any) {
 
-        console.error('we are here', err);
         error(err.status, {message: err.message, status: err.status})
     }
 };
