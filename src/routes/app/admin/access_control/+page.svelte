@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { AuthGuard, Title, Toolbar, Button } from '$lib/ui';
+	import { Title, Toolbar, Button } from '$lib/ui';
 	import type { PageData } from './$types';
 	import type { RAccessControl } from '$lib/types';
 	import { loader } from '$lib/stores.svelte';

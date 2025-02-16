@@ -148,21 +148,10 @@
 					/>
 				</SidebarDrop>
 
-				{#if hasPermission('menu.admin')}
+				{#if hasPermission('admin.menu')}
 					<SidebarDrop name="Admin" icon="bi-gear">
-						<SidebarLink
-							name="Roles"
-							icon="bi-person"
-							{toggle}
-							url="{base}/app/admin/roles/list"
-						/>
-						<SidebarLink name="Users" icon="bi-person" {toggle} url="{base}/app/sales/customers" />
-						<SidebarLink
-							name="Access Control"
-							icon="bi-person"
-							{toggle}
-							url="{base}/app/sales/customers"
-						/>
+						<SidebarLink name="Access Control" icon="bi-person" {toggle} url="{base}/app/admin/access_control" />
+						<SidebarLink name="Users" icon="bi-person" {toggle} url="{base}/app/admin/users" />
 					</SidebarDrop>
 				{/if}
 				<div style="bottom: 0; left: 2em; position: absolute;" class="text-center">
