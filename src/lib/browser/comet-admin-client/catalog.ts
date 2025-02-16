@@ -8,19 +8,11 @@ export class Catalog {
 
 	_products(id?: string) {
 		return new _Products(this.client);
-		/*
-		return  {
-			retrieve: async () => this.client.get(`catalog/products/${id}`),
-			create: async (data: any) => this.client.post(`catalog/products`, data),
-			update: async (data: any) => this.client.put(`catalog/products/${id}`, data),
-			delete: async () => this.client.delete(`catalog/products/${id}`),
-			list: async (params?: any) => this.client.get(`catalog/products/list`, params),
-			importCSV: async (formData: FormData) => this.client.post(`catalog/products/import-csv`, formData),
-		}		
-			*/
-
 	}
 
+	collections(id?: string) {
+		return new Collections(this.client, id);
+	}
 
 }
 
@@ -44,3 +36,26 @@ class Products {
 		return await this.client.post(`catalog/products/import-media`, formData);
 	}
 }
+
+
+class Collections {
+	constructor(private readonly client: any, private readonly id?:string) {
+		this.id = id;
+		this.client = client;
+	}
+
+	async list(params?: any): Promise<any> {
+		return this.client.get(`catalog/collections/list`, {params});
+	}
+
+
+	async listProducts(params?: any): Promise<any> {
+		return this.client.get(`catalog/collections/${this.id}/products`, {params});
+	}
+
+	async addProducts(params?: any): Promise<any> {
+		return this.client.post(`catalog/collections/${this.id}/products`, params);
+	}
+
+}
+

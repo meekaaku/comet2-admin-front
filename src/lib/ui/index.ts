@@ -6,6 +6,7 @@ export { default as DialogBody } from './DialogBody.svelte';
 export { default as DialogFooter } from './DialogFooter.svelte';
 export { default as FileUpload } from './FileUpload.svelte';
 export { default as Icon } from './Icon.svelte';
+export { default as Image} from './Image.svelte';
 export { default as Loading } from './Loading.svelte';
 export { default as Progress } from './Progress.svelte';
 export { default as Paginator } from './Paginator.svelte';

@@ -6,5 +6,6 @@ export * from './finance.types';
 export * from './file.types';
 export * from './product.types';
 export * from './admin.types';
+export * from './collection.types';
 
 

@@ -248,7 +248,8 @@
 					<td data-label="Name" class="text-left align-middle">{product.name.slice(0, 40)}</td>
 					<td data-label="Name" class="text-center align-middle">{product.status}</td>
 					<td data-label="Action" class="text-center align-middle">
-						<a href={`view?id=${product.id}`}>View</a>
+						<!-- <a href={`view?id=${product.id}`}>View</a> -->
+						View
 					</td>
 				</tr>
 			{/each}
