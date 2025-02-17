@@ -48,6 +48,12 @@ class Collections {
 		return this.client.get(`catalog/collections/list`, {params});
 	}
 
+	async read(params?: any): Promise<any> {
+		const { id } = params;
+		return this.client.get(`catalog/collections/list`, {params});
+	}
+
+
 
 	async listProducts(params?: any): Promise<any> {
 		return this.client.get(`catalog/collections/${this.id}/products`, {params});
