@@ -64,13 +64,15 @@
 
 
 	async function onTabChange(id: string) {
+		console.log('onTabChange', id);
 		if(!collection) return;
 		activeTab = id;
-		if(id === 'products') {
-			if(products) return;
+		if(id === 'product') {
 			try {
 				loader.start();
-				products = [] //await comet.sales.orders.files.list(order.header.id);
+				console.log('retreiving products');
+				products = await comet.catalog.collections(collection.id).listProducts();
+				console.log(products);
 				loader.stop();
 			} catch (error: any) {
 				loader.stop();
@@ -128,7 +130,9 @@
 
 							{@render orderProperty('Name', collection.name)}
 							{@render orderProperty('slug', collection.slug)}
+							{@render orderProperty('description', collection.description)}
 
+							<!-- 
 							<tr>
 								<td data-label="" class="text-left fw-bold">Payment Status</td>
 								<td data-label="" class="text-left">
@@ -190,63 +194,16 @@
 
 								</td>
 							</tr>						
-
+							-->
 						</tbody>
 					</table>
 
 
 				</TabPane>
+				
+
 				<TabPane id="product">
-					<table class="ct-table table table-sm table-striped">
-						<thead>
-						<tr>
-							<th style="width: 5%" class="text-center">#</th>
-							<th style="width: 10%" class="text-center">SKU</th>
-							<th style="width: 55%" class="text-center">Name</th>
-							<th style="width: 10%" class="text-center">Quantity</th>
-							<th style="width: 10%" class="text-center">Base Price</th>
-							<th style="width: 10%" class="text-center">Net Price</th>
-						</tr>
-						</thead>
-						<tbody>
-							{#each order.lines as line}
-							<tr>
-								<td data-label="#" class="text-center">{line.sort + 1}</td>
-								<td data-label="SKU" class="text-left">{line.product_sku}</td>
-								<td data-label="Name" class="text-left">{line.product_name}</td>
-								<td data-label="Name" class="text-end">{formatNumber(line.quantity)} {line.unit}</td>
-
-								<td data-label="Base Price" class="text-end">{formatNumber(line.base_price_notax)}</td>
-								<td data-label="Net Price" class="text-end">{formatNumber(line.net_price_notax)}</td>
-							</tr>
-							{/each}
-						</tbody>
-					</table>
-
-					<table class="ct-table table table-sm table-striped">
-						<thead>
-						<tr>
-							<th style="width: 90%" class="text-center"></th>
-							<th style="width: 10%" class="text-center"></th>
-						</tr>
-						</thead>
-						<tbody>
-							{#each order.summaries as line}
-							<tr>
-								<td data-label="Name" class="text-end">{line.name}</td>
-								<td data-label="Amount" class="text-end">{formatNumber(line.value)}</td>
-							</tr>
-							{/each}
-						</tbody>
-					</table>
-
-				</TabPane>
-
-				<TabPane id="invoice">Invoices</TabPane>
-				<TabPane id="payment">Payments</TabPane>
-				<TabPane id="shipment">Shipments</TabPane>
-				<TabPane id="document">
-					{#if files}
+					{#if products}
 						<table class="ct-table table table-sm table-striped">
 							<thead>
 								<tr>
