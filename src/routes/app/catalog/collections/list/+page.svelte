@@ -130,8 +130,7 @@
 						{#if item.description?.length > 100}...{/if}
 					</td>
 					<td data-label="Action" class="text-center align-middle">
-						<!-- <a href={`view?id=${product.id}`}>View</a> -->
-						View
+						<a href={`view?id=${item.id}`}>View</a>
 					</td>
 				</tr>
 			{/each}

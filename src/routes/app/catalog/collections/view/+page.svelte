@@ -1,155 +1,292 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { goto } from '$app/navigation';
-	import { loading } from '$lib/stores';
-	import { Title, Toolbar, Button, AuthGuard, Paginator, Icon, Dialog, DialogBody, DialogFooter, FileUpload, Image } from '$lib/ui';
-	import { comet } from '$lib';
-	import { notify, formatDate, formatTime, formatNumber } from '$lib/utils';
+	import { setContext, getContext, onMount } from 'svelte';
+	import { page as svpage } from '$app/stores';
+	import { Icon, Title, Toolbar, Button, Paginator, Loading, AuthGuard, TabHead, Tab, TabBody, TabHeader, TabPane, FileUpload } from '$lib/ui';
+	import { comet, logger } from '$lib';
+	import { formatBytes, formatNumber, formatAddress, formatDate, formatTime, notify } from '$lib/utils';
+	import type { ROrderListRow, RPaginated, ROrder, QOrderHeaderUpdate, QBulk, ROrderHeader, ROrderFile } from '$lib/types';
+	import { loader } from '$lib/stores.svelte';
 	import type { PageData } from './$types';
-	import type { RCollectionListRow, RPaginated } from '$lib/types';
-	import { img_placeholder } from '$lib/constants';
 
-
-	interface RCollectionListRowExtends extends RCollectionListRow
-	{
-		selected: boolean;
+	type TPageState = {
+		editPaymentStatus: boolean,
+		editShippingStatus: boolean,
+		qPaymentStatus: string | null,
+		qShippingStatus: string | null,
+		savingField: string | null,
+		editingField: string | null,
+		editingValue: string | null
 	}
 
-	let { data }: { data: PageData } = $props();
-	let somethingSelected: boolean = $state(false);
-	let list = $state<RPaginated<RCollectionListRowExtends>>(data.list as RPaginated<RCollectionListRowExtends>);
-	let search: string = $state('');
-
-	$effect(() => {
-		list = data.list as RPaginated<RCollectionListRowExtends>;
+	let pageState:TPageState = $state<TPageState>({
+		editPaymentStatus: false,
+		editShippingStatus: false,
+		qPaymentStatus: null,
+		qShippingStatus: null,
+		savingField: null,
+		editingField: null,
+		editingValue: null
 	});
 
+	let { data }: { data: PageData } = $props();
+	let collection = $state<any>(data.collection);
+	let search = $state('');
+	let products = $state<any[]|null>([]);
+	let activeTab = $state<string>('detail');
 
 
+	/*
+	async function onSaveStatus() {
+		if(!order) return;
+		if(!pageState.editingField) return;
+		if(!pageState.editingValue) return;
+		pageState.savingField = pageState.editingField;
 
-	function onPageChange(detail: any) {
-		const _page = detail.page;
-		const _page_size = detail.page_size || 100;
-		$page.url.searchParams.set('page', _page.toString());
-		$page.url.searchParams.set('page_size', _page_size.toString());
-		goto(`${$page.url.toString()}`, { invalidateAll: true, replaceState: false });
-	}
 
-	function orderBy(column: string) {
-		const current_order_by = $page.url.searchParams.get('order_by') || 'name';
-		const current_order_dir = $page.url.searchParams.get('order_dir') || 'asc';
+		const spec: QBulk<QOrderHeaderUpdate> = { payload: [{order_id: order.header.id, field: pageState.editingField, value: pageState.editingValue}] };
+		try {	
+			loader.start();
+			const res = await comet.sales.orders.updateHeader(spec);
+			pageState.savingField = null;
+			const message = res.message;
+			order.header[pageState.editingField as keyof ROrderHeader] = pageState.editingValue;
 
-		let order_dir = 'asc';
-		if(current_order_by === column) {
-			order_dir = current_order_dir === 'asc' ? 'desc' : 'asc';
+			notify({ heading: 'Success', message: message, type: 'info' });
+			pageState.editingField = null;
+			loader.stop();
+		} catch (error: any) {
+			pageState.savingField = null;
+			notify({ heading: 'Error', message: error.message, type: 'error' });
+			loader.stop();
 		}
-
-		$page.url.searchParams.set('order_by', column);
-		$page.url.searchParams.set('order_dir', order_dir);
-		goto(`${$page.url.toString()}`, { invalidateAll: true, replaceState: false });
 	}
+		*/
 
-	async function onDeleteClick()
-	{
-		alert('Not implemented yet')
-	}
 
-	function onSelectChange(e: Event)
-	{
-		somethingSelected = false;
-		list.items.forEach(item => {
-			if(item.selected)
-			{
-				somethingSelected = true;
-				return;
+	async function onTabChange(id: string) {
+		if(!collection) return;
+		activeTab = id;
+		if(id === 'products') {
+			if(products) return;
+			try {
+				loader.start();
+				products = [] //await comet.sales.orders.files.list(order.header.id);
+				loader.stop();
+			} catch (error: any) {
+				loader.stop();
+				notify({ heading: 'Error', message: error.message, type: 'error' });
 			}
-		});
+		}
 	}
 
-	async function onSearch(e: Event)
-	{
-		e.preventDefault();
-		goto(`?search=${search}`, { invalidateAll: true, replaceState: false });
-	}
 
 </script>
 
+		<Title>Collection - {collection.name}</Title>
+		<Toolbar>
+			{#if activeTab === 'detail'}
+				<Button width="6em" icon="bi-plus-lg" size="sm" color="primary" tooltip="Cancel Order">Cancel</Button>
+				<Button width="6em" icon="bi-plus-lg" size="sm" color="primary">Edit</Button>
+			{:else if activeTab === 'product'}
+				Product related buttons
+			{:else if activeTab === 'invoice'}	
+				Invoice related buttons
+			{:else if activeTab === 'payment'}	
+				Payment related buttons
+			{:else if activeTab === 'shipment'}	
+				Shipment related buttons
+			{:else if activeTab === 'document'}	
+				<Button width="5em" icon="bi-plus-lg" size="sm" color="primary">Add</Button>
+			{/if}
 
-	<Title>Collections</Title>
+		</Toolbar>
 
-	<Toolbar>
-		
-			<form style="width: 20rem;" onsubmit={onSearch}>
-			<div  class="d-flex input-group">
-				<input type="text" class="form-control form-control-sm" placeholder="Search" bind:value={search}  />
-				{#if search && 1}
-					<button type="button" class="btn btn-sm btn-outline-primary" onclick={(e) => {e.preventDefault(); search = ''; onSearch(e)}}><Icon icon="bi-x"  /></button>
-				{/if}
-				<button type="submit" class="btn btn-sm btn-outline-primary" onclick={onSearch}><Icon icon="bi-search" /></button>
-			</div>
-			</form>
-
-
-		<div class="dropdown d-inline-block ms-2">
-			<button class="btn btn-sm btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="width: 8em;" disabled>
-				<Icon icon="bi-plus" /> Import  
-			</button>
-			<ul class="dropdown-menu">
-				<li><a class="dropdown-item" href="#">Product Variants</a></li>
-				<li><a class="dropdown-item" href="#">Product Media</a></li>
-			</ul>
-		</div>
-	
-		<Button width="8em" size="sm" color="danger" icon="bi-trash" disabled={$loading || !somethingSelected} onclick={onDeleteClick} >Delete</Button>
-	</Toolbar>
-
-
-
-	<table class="ct-table table table-sm table-striped">
-		<thead>
+		{#snippet orderProperty( label: string, value: string)}
 			<tr>
-				<th style="width: 8%" class="text-center">Image</th>
-				<th style="width: 20em;" class="text-center pointer" onclick={() => orderBy('name')}>Name</th>
-				<th style="width: 20em;" class="text-center pointer" onclick={() => orderBy('slug')}>Slug</th>
-				<th class="text-center pointer">Description</th>
-				<th style="width: 3%" class="text-center">Action</th>
+				<td data-label="Property" class="text-left fw-bold">{label}</td>
+				<td data-label="Value" class="text-left">{value}</td>
 			</tr>
-		</thead>
-		<tbody>
-			{#each list.items as item }
-				<tr>
-					<td data-label="Image" class="text-center align-middle">
-						<input type="checkbox" bind:checked={item.selected}  onchange={onSelectChange}/>
-						&nbsp;
-						<Image src={item.image_url} alt={item.name} style="width: 50px; height: 50px;" />
-					</td>
-					<td data-label="Name" class="text-left align-middle">{item.name.slice(0, 40)}</td>
-					<td data-label="Slug" class="text-left align-middle">{item.slug}</td>
-					<td data-label="Description" class="text-left align-middle">
-						{item.description?.slice(0, 100)}
-						{#if item.description?.length > 100}...{/if}
-					</td>
-					<td data-label="Action" class="text-center align-middle">
-						<!-- <a href={`view?id=${product.id}`}>View</a> -->
-						View
-					</td>
-				</tr>
-			{/each}
-		</tbody>
-	</table>
+		{/snippet}
 
-	<div class="d-flex justify-content-center mt-2">
-		<Paginator
-			page={list.page}
-			page_count={list.page_count}
-			page_size={list.page_size}
-			{onPageChange}
-		/>
-	</div>
+		<Tab {activeTab} {onTabChange}>
+			<TabHeader>
+				<TabHead id="detail" name="Details" icon="bi-card-list"></TabHead>
+				<TabHead id="product" name="Products" icon="bi-cart"></TabHead>
+	
+			</TabHeader>
 
+			<TabBody>
+				<TabPane id="detail">
+					<table class="ct-table table table-sm table-striped">
+						<thead>
+						<tr>
+							<th style="width: 10%" class="text-center"></th>
+							<th style="width: 30%" class="text-center"></th>
+						</tr>
+						</thead>
+						<tbody>
+
+							{@render orderProperty('Name', collection.name)}
+							{@render orderProperty('slug', collection.slug)}
+
+							<tr>
+								<td data-label="" class="text-left fw-bold">Payment Status</td>
+								<td data-label="" class="text-left">
+									
+									{#if pageState.editingField !== 'payment_status_name'}
+										<span class="me-2"
+										class:text-success={order.header.payment_status_name === 'complete'}
+										class:text-danger={order.header.payment_status_name !== 'complete'}
+										>
+										{order.header.payment_status_name}
+										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={() => {pageState.editingField = 'payment_status_name'; pageState.editingValue = order?.header.payment_status_name}}>Edit</Button>
+									</span>
+									{:else}
+									 	<div class="input-group" style="width: 20rem;">
+
+										<select class="form-select form-select-sm" bind:value={pageState.editingValue}>
+											<option value="pending">Pending</option>
+											<option value="complete">Complete</option>
+											<option value="invalid">Invalid</option>
+										</select>
+										&nbsp;
+										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={onSaveStatus} busy={pageState.savingField === 'payment_status_name'} busytext="Saving">Save</Button>
+										&nbsp;
+										<Button icon="bi-pencil-square" size="sm" color="danger" outline onclick={() => {pageState.editingField = null}}>Cancel</Button>
+										</div>
+									{/if}
+
+								</td>
+							</tr>						
+							<tr>
+								<td data-label="" class="text-left fw-bold">Shipping Status</td>
+								<td data-label="" class="text-left">
+									{#if pageState.editingField !== 'shipping_status_name'}
+										<span class="me-2"
+										class:text-success={order.header.shipping_status_name === 'complete'}
+										class:text-danger={order.header.shipping_status_name !== 'complete'}
+										>
+										{order.header.shipping_status_name}
+										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={() => {pageState.editingField = 'shipping_status_name'; pageState.editingValue = order.header.shipping_status_name}}>Edit</Button>
+									</span>
+									{:else}
+									 	<div class="input-group" style="width: 20rem;">
+
+										<select class="form-select form-select-sm" bind:value={pageState.editingValue}>
+											<option value="pending">Pending</option>
+											<option value="ready">Ready</option>
+											<option value="shipped">Shipped</option>
+											<option value="cancelled">Cancelled</option>
+											<option value="complete">Complete</option>
+											<option value="invalid">Invalid</option>
+										</select>
+										&nbsp;
+										<Button icon="bi-pencil-square" size="sm" color="primary" outline onclick={onSaveStatus} busy={pageState.savingField === 'shipping_status_name'} busytext="Saving">Save</Button>
+										&nbsp;
+										<Button icon="bi-pencil-square" size="sm" color="danger" outline onclick={() => {pageState.editingField = null}}>Cancel</Button>
+										</div>
+									{/if}
+
+
+								</td>
+							</tr>						
+
+						</tbody>
+					</table>
+
+
+				</TabPane>
+				<TabPane id="product">
+					<table class="ct-table table table-sm table-striped">
+						<thead>
+						<tr>
+							<th style="width: 5%" class="text-center">#</th>
+							<th style="width: 10%" class="text-center">SKU</th>
+							<th style="width: 55%" class="text-center">Name</th>
+							<th style="width: 10%" class="text-center">Quantity</th>
+							<th style="width: 10%" class="text-center">Base Price</th>
+							<th style="width: 10%" class="text-center">Net Price</th>
+						</tr>
+						</thead>
+						<tbody>
+							{#each order.lines as line}
+							<tr>
+								<td data-label="#" class="text-center">{line.sort + 1}</td>
+								<td data-label="SKU" class="text-left">{line.product_sku}</td>
+								<td data-label="Name" class="text-left">{line.product_name}</td>
+								<td data-label="Name" class="text-end">{formatNumber(line.quantity)} {line.unit}</td>
+
+								<td data-label="Base Price" class="text-end">{formatNumber(line.base_price_notax)}</td>
+								<td data-label="Net Price" class="text-end">{formatNumber(line.net_price_notax)}</td>
+							</tr>
+							{/each}
+						</tbody>
+					</table>
+
+					<table class="ct-table table table-sm table-striped">
+						<thead>
+						<tr>
+							<th style="width: 90%" class="text-center"></th>
+							<th style="width: 10%" class="text-center"></th>
+						</tr>
+						</thead>
+						<tbody>
+							{#each order.summaries as line}
+							<tr>
+								<td data-label="Name" class="text-end">{line.name}</td>
+								<td data-label="Amount" class="text-end">{formatNumber(line.value)}</td>
+							</tr>
+							{/each}
+						</tbody>
+					</table>
+
+				</TabPane>
+
+				<TabPane id="invoice">Invoices</TabPane>
+				<TabPane id="payment">Payments</TabPane>
+				<TabPane id="shipment">Shipments</TabPane>
+				<TabPane id="document">
+					{#if files}
+						<table class="ct-table table table-sm table-striped">
+							<thead>
+								<tr>
+								<th style="width: 5%" class="text-center">#</th>
+									<th style="width: 55%" class="text-center">Name</th>
+									<th style="width: 10%" class="text-center">Type</th>
+									<th style="width: 10%" class="text-center">Size</th>
+									<th style="width: 10%" class="text-center">Date</th>
+									<th style="width: 10%" class="text-center">Action</th>
+								</tr>
+							</thead>				 
+
+							<tbody>
+								{#each products as file, i}
+								<tr>
+									<td data-label="#" class="text-center">{i + 1}</td>
+									<td data-label="Name" class="text-left"><a href={file.cdn_url} target="_blank">{file.name}</a></td>
+									<td data-label="Type" class="text-left">{file.type}</td>
+									<td data-label="Size" class="text-end">{formatBytes(file.size)}</td>
+									<td data-label="Date" class="text-end">{formatDate(file.date_created)}</td>
+									<td data-label="Action" class="text-left">View</td>
+								</tr>
+								{/each}
+							</tbody>
+						</table>
+
+					{:else}
+						<Loading message="Retrieving documents..."></Loading>
+					{/if}
+				</TabPane>
+			</TabBody>
+		</Tab>
+
+
+		
+
+
+		<div class="d-flex justify-content-center mt-2">
+			<!-- <Paginator page={list.page} page_count={list.page_count} page_size={list.page_size} on:pagechange={onPageChange} /> -->
+		</div>
 
 <style>
-	.pointer {
-		cursor: pointer;
-	}
 </style>
