@@ -1,7 +1,5 @@
 <script lang="ts">
-	import { setContext, getContext, onMount } from 'svelte';
-	import { page as svpage } from '$app/stores';
-	import { Icon, Title, Toolbar, Button, Paginator, Loading, AuthGuard, TabHead, Tab, TabBody, TabHeader, TabPane, FileUpload } from '$lib/ui';
+	import { Image, Title, Toolbar, Button, Paginator, Loading, AuthGuard, TabHead, Tab, TabBody, TabHeader, TabPane, FileUpload } from '$lib/ui';
 	import { comet, logger } from '$lib';
 	import { formatBytes, formatNumber, formatAddress, formatDate, formatTime, notify } from '$lib/utils';
 	import type { ROrderListRow, RPaginated, ROrder, QOrderHeaderUpdate, QBulk, ROrderHeader, ROrderFile } from '$lib/types';
@@ -33,6 +31,7 @@
 	let search = $state('');
 	let products = $state<any[]|null>([]);
 	let activeTab = $state<string>('detail');
+	let somethingSelected = $state<boolean>(false);
 
 
 	/*
@@ -70,9 +69,7 @@
 		if(id === 'product') {
 			try {
 				loader.start();
-				console.log('retreiving products');
 				products = await comet.catalog.collections(collection.id).listProducts();
-				console.log(products);
 				loader.stop();
 			} catch (error: any) {
 				loader.stop();
@@ -80,6 +77,20 @@
 			}
 		}
 	}
+
+	function onSelectChange(e: Event)
+	{
+		somethingSelected = false;
+		if(!products) return;
+		products.forEach(item => {
+			if(item.selected)
+			{
+				somethingSelected = true;
+				return;
+			}
+		});
+	}
+
 
 
 </script>
@@ -207,24 +218,24 @@
 						<table class="ct-table table table-sm table-striped">
 							<thead>
 								<tr>
-								<th style="width: 5%" class="text-center">#</th>
-									<th style="width: 55%" class="text-center">Name</th>
-									<th style="width: 10%" class="text-center">Type</th>
-									<th style="width: 10%" class="text-center">Size</th>
-									<th style="width: 10%" class="text-center">Date</th>
+									<th style="width: 10%" class="text-center">Image</th>
+									<th style="width: 10%" class="text-left">SKU</th>
+									<th class="text-left">Name</th>
 									<th style="width: 10%" class="text-center">Action</th>
 								</tr>
 							</thead>				 
 
 							<tbody>
-								{#each products as file, i}
+								{#each products as product, i}
 								<tr>
-									<td data-label="#" class="text-center">{i + 1}</td>
-									<td data-label="Name" class="text-left"><a href={file.cdn_url} target="_blank">{file.name}</a></td>
-									<td data-label="Type" class="text-left">{file.type}</td>
-									<td data-label="Size" class="text-end">{formatBytes(file.size)}</td>
-									<td data-label="Date" class="text-end">{formatDate(file.date_created)}</td>
-									<td data-label="Action" class="text-left">View</td>
+									<td data-label="Image" class="text-center align-middle">
+										<input type="checkbox" bind:checked={product.selected}  onchange={onSelectChange}/>
+										&nbsp;
+										<Image src={product.image_url} alt={product.name} style="width: 50px; height: 50px;" />
+									</td>
+									<td data-label="SKU" class="text-left">{product.sku}</td>
+									<td data-label="Name" class="text-left"><a href={`/app/products/${product.slug}`} >{product.name}</a></td>
+									<td data-label="Action" class="text-left">Remove</td>
 								</tr>
 								{/each}
 							</tbody>

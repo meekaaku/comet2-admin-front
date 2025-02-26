@@ -136,6 +136,8 @@
 		goto(`?search=${search}`, { invalidateAll: true, replaceState: false });
 	}
 
+
+
 </script>
 
 
@@ -220,6 +222,8 @@
 		</div>
 	
 		<Button width="8em" size="sm" color="danger" icon="bi-trash" disabled={$loading || !somethingSelected} onclick={onDeleteClick} >Delete</Button>
+
+
 	</Toolbar>
 
 

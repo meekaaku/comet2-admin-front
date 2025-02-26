@@ -1,0 +1,6 @@
+TODO:
+- Image upload creates wrong mime type
+- Image upload puts a new line at end of name
+
+
+DONE:
